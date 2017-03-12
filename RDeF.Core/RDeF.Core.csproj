@@ -1,0 +1,109 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F07900AF-8275-48AD-A7CE-7A7DE267DE2A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RDeF</RootNamespace>
+    <AssemblyName>RDeF.Core</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\RDeF.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <DocumentationFile>bin\Debug\RDeF.Core.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\.build\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\.build\VersionAssemblyInfo.cs">
+      <Link>Properties\VersionAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Collections\CollectionExtensions.cs" />
+    <Compile Include="ComponentModel\DefaultActivator.cs" />
+    <Compile Include="Collections\DictionaryExtensions.cs" />
+    <Compile Include="Duration.cs" />
+    <Compile Include="Entities\IInMemoryEntitySource.cs" />
+    <Compile Include="Mapping\Converters\BooleanConverter.cs" />
+    <Compile Include="Mapping\Converters\Base64BinaryConverter.cs" />
+    <Compile Include="Mapping\Converters\GuidConverter.cs" />
+    <Compile Include="Mapping\Converters\UriConverter.cs" />
+    <Compile Include="Mapping\Converters\UntypedLiteralConverter.cs" />
+    <Compile Include="Mapping\Converters\StringConverter.cs" />
+    <Compile Include="Mapping\Converters\DurationConverter.cs" />
+    <Compile Include="Mapping\Converters\DecimalConverter.cs" />
+    <Compile Include="Mapping\Converters\DateTimeConverter.cs" />
+    <Compile Include="Mapping\Converters\IntegerConverter.cs" />
+    <Compile Include="Mapping\Converters\FloatingPointLiteralConverter.cs" />
+    <Compile Include="Mapping\Converters\LiteralConverterBase.cs" />
+    <Compile Include="Entities\DefaultChangeDetector.cs" />
+    <Compile Include="Entities\DefaultEntityContext.cs" />
+    <Compile Include="Entities\DefaultEntityContextFactory.cs" />
+    <Compile Include="Entities\Entity.cs" />
+    <Compile Include="Entities\IChangeDetector.cs" />
+    <Compile Include="Entities\SimpleInMemoryEntitySource.cs" />
+    <Compile Include="Mapping\DefaultMappingRepository.cs" />
+    <Compile Include="Mapping\DefaultMappingsBuilder.cs" />
+    <Compile Include="Mapping\MergingEntityMapping.cs" />
+    <Compile Include="Mapping\PropertyMappingEqualityComparer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reflection\ExecutionContext.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\RollerCaster\RollerCaster\RollerCaster.csproj">
+      <Project>{a0131536-8084-4d67-b24b-78e670914034}</Project>
+      <Name>RollerCaster</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RDeF.Contracts\RDeF.Contracts.csproj">
+      <Project>{b0f60589-f1ed-4cb5-9c42-4004f02536eb}</Project>
+      <Name>RDeF.Contracts</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="RDeF.Core.project.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
+      <Link>CustomDictionary.xml</Link>
+    </CodeAnalysisDictionary>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

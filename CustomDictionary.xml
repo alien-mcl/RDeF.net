@@ -1,0 +1,29 @@
+<Dictionary>
+    <Words>
+        <Recognized>
+            <Word>rdf</Word>
+            <Word>rdfs</Word>
+            <Word>iri</Word>
+            <Word>qiri</Word>
+            <Word>oguid</Word>
+            <Word>ns</Word>
+            <Word>untyped</Word>
+        </Recognized>
+        <DiscreteExceptions>
+            <Term>rdf</Term>
+            <Term>rdfs</Term>
+            <Term>QIri</Term>
+            <Term>nonNegative</Term>
+            <Term>DayTime</Term>
+        </DiscreteExceptions>
+    </Words>
+    <Acronyms>
+        <CasingExceptions>
+            <Acronym>rdf</Acronym>
+            <Acronym>rdfs</Acronym>
+            <Acronym>oguid</Acronym>
+            <Acronym>ns</Acronym>
+            <Acronym>De</Acronym>
+        </CasingExceptions>
+    </Acronyms>
+</Dictionary>
