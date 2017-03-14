@@ -53,7 +53,11 @@
     <Compile Include="ComponentModel\DefaultActivator.cs" />
     <Compile Include="Collections\DictionaryExtensions.cs" />
     <Compile Include="Duration.cs" />
+    <Compile Include="Entities\EntityExtensions.cs" />
+    <Compile Include="Entities\EntityInitializationContext.cs" />
     <Compile Include="Entities\IInMemoryEntitySource.cs" />
+    <Compile Include="Entities\MulticastPropertyValueExtensions.cs" />
+    <Compile Include="Entities\StatementExtensions.cs" />
     <Compile Include="Mapping\Converters\BooleanConverter.cs" />
     <Compile Include="Mapping\Converters\Base64BinaryConverter.cs" />
     <Compile Include="Mapping\Converters\GuidConverter.cs" />

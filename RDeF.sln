@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RollerCaster", "..\RollerCaster\RollerCaster\RollerCaster.csproj", "{A0131536-8084-4D67-B24B-78E670914034}"
 EndProject
@@ -31,6 +31,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDeF.Mapping.Attributes", "RDeF.Mapping.Attributes\RDeF.Mapping.Attributes.csproj", "{C2C8CA10-8703-498E-851B-BD8C7010BF89}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDeF.Mapping.Attributes.Tests", "RDeF.Mapping.Attributes.Tests\RDeF.Mapping.Attributes.Tests.csproj", "{49F1CE92-7D60-4598-922F-F73C632027A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDeF.Serialization", "RDeF.Serialization\RDeF.Serialization.csproj", "{D20315CA-9F4F-4073-A205-ED66BDC5A177}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -66,6 +68,10 @@ Global
 		{49F1CE92-7D60-4598-922F-F73C632027A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49F1CE92-7D60-4598-922F-F73C632027A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49F1CE92-7D60-4598-922F-F73C632027A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D20315CA-9F4F-4073-A205-ED66BDC5A177}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D20315CA-9F4F-4073-A205-ED66BDC5A177}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D20315CA-9F4F-4073-A205-ED66BDC5A177}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D20315CA-9F4F-4073-A205-ED66BDC5A177}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

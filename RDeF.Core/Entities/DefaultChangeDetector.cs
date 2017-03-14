@@ -17,13 +17,13 @@ namespace RDeF.Entities
             _mappingsRepository = mappingsRepository;
         }
 
-        public void Process(Entity entity, ref IDictionary<IEntity, ISet<Statement>> retractedStatements, ref IDictionary<IEntity, ISet<Statement>> addedStatements)
+        public void Process(Entity entity, IDictionary<IEntity, ISet<Statement>> retractedStatements, IDictionary<IEntity, ISet<Statement>> addedStatements)
         {
-            ProcessTypes(entity, ref retractedStatements, ref addedStatements);
-            ProcessProperties(entity, ref retractedStatements, ref addedStatements);
+            ProcessTypes(entity, retractedStatements, addedStatements);
+            ProcessProperties(entity, retractedStatements, addedStatements);
         }
 
-        private void ProcessTypes(Entity entity, ref IDictionary<IEntity, ISet<Statement>> retractedStatements, ref IDictionary<IEntity, ISet<Statement>> addedStatements)
+        private void ProcessTypes(Entity entity, IDictionary<IEntity, ISet<Statement>> retractedStatements, IDictionary<IEntity, ISet<Statement>> addedStatements)
         {
             var matchedTypes = new HashSet<Type>();
             foreach (var originalType in entity.OriginalTypes)
@@ -55,7 +55,7 @@ namespace RDeF.Entities
             }
         }
 
-        private void ProcessProperties(Entity entity, ref IDictionary<IEntity, ISet<Statement>> retractedStatements, ref IDictionary<IEntity, ISet<Statement>> addedStatements)
+        private void ProcessProperties(Entity entity, IDictionary<IEntity, ISet<Statement>> retractedStatements, IDictionary<IEntity, ISet<Statement>> addedStatements)
         {
             bool isFirstPass = true;
             var currentProperties = new HashSet<MulticastPropertyValue>();

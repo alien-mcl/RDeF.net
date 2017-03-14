@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using RDeF.Collections;
 using RDeF.Mapping;
-using RDeF.Vocabularies;
 using RollerCaster;
-using RollerCaster.Reflection;
 
 namespace RDeF.Entities
 {
@@ -75,7 +72,7 @@ namespace RDeF.Entities
                 {
                     lock (entity.Value.SynchronizationContext)
                     {
-                        _changeDetector.Process(entity.Value, ref retractedStatements, ref addedStatements);
+                        _changeDetector.Process(entity.Value, retractedStatements, addedStatements);
                     }
                 }
 
@@ -92,15 +89,39 @@ namespace RDeF.Entities
                 {
                     lock (entity.Value.SynchronizationContext)
                     {
-                        if (entity.Value.IsChanged)
+                        if (!entity.Value.IsChanged)
                         {
-                            foreach (var propertyValue in entity.Value.OriginalValues)
+                            continue;
+                        }
+
+                        var valuesToSet = new List<MulticastPropertyValue>();
+                        foreach (var currentPropertyValue in entity.Value.PropertyValues)
+                        {
+                            MulticastPropertyValue valueToSet = null;
+                            var originalValue = entity.Value.OriginalValues.FindMatching(currentPropertyValue);
+                            if (originalValue != null)
                             {
-                                entity.Value.SetPropertyInternal(propertyValue.CastedType, propertyValue.Property.Name, propertyValue.Value);
+                                entity.Value.OriginalValues.Remove(originalValue);
+                                if (originalValue.Value != null)
+                                {
+                                    valueToSet = originalValue;
+                                }
                             }
 
-                            entity.Value.IsInitialized = true;
+                            if (valueToSet == null)
+                            {
+                                valueToSet = new MulticastPropertyValue(currentPropertyValue.CastedType, currentPropertyValue.Property, null);
+                            }
+
+                            valuesToSet.Add(valueToSet);
                         }
+
+                        foreach (var propertyValue in valuesToSet.Concat(entity.Value.OriginalValues))
+                        {
+                            entity.Value.SetPropertyInternal(propertyValue.CastedType, propertyValue.Property.Name, propertyValue.Value);
+                        }
+
+                        entity.Value.IsInitialized = true;
                     }
                 }
             }
@@ -109,7 +130,8 @@ namespace RDeF.Entities
         internal virtual void Initialize(Entity entity)
         {
             //// TODO: Think about currating the resulting data set against i.e. ontology to trim unnecessary proxy property values.
-            InitializeInternal(entity, _entitySource.Load(entity.Iri));
+            var context = new EntityInitializationContext();
+            InitializeInternal(entity, _entitySource.Load(entity.Iri), context);
         }
 
         internal Entity CreateInternal(Iri id, bool isInitialized = true)
@@ -130,160 +152,62 @@ namespace RDeF.Entities
             return result;
         }
 
-        private static bool HandleLinkedListValue(Statement statement, Dictionary<Iri, ISet<Statement>> otherEntityStatements)
+        private TEntity CreateInternal<TEntity>(Iri id, bool isInitialized = true) where TEntity : IEntity
         {
-            if ((statement.Predicate == rdf.first) || (statement.Predicate == rdf.last))
-            {
-                otherEntityStatements.EnsureKey(statement.Subject).Add(statement);
-                return true;
-            }
-
-            return false;
+            return CreateInternal(id, isInitialized).ActLike<TEntity>();
         }
 
-        private static void BuildList(Entity entity, Iri head, Dictionary<Iri, ISet<Statement>> otherEntityStatements, ICollectionMapping collectionMapping, Dictionary<Entity, Entity> entities)
+        private void InitializeInternal(Entity entity, IEnumerable<Statement> statements, EntityInitializationContext context)
         {
-            Iri previousHead = null;
-            while (true)
-            {
-                ISet<Statement> statements;
-                if ((previousHead == head) || (!otherEntityStatements.TryGetValue(head, out statements)))
-                {
-                    break;
-                }
-
-                previousHead = head;
-                foreach (var statement in statements)
-                {
-                    if (statement.Predicate == rdf.first)
-                    {
-                        var value = collectionMapping.ValueConverter.ConvertFrom(statement);
-                        entity.SetPropertyInternal(collectionMapping.EntityMapping.Type, collectionMapping.Name, value);
-                        var otherEntity = value as IEntity;
-                        if (otherEntity != null)
-                        {
-                            var unwrappedEntity = (Entity)otherEntity.Unwrap();
-                            entities[unwrappedEntity] = unwrappedEntity;
-                        }
-                    }
-                    else if (statement.Predicate == rdf.last)
-                    {
-                        head = statement.Object;
-                    }
-                }
-            }
-        }
-
-        private void InitializeInternal(Entity entity, IEnumerable<Statement> statements, Dictionary<Iri, ISet<Statement>> otherEntityStatements = null)
-        {
-            otherEntityStatements = otherEntityStatements ?? new Dictionary<Iri, ISet<Statement>>();
-            var lists = new Dictionary<Iri, ISet<Statement>>();
-            var entities = new Dictionary<Entity, Entity>();
             foreach (var statement in statements)
             {
-                if (statement.Predicate == rdfs.type)
+                if (!statement.IsRelatedTo(entity))
+                {
+                    context.EntityStatements.EnsureKey(statement.Subject).Add(statement);
+                    continue;
+                }
+
+                if (statement.IsTypeAssertion())
                 {
                     entity.CastedTypes.Add(MappingsRepository.FindEntityMappingFor(statement.Object).Type);
                     continue;
                 }
 
-                HandlePropertyValue(entity, statement, otherEntityStatements, lists, entities);
-            }
-
-            BuildLists(entity, otherEntityStatements, lists, entities);
-            entity.IsInitialized = true;
-            foreach (var otherEntity in entities)
-            {
-                ISet<Statement> otherStatements;
-                if (otherEntityStatements.TryGetValue(otherEntity.Value.Iri, out otherStatements))
+                var propertyMapping = MappingsRepository.FindPropertyMappingFor(statement.Predicate);
+                if (!statement.Matches(propertyMapping.Graph))
                 {
-                    InitializeInternal(otherEntity.Key, otherStatements, otherEntityStatements);
-                }
-                else
-                {
-                    Initialize(otherEntity.Key);
-                }
-            }
-        }
-
-        private void BuildLists(Entity entity, Dictionary<Iri, ISet<Statement>> otherEntityStatements, Dictionary<Iri, ISet<Statement>> lists, Dictionary<Entity, Entity> entities)
-        {
-            foreach (var list in lists)
-            {
-                if (list.Key != entity.Iri)
-                {
-                    BuildLists(CreateInternal(list.Key), otherEntityStatements, lists, entities);
                     continue;
                 }
 
-                foreach (var head in list.Value)
+                //// TODO: Develop a dictionary statements handling.
+                var collectionMapping = propertyMapping as ICollectionMapping;
+                if (collectionMapping?.StoreAs == CollectionStorageModel.LinkedList)
                 {
-                    var collectionMapping = MappingsRepository.FindPropertyMappingFor(head.Predicate) as ICollectionMapping;
-                    BuildList(entity, head.Object, otherEntityStatements, collectionMapping, entities);
+                    context.LinkedLists.EnsureKey(entity.Iri)[statement.Object] = collectionMapping;
+                    continue;
                 }
+
+                entity.SetProperty(statement, propertyMapping, context);
             }
+
+            entity.InitializeLists(context);
+            entity.IsInitialized = true;
+            InitializeChildEntities(context);
         }
 
-        private void HandlePropertyValue(Entity entity, Statement statement, Dictionary<Iri, ISet<Statement>> otherEntityStatements, Dictionary<Iri, ISet<Statement>> lists, Dictionary<Entity, Entity> entities)
+        private void InitializeChildEntities(EntityInitializationContext context)
         {
-            if (HandleLinkedListValue(statement, otherEntityStatements))
+            foreach (var otherEntity in context.EntitiesCreated.Where(otherEntity => !otherEntity.IsInitialized))
             {
-                return;
-            }
-
-            if (statement.Subject != entity.Iri)
-            {
-                otherEntityStatements.EnsureKey(statement.Subject).Add(statement);
-                return;
-            }
-
-            var propertyMapping = MappingsRepository.FindPropertyMappingFor(statement.Predicate);
-            if ((propertyMapping.Graph != null) && (propertyMapping.Graph != statement.Graph))
-            {
-                return;
-            }
-
-            var collectionMapping = propertyMapping as ICollectionMapping;
-            if ((collectionMapping != null) && (collectionMapping.StoreAs == CollectionStorageModel.LinkedList))
-            {
-                lists.EnsureKey(entity.Iri).Add(statement);
-                return;
-            }
-
-            var value = propertyMapping.ValueConverter.ConvertFrom(statement);
-            var otherEntity = value as IEntity;
-            if (otherEntity != null)
-            {
-                var unwrappedEntity = (Entity)otherEntity.Unwrap();
-                entities[unwrappedEntity] = unwrappedEntity;
-            }
-
-            if (value == null)
-            {
-                entity.SetPropertyInternal(propertyMapping.EntityMapping.Type, propertyMapping.Name, null);
-                return;
-            }
-
-            if (value.GetType().IsAnEnumerableType())
-            {
-                if (value.GetType().IsADictionary())
+                ISet<Statement> otherStatements;
+                if (!context.EntityStatements.TryGetValue(otherEntity.Iri, out otherStatements))
                 {
-                    //// TODO: Develop a dictionary statements handling.
-                }
-                else
-                {
-                    ((IList)entity.GetPropertyInternal(propertyMapping.EntityMapping.Type, propertyMapping.Name)).Add(value);
+                    continue;
                 }
 
-                return;
+                InitializeInternal(otherEntity, otherStatements, context);
+                context.EntityStatements.Remove(otherEntity.Iri);
             }
-
-            entity.SetPropertyInternal(propertyMapping.EntityMapping.Type, propertyMapping.Name, value);
-        }
-
-        private TEntity CreateInternal<TEntity>(Iri id, bool isInitialized = true) where TEntity : IEntity
-        {
-            return CreateInternal(id, isInitialized).ActLike<TEntity>();
         }
     }
 }

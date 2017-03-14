@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace RDeF.ComponentModel
 {
@@ -8,7 +9,8 @@ namespace RDeF.ComponentModel
         /// <inheritdoc />
         public object CreateInstance(Type type)
         {
-            return Activator.CreateInstance(type);
+            return (type.GetTypeInfo().GetConstructor(Type.EmptyTypes) != null ? Activator.CreateInstance(type) :
+                type.GetTypeInfo().GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public, null, Type.EmptyTypes, null));
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Given_instance_of.DefaultChangeDetector_class
 
         public override void TheTest()
         {
-            Detector.Process(Entity, ref _retractedStatements, ref _addedStatements);
+            Detector.Process(Entity, _retractedStatements, _addedStatements);
         }
 
         [Test]

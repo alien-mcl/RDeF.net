@@ -1,4 +1,5 @@
-﻿using RDeF.Entities;
+﻿using System.Collections.Generic;
+using RDeF.Entities;
 using RDeF.Mapping;
 using RDeF.Mapping.Attributes;
 
@@ -18,5 +19,11 @@ namespace RDeF.Data
 
         [Property("ordinal")]
         int Ordinal { get; set; }
+
+        [Collection("categories")]
+        ICollection<string> Categories { get; }
+
+        [Collection("comments")]
+        IList<string> Comments { get; }
     }
 }

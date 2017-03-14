@@ -20,7 +20,7 @@ namespace RDeF.Entities
             Iri = id;
             _isInitialized = false;
             _context = context;
-            OriginalValues = Array.Empty<MulticastPropertyValue>();
+            OriginalValues = new HashSet<MulticastPropertyValue>();
         }
 
         /// <inheritdoc />
@@ -33,7 +33,7 @@ namespace RDeF.Entities
 
         internal IEnumerable<Type> OriginalTypes { get; set; }
 
-        internal IEnumerable<MulticastPropertyValue> OriginalValues { get; set; }
+        internal ISet<MulticastPropertyValue> OriginalValues { get; set; }
 
         internal bool IsChanged { get; set; }
 

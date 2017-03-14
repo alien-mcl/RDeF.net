@@ -9,11 +9,11 @@ namespace Given_instance_of.DefaultEntityContext_class
     {
         internal Mock<IChangeDetector> ChangeDetector { get; private set; }
 
-        protected Mock<IEntitySource> EntitySource { get; private set; }
+        protected Mock<IEntitySource> EntitySource { get; set; }
 
         protected Mock<IMappingsRepository> MappingsRepository { get; private set; }
 
-        protected DefaultEntityContext Context { get; private set; }
+        protected DefaultEntityContext Context { get; set; }
 
         public virtual void TheTest()
         {

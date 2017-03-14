@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using RDeF.Collections;
 using RollerCaster;
 
 namespace RDeF.Entities
@@ -9,12 +11,18 @@ namespace RDeF.Entities
     public sealed class SimpleInMemoryEntitySource : IInMemoryEntitySource
     {
         private readonly object _sync = new Object();
-        private readonly ISet<IEntity> _entities = new HashSet<IEntity>();
+
+        internal SimpleInMemoryEntitySource()
+        {
+            Entities = new ConcurrentDictionary<IEntity, ISet<Statement>>();
+        }
+
+        internal IDictionary<IEntity, ISet<Statement>> Entities { get; }
 
         /// <inheritdoc />
         public IEnumerable<Statement> Load(Iri iri)
         {
-            return new Statement[0];
+            throw new NotSupportedException("In-Memory entity source doesn't support entity loading.");
         }
 
         /// <inheritdoc />
@@ -24,9 +32,12 @@ namespace RDeF.Entities
         {
             lock (_sync)
             {
-                foreach (var entityStatements in retractedStatements.Concat(addedStatements))
+                ProcessStatements(retractedStatements, (statements, statement) => statements.Remove(statement));
+                ProcessStatements(addedStatements, (statements, statement) => statements.Add(statement));
+                var toBeRemoved = Entities.Where(entity => entity.Value.Count == 0).Select(entity => entity.Key).ToList();
+                foreach (var entity in toBeRemoved)
                 {
-                    _entities.Add(entityStatements.Key);
+                    Entities.Remove(entity);
                 }
             }
         }
@@ -36,10 +47,10 @@ namespace RDeF.Entities
         {
             lock (_sync)
             {
-                var result = _entities.FirstOrDefault(entity => entity.Iri == iri);
+                var result = Entities.Where(entity => entity.Key.Iri == iri).Select(entity => entity.Key).FirstOrDefault();
                 if (result == null)
                 {
-                    _entities.Add(result = new Entity(iri, entityContext as DefaultEntityContext));
+                    Entities[result = new Entity(iri, entityContext as DefaultEntityContext) { IsInitialized = true }] = new HashSet<Statement>();
                 }
 
                 return result;
@@ -51,20 +62,32 @@ namespace RDeF.Entities
         {
             lock (_sync)
             {
-                var result = _entities.FirstOrDefault(entity => entity.Iri == iri);
-                if (result == null)
-                {
-                    _entities.Add(result = new Entity(iri, entityContext as DefaultEntityContext));
-                }
-
-                return result.ActLike<TEntity>();
+                return Create(iri, entityContext).ActLike<TEntity>();
             }
         }
 
         /// <inheritdoc />
         public IQueryable<TEntity> AsQueryable<TEntity>() where TEntity : IEntity
         {
-            return _entities.AsQueryable().OfType<TEntity>();
+            return Entities.Keys.Where(entity => entity.Is<TEntity>()).Select(entity => entity.ActLike<TEntity>()).AsQueryable();
+        }
+
+        private void ProcessStatements(IEnumerable<KeyValuePair<IEntity, ISet<Statement>>> entityStatements, Action<ISet<Statement>, Statement> action)
+        {
+            IEntity lastEntity = null;
+            ISet<Statement> lastEntityStatements = null;
+            foreach (var retractedEntityStatements in entityStatements)
+            {
+                if (!Equals(lastEntity, retractedEntityStatements.Key))
+                {
+                    lastEntityStatements = Entities.EnsureKey(lastEntity = retractedEntityStatements.Key);
+                }
+
+                foreach (var retractedStatement in retractedEntityStatements.Value)
+                {
+                    action(lastEntityStatements, retractedStatement);
+                }
+            }
         }
     }
 }

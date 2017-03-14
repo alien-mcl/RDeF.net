@@ -4,12 +4,15 @@ namespace RDeF.Collections
 {
     internal static class CollectionExtensions
     {
-        internal static void AddIf<T>(this ICollection<T> collection, T item, bool conditional)
+        internal static bool AddIf<T>(this ICollection<T> collection, T item, bool conditional)
         {
-            if (conditional)
+            if (!conditional)
             {
-                collection.Add(item);
+                return false;
             }
+
+            collection.Add(item);
+            return true;
         }
     }
 }
