@@ -21,9 +21,15 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
         }
 
         [Test]
-        public void Should_create_new_entity_already_initialized()
+        public void Should_provide_a_queryable_collection_of_typed_entities()
         {
             Result.Should().HaveCount(1);
+        }
+
+        [Test]
+        public void Should_provide_a_queryable_collection_of_entities()
+        {
+            EntitySource.AsQueryable<IEntity>().Should().HaveCount(1);
         }
 
         protected override void ScenarioSetup()

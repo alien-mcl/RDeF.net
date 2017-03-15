@@ -48,6 +48,7 @@
     <Compile Include="ComponentModel\IriTypeConverter.cs" />
     <Compile Include="Entities\IEntity.cs" />
     <Compile Include="Mapping\ILiteralConverter.cs" />
+    <Compile Include="Serialization\IRdfWriter.cs" />
     <Compile Include="Vocabularies\OGuid.cs" />
     <Compile Include="Vocabularies\Rdf.cs" />
     <Compile Include="Vocabularies\Xsd.cs" />

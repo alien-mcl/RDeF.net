@@ -56,6 +56,7 @@
     <Compile Include="Entities\EntityExtensions.cs" />
     <Compile Include="Entities\EntityInitializationContext.cs" />
     <Compile Include="Entities\IInMemoryEntitySource.cs" />
+    <Compile Include="Entities\IriComparer.cs" />
     <Compile Include="Entities\MulticastPropertyValueExtensions.cs" />
     <Compile Include="Entities\StatementExtensions.cs" />
     <Compile Include="Mapping\Converters\BooleanConverter.cs" />

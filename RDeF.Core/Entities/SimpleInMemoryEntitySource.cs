@@ -69,6 +69,11 @@ namespace RDeF.Entities
         /// <inheritdoc />
         public IQueryable<TEntity> AsQueryable<TEntity>() where TEntity : IEntity
         {
+            if (typeof(TEntity) == typeof(IEntity))
+            {
+                return (IQueryable<TEntity>)Entities.Keys.AsQueryable();
+            }
+
             return Entities.Keys.Where(entity => entity.Is<TEntity>()).Select(entity => entity.ActLike<TEntity>()).AsQueryable();
         }
 

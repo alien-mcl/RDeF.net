@@ -8,6 +8,7 @@
             <Word>oguid</Word>
             <Word>ns</Word>
             <Word>untyped</Word>
+            <Word>ld</Word>
         </Recognized>
         <DiscreteExceptions>
             <Term>rdf</Term>

@@ -6,7 +6,7 @@
     "win": {}
   },
   "dependencies": {
-    "FluentAssertions": "4.19.0",
+    "FluentAssertions": "4.19.2",
     "Moq": "4.7.1",
     "NUnit": "3.6.1",
     "StyleCop.Analyzers": "1.0.0"
