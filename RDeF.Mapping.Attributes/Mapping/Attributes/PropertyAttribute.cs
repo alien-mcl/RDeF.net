@@ -1,43 +1,49 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace RDeF.Mapping.Attributes
 {
     /// <summary>Represents a property mapping.</summary>
+    [SuppressMessage("Microsoft.Performance", "CA1813:AvoidUnsealedAttributes", Justification = "Hierarchy is rquired and constistant with corresponding types.")]
     [AttributeUsage(AttributeTargets.Property)]
-    [DebuggerDisplay("{ToString()}")]
-    public sealed class PropertyAttribute : TermAttribute
+    [DebuggerDisplay("{Iri??Prefix+\":\"+Term,nq}")]
+    public class PropertyAttribute : TermAttribute
     {
+        private Type _valueConverterType;
+
+        /// <summary>Initializes a new instance of the <see cref="PropertyAttribute"/> class.</summary>
+        public PropertyAttribute()
+        {
+        }
+
         /// <summary>Initializes a new instance of the <see cref="PropertyAttribute"/> class.</summary>
         /// <param name="prefix">The prefix of the class mapping.</param>
         /// <param name="term">The term of the class mapping.</param>
-        /// <param name="valueConverterType">Type of the converter to be used.</param>
-        /// <param name="graph">Optional graph.</param>
-        public PropertyAttribute(string prefix, string term, Type valueConverterType = null, string graph = null) : base(prefix, term, graph)
+        /// <param name="graphPrefix">Optional graph prefix.</param>
+        /// <param name="graphTerm">Optional graph term.</param>
+        public PropertyAttribute(string prefix, string term, string graphPrefix = null, string graphTerm = null) : base(prefix, term, graphPrefix, graphTerm)
         {
-            if ((valueConverterType != null) && (!typeof(IConverter).IsAssignableFrom(valueConverterType)))
-            {
-                throw new ArgumentOutOfRangeException(nameof(valueConverterType));
-            }
-
-            ValueConverterType = valueConverterType;
         }
 
-        /// <summary>Initializes a new instance of the <see cref="PropertyAttribute"/> class.</summary>
-        /// <param name="iri">The iri.</param>
-        /// <param name="valueConverterType">Type of the converter to be used.</param>
-        /// <param name="graph">Optional graph.</param>
-        public PropertyAttribute(string iri, Type valueConverterType = null, string graph = null) : base(iri, graph)
+        /// <summary>Gets or sets the type of the converter.</summary>
+        [SuppressMessage("Microsoft.Usage", "CA2208:InstantiateArgumentExceptionsCorrectly", Justification = "Using setter's value would be meaningless.")]
+        public Type ValueConverterType
         {
-            if ((valueConverterType != null) && (!typeof(IConverter).IsAssignableFrom(valueConverterType)))
+            get
             {
-                throw new ArgumentOutOfRangeException(nameof(valueConverterType));
+                return _valueConverterType;
             }
 
-            ValueConverterType = valueConverterType;
-        }
+            set
+            {
+                if ((value != null) && (!typeof(IConverter).IsAssignableFrom(value)))
+                {
+                    throw new ArgumentOutOfRangeException("valueConverterType");
+                }
 
-        /// <summary>Gets the type of the converter.</summary>
-        internal Type ValueConverterType { get; }
+                _valueConverterType = value;
+            }
+        }
     }
 }

@@ -49,6 +49,7 @@
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AssertionsExtensions.cs" />
+    <Compile Include="ComponentModel\TestModule.cs" />
     <Compile Include="Data\IComplexEntity.cs" />
     <Compile Include="Data\IProduct.cs" />
     <Compile Include="Data\IService.cs" />
@@ -65,7 +66,6 @@
     <Compile Include="Given_instance_of\converter_of_type\IntegerConverter_class.cs" />
     <Compile Include="Given_instance_of\converter_of_type\StringConverter_class.cs" />
     <Compile Include="Given_instance_of\converter_of_type\LiteralConverterTest.cs" />
-    <Compile Include="Given_instance_of\DefaultActivator_class\when_creating_instance.cs" />
     <Compile Include="Given_instance_of\DefaultChangeDetector_class\DefaultChangeDetectorTest.cs" />
     <Compile Include="Given_instance_of\DefaultChangeDetector_class\when_processing_an_entity.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContextFactory_class\DefaultEntityContextFactoryTest.cs" />
@@ -108,6 +108,8 @@
     <Compile Include="Given_instance_of\Statement_class\when_initializing_localized_literal.cs" />
     <Compile Include="Given_instance_of\Statement_class\when_initializing_literal_value.cs" />
     <Compile Include="Given_instance_of\Statement_class\when_initializing_resource_relation.cs" />
+    <Compile Include="Given_large_set_of_data\PerformanceTest.cs" />
+    <Compile Include="Given_large_set_of_data\when_processing_entities_from_it.cs" />
     <Compile Include="Mapping\Converters\ConverterExtensions.cs" />
     <Compile Include="Mapping\TestConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -119,10 +119,10 @@ namespace Given_instance_of.DefaultEntityContext_class
                 SetupPropertyMapping(entityMapping, "Doubles"),
                 SetupPropertyMapping(entityMapping, "Other")
             };
-            MappingsRepository.Setup(instance => instance.FindEntityMappingFor(It.IsAny<Iri>()))
-                .Returns<Iri>(iri => entityMapping.Object);
-            MappingsRepository.Setup(instance => instance.FindPropertyMappingFor(It.IsAny<Iri>()))
-                .Returns<Iri>(iri => properties.Where(property => property.Object.Predicate == iri).Select(property => property.Object).First());
+            MappingsRepository.Setup(instance => instance.FindEntityMappingFor(It.IsAny<Iri>(), null))
+                .Returns<Iri, Iri>((iri, graph) => entityMapping.Object);
+            MappingsRepository.Setup(instance => instance.FindPropertyMappingFor(It.IsAny<Iri>(), null))
+                .Returns<Iri, Iri>((iri, graph) => properties.Where(property => property.Object.Term == iri).Select(property => property.Object).First());
         }
 
         private Mock<ICollectionMapping> SetupPropertyMapping(Mock<IEntityMapping> entityMapping, string propertyName)
@@ -137,7 +137,8 @@ namespace Given_instance_of.DefaultEntityContext_class
             result.SetupGet(instance => instance.ValueConverter).Returns(converter.Object);
             result.SetupGet(instance => instance.StoreAs)
                 .Returns(property.PropertyType.GetGenericTypeDefinition() == typeof(IList<>) ? CollectionStorageModel.LinkedList : CollectionStorageModel.Simple);
-            result.SetupGet(instance => instance.Predicate).Returns(collectionMapping.Resolve(Array.Empty<QIriMapping>()));
+            result.SetupGet(instance => instance.Term).Returns(new Iri(collectionMapping.Iri));
+            result.SetupGet(instance => instance.Graph).Returns((Iri)null);
             return result;
         }
 

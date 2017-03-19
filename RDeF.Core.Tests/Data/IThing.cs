@@ -3,10 +3,10 @@ using RDeF.Mapping.Attributes;
 
 namespace RDeF.Data
 {
-    [Class("Thing")]
+    [Class(Iri = "Thing")]
     public interface IThing : IEntity
     {
-        [Property("abstract")]
+        [Property(Iri = "abstract")]
         string Abstract { get; set; }
     }
 }

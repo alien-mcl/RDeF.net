@@ -5,39 +5,24 @@ namespace RDeF.Mapping.Attributes
 {
     /// <summary>Represents a collection mapping.</summary>
     [AttributeUsage(AttributeTargets.Property)]
-    [DebuggerDisplay("{ToString()}")]
-    public sealed class CollectionAttribute : TermAttribute
+    [DebuggerDisplay("{Iri??Prefix+\":\"+Term,nq}[]")]
+    public sealed class CollectionAttribute : PropertyAttribute
     {
+        /// <summary>Initializes a new instance of the <see cref="CollectionAttribute"/> class.</summary>
+        public CollectionAttribute()
+        {
+        }
+
         /// <summary>Initializes a new instance of the <see cref="CollectionAttribute"/> class.</summary>
         /// <param name="prefix">The prefix of the class mapping.</param>
         /// <param name="term">The term of the class mapping.</param>
-        /// <param name="valueConverterType">Type of the converter to be used.</param>
-        /// <param name="graph">Optional graph.</param>
-        public CollectionAttribute(string prefix, string term, Type valueConverterType = null, string graph = null) : base(prefix, term, graph)
+        /// <param name="graphPrefix">Optional graph prefix.</param>
+        /// <param name="graphTerm">Optional graph term.</param>
+        public CollectionAttribute(string prefix, string term, string graphPrefix = null, string graphTerm = null) : base(prefix, term, graphPrefix, graphTerm)
         {
-            if ((valueConverterType != null) && (!typeof(IConverter).IsAssignableFrom(valueConverterType)))
-            {
-                throw new ArgumentOutOfRangeException(nameof(valueConverterType));
-            }
-
-            ValueConverterType = valueConverterType;
         }
 
-        /// <summary>Initializes a new instance of the <see cref="CollectionAttribute"/> class.</summary>
-        /// <param name="iri">The iri.</param>
-        /// <param name="valueConverterType">Type of the converter to be used.</param>
-        /// <param name="graph">Optional graph.</param>
-        public CollectionAttribute(string iri, Type valueConverterType = null, string graph = null) : base(iri, graph)
-        {
-            if ((valueConverterType != null) && (!typeof(IConverter).IsAssignableFrom(valueConverterType)))
-            {
-                throw new ArgumentOutOfRangeException(nameof(valueConverterType));
-            }
-
-            ValueConverterType = valueConverterType;
-        }
-
-        /// <summary>Gets the type of the converter.</summary>
-        internal Type ValueConverterType { get; }
+        /// <summary>Gets or sets a storage model of the collection being mapped.</summary>
+        public CollectionStorageModel StoreAs { get; set; }
     }
 }

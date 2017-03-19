@@ -54,15 +54,24 @@
     <Compile Include="..\RDeF.Core.Tests\Mapping\TestConverter.cs">
       <Link>Mapping\TestConverter.cs</Link>
     </Compile>
+    <Compile Include="AssertionsExtensions.cs" />
     <Compile Include="Given_instance_of\AttributeMappingSource_class\AttributeMappingSourceTest.cs" />
     <Compile Include="Given_instance_of\AttributeMappingSource_class\when_gathering_entity_mappings.cs" />
     <Compile Include="Given_instance_of\AttributeMappingSource_class\when_initializing.cs" />
+    <Compile Include="Given_instance_of\AttributeCollectionMappingProvider_class\AttributeCollectionMappingProviderTest.cs" />
+    <Compile Include="Given_instance_of\AttributeCollectionMappingProvider_class\when_accepting_a_visitor.cs" />
+    <Compile Include="Given_instance_of\AttributeCollectionMappingProvider_class\when_initializing.cs" />
+    <Compile Include="Given_instance_of\AttributeEntityMappingProvider_class\AttributePropertyMappingProviderTest.cs" />
+    <Compile Include="Given_instance_of\AttributeEntityMappingProvider_class\when_accepting_a_visitor.cs" />
+    <Compile Include="Given_instance_of\AttributeEntityMappingProvider_class\when_initializing.cs" />
+    <Compile Include="Given_instance_of\AttributePropertyMappingProvider_class\AttributePropertyMappingProviderTest.cs" />
+    <Compile Include="Given_instance_of\AttributePropertyMappingProvider_class\when_accepting_a_visitor.cs" />
+    <Compile Include="Given_instance_of\AttributePropertyMappingProvider_class\when_initializing.cs" />
+    <Compile Include="Given_instance_of\AttributesMappingSourceProvider_class\when_getting_mapping_sources_for_assembly.cs" />
     <Compile Include="Given_instance_of\CollectionAttribute_class\CollectionAttributeTest.cs" />
     <Compile Include="Given_instance_of\CollectionAttribute_class\when_initializing.cs" />
-    <Compile Include="Given_instance_of\CollectionAttribute_class\when_resolving.cs" />
     <Compile Include="Given_instance_of\ClassAttribute_class\when_initializing.cs" />
     <Compile Include="Given_instance_of\PropertyAttribute_class\PropertyAttributeTest.cs" />
-    <Compile Include="Given_instance_of\PropertyAttribute_class\when_resolving.cs" />
     <Compile Include="Given_instance_of\PropertyAttribute_class\when_initializing.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

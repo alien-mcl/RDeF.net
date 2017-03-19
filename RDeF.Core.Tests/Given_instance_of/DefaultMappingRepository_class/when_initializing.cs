@@ -1,21 +1,25 @@
-﻿using FluentAssertions;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using RDeF.Data;
 using RDeF.Mapping;
+using RDeF.Mapping.Providers;
 
 namespace Given_instance_of.DefaultMappingRepository_class
 {
     [TestFixture]
     public class when_initializing : DefaultMappingRepositoryTest
     {
-        private Mock<IEntityMapping> PrimaryEntityMapping { get; set; }
+        private IEnumerable<Mock<ITermMappingProvider>> PrimaryEntityMappingProvider { get; set; }
 
-        private Mock<IEntityMapping> SecondaryEntityMapping { get; set; }
+        private IEnumerable<Mock<ITermMappingProvider>> SecondaryEntityMappingProvider { get; set; }
 
         public override void TheTest()
         {
-            MappingRepository = new DefaultMappingRepository(new[] { MappingSource.Object });
+            MappingRepository = new DefaultMappingRepository(new[] { MappingSource.Object }, new[] { new TestConverter() }, Array.Empty<QIriMapping>());
         }
 
         [Test]
@@ -39,10 +43,10 @@ namespace Given_instance_of.DefaultMappingRepository_class
         protected override void ScenarioSetup()
         {
             var converter = new Mock<IConverter>(MockBehavior.Strict);
-            PrimaryEntityMapping = SetupEntityMapping(converter.Object, "Product", "Name", "Price");
-            SecondaryEntityMapping = SetupEntityMapping(converter.Object, "Service", "Name", "Description");
-            MappingSource.Setup(instance => instance.GatherEntityMappings())
-                .Returns(new[] { PrimaryEntityMapping.Object, SecondaryEntityMapping.Object });
+            PrimaryEntityMappingProvider = SetupMappingProviders("Product", "Name", "Price");
+            SecondaryEntityMappingProvider = SetupMappingProviders("Service", "Name", "Description");
+            MappingSource.Setup(instance => instance.GatherEntityMappingProviders())
+                .Returns(PrimaryEntityMappingProvider.Concat(SecondaryEntityMappingProvider).Select(provider => provider.Object));
         }
     }
 }

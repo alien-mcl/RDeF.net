@@ -98,7 +98,10 @@ namespace Given_instance_of.DefaultChangeDetector_class
                 .Returns<Type>(type =>
                 {
                     var entityMapping = new Mock<IEntityMapping>(MockBehavior.Strict);
-                    entityMapping.SetupGet(instance => instance.Classes).Returns(new[] { new Iri(type.Name.Substring(1)) });
+                    var classMapping = new Mock<IStatementMapping>(MockBehavior.Strict);
+                    classMapping.SetupGet(instance => instance.Graph).Returns((Iri)null);
+                    classMapping.SetupGet(instance => instance.Term).Returns(new Iri(type.Name.Substring(1)));
+                    entityMapping.SetupGet(instance => instance.Classes).Returns(new[] { classMapping.Object });
                     return entityMapping.Object;
                 });
             MappingsRepository.Setup(instance => instance.FindPropertyMappingFor(It.IsAny<PropertyInfo>()))
@@ -106,7 +109,7 @@ namespace Given_instance_of.DefaultChangeDetector_class
                 {
                     var propertyMapping = new Mock<IPropertyMapping>(MockBehavior.Strict);
                     propertyMapping.SetupGet(instance => instance.ValueConverter).Returns(Converter.Object);
-                    propertyMapping.SetupGet(instance => instance.Predicate).Returns(new Iri(property.Name));
+                    propertyMapping.SetupGet(instance => instance.Term).Returns(new Iri(property.Name));
                     return propertyMapping.Object;
                 });
             _retractedStatements = new Dictionary<IEntity, ISet<Statement>>();

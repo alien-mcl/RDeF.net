@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 using FluentAssertions;
-using Moq;
 using NUnit.Framework;
 using RDeF.Data;
 using RDeF.Mapping;
@@ -34,8 +34,8 @@ namespace Given_instance_of.DefaultMappingRepository_class.which_is_already_init
 
         protected override void ScenarioSetup()
         {
-            MappingSource.Setup(instance => instance.GatherEntityMappings())
-                .Returns(new[] { SetupEntityMapping(new Mock<IConverter>(MockBehavior.Strict).Object, "Product", ExpectedProperty.Name, "Price").Object });
+            MappingSource.Setup(instance => instance.GatherEntityMappingProviders())
+                .Returns(SetupMappingProviders("Product", ExpectedProperty.Name, "Price").Select(provider => provider.Object));
             base.ScenarioSetup();
         }
     }

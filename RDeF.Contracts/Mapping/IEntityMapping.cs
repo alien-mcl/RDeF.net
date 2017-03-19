@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using RDeF.Entities;
 
 namespace RDeF.Mapping
 {
@@ -11,7 +10,7 @@ namespace RDeF.Mapping
         Type Type { get; }
 
         /// <summary>Gets the classes this entity is marked with.</summary>
-        IEnumerable<Iri> Classes { get; }
+        IEnumerable<IStatementMapping> Classes { get; }
 
         /// <summary>Gets the property mappings.</summary>
         IEnumerable<IPropertyMapping> Properties { get; }

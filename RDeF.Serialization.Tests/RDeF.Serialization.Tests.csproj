@@ -49,6 +49,7 @@
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Given_instance_of\JsonLdWriter_class\JsonLdWriterTest.cs" />
+    <Compile Include="Given_instance_of\JsonLdWriter_class\when_initializing.cs" />
     <Compile Include="Given_instance_of\JsonLdWriter_class\when_serializing_named_graphs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

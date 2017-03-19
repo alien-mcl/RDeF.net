@@ -44,10 +44,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ComponentModel\IActivator.cs" />
+    <Compile Include="ComponentModel\IComponentConfigurator.cs" />
+    <Compile Include="ComponentModel\IModule.cs" />
     <Compile Include="ComponentModel\IriTypeConverter.cs" />
     <Compile Include="Entities\IEntity.cs" />
+    <Compile Include="Mapping\AmbiguousMappingException.cs" />
     <Compile Include="Mapping\ILiteralConverter.cs" />
+    <Compile Include="Mapping\IMappingSourceProvider.cs" />
+    <Compile Include="Mapping\IStatementMapping.cs" />
+    <Compile Include="Mapping\Providers\ICollectionMappingProvider.cs" />
+    <Compile Include="Mapping\Providers\IDictionaryMappingProvider.cs" />
+    <Compile Include="Mapping\Providers\IEntityMappingProvider.cs" />
+    <Compile Include="Mapping\Visitors\IMappingProviderVisitor.cs" />
+    <Compile Include="Mapping\Providers\ITermMappingProvider.cs" />
+    <Compile Include="Mapping\Providers\IPropertyMappingProvider.cs" />
     <Compile Include="Serialization\IRdfWriter.cs" />
     <Compile Include="Vocabularies\OGuid.cs" />
     <Compile Include="Vocabularies\Rdf.cs" />
@@ -86,6 +96,7 @@
       <Link>CustomDictionary.xml</Link>
     </CodeAnalysisDictionary>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

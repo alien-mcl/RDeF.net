@@ -37,7 +37,7 @@ namespace Given_instance_of.DefaultEntityContext_class
         [Test]
         public void Should_search_for_mappings_for_a_statement()
         {
-            MappingsRepository.Verify(instance => instance.FindPropertyMappingFor(PredicateIri), Times.Once);
+            MappingsRepository.Verify(instance => instance.FindPropertyMappingFor(PredicateIri, null), Times.Once);
         }
 
         [Test]
@@ -79,8 +79,8 @@ namespace Given_instance_of.DefaultEntityContext_class
             PropertyMapping.SetupGet(instance => instance.Name).Returns("Name");
             PropertyMapping.SetupGet(instance => instance.Graph).Returns((Iri)null);
             PropertyMapping.SetupGet(instance => instance.ValueConverter).Returns(Converter.Object);
-            MappingsRepository.Setup(instance => instance.FindPropertyMappingFor(It.IsAny<Iri>()))
-                .Returns<Iri>(iri => PropertyMapping.Object);
+            MappingsRepository.Setup(instance => instance.FindPropertyMappingFor(It.IsAny<Iri>(), It.IsAny<Iri>()))
+                .Returns<Iri, Iri>((iri, graph) => PropertyMapping.Object);
         }
     }
 }

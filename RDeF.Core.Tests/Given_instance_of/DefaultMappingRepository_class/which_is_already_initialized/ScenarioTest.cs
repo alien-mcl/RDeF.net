@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+﻿using System;
 using RDeF.Mapping;
 
 namespace Given_instance_of.DefaultMappingRepository_class.which_is_already_initialized
@@ -7,7 +7,7 @@ namespace Given_instance_of.DefaultMappingRepository_class.which_is_already_init
     {
         protected override void ScenarioSetup()
         {
-            MappingRepository = new DefaultMappingRepository(new[] { MappingSource.Object });
+            MappingRepository = new DefaultMappingRepository(new[] { MappingSource.Object }, new[] { new TestConverter() }, Array.Empty<QIriMapping>());
         }
     }
 }

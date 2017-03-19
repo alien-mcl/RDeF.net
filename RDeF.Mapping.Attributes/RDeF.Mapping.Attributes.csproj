@@ -49,13 +49,16 @@
     <Compile Include="..\.build\VersionAssemblyInfo.cs">
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Mapping\Attributes\AttributeEntityMapping.cs" />
-    <Compile Include="Mapping\Attributes\AttributePropertyMapping.cs" />
-    <Compile Include="Mapping\Attributes\AttributesMappingSource.cs" />
+    <Compile Include="Mapping\AttributesMappingSource.cs" />
     <Compile Include="Mapping\Attributes\CollectionAttribute.cs" />
     <Compile Include="Mapping\Attributes\PropertyAttribute.cs" />
     <Compile Include="Mapping\Attributes\TermAttribute.cs" />
     <Compile Include="Mapping\Attributes\ClassAttribute.cs" />
+    <Compile Include="Mapping\AttributesMappingSourceProvider.cs" />
+    <Compile Include="Mapping\Providers\AttributeCollectionMappingProvider.cs" />
+    <Compile Include="Mapping\Providers\AttributeEntityMappingProvider.cs" />
+    <Compile Include="Mapping\Providers\AttributeTermMappingProvider.cs" />
+    <Compile Include="Mapping\Providers\AttributePropertyMappingProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

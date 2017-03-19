@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using RDeF.Entities;
 
 namespace RDeF.Mapping
 {
@@ -9,7 +8,7 @@ namespace RDeF.Mapping
         internal MergingEntityMapping(Type type)
         {
             Type = type;
-            Classes = new HashSet<Iri>();
+            Classes = new HashSet<IStatementMapping>(StatementMappingEqualityComparer.Default);
             Properties = new HashSet<IPropertyMapping>(PropertyMappingEqualityComparer.Default);
         }
 
@@ -17,13 +16,13 @@ namespace RDeF.Mapping
         public Type Type { get; }
 
         /// <summary>Gets the list of classes this entity mapping maps.</summary>
-        public ISet<Iri> Classes { get; }
+        public ISet<IStatementMapping> Classes { get; }
 
         /// <summary>Gets the property mappings.</summary>
         public ISet<IPropertyMapping> Properties { get; }
 
         /// <inheritdoc />
-        IEnumerable<Iri> IEntityMapping.Classes { get { return Classes; } }
+        IEnumerable<IStatementMapping> IEntityMapping.Classes { get { return Classes; } }
 
         /// <inheritdoc />
         IEnumerable<IPropertyMapping> IEntityMapping.Properties { get { return Properties; } }

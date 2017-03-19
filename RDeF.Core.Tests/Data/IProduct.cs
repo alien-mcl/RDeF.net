@@ -5,25 +5,25 @@ using RDeF.Mapping.Attributes;
 
 namespace RDeF.Data
 {
-    [Class("Product")]
+    [Class(Iri = "Product")]
     public interface IProduct : IEntity
     {
-        [Property("name", typeof(TestConverter))]
+        [Property(Iri = "name", ValueConverterType = typeof(TestConverter))]
         string Name { get; set; }
 
-        [Property("description")]
+        [Property(Iri = "description")]
         string Description { get; set; }
 
-        [Property("price")]
+        [Property(Iri = "price")]
         double Price { get; set; }
 
-        [Property("ordinal")]
+        [Property(Iri = "ordinal")]
         int Ordinal { get; set; }
 
-        [Collection("categories")]
+        [Collection(Iri = "categories")]
         ICollection<string> Categories { get; }
 
-        [Collection("comments")]
+        [Collection(Iri = "comments")]
         IList<string> Comments { get; }
     }
 }

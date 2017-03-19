@@ -18,6 +18,7 @@ namespace System
 {
     /// <summary>This structure holds components of an Xsd Duration. It is used internally to support Xsd durations without loss of fidelity. Duration structures are immutable once they've been created.</summary> 
     [ExcludeFromCodeCoverage]
+    [SuppressMessage("TS0000", "NoUnitTests", Justification = "Code is taken from the .net Framework source. Assumption is that the code is tested.")]
     public struct Duration
     {
         private const uint NegativeBit = 0x80000000;

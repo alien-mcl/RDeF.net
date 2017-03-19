@@ -4,23 +4,23 @@ using RDeF.Mapping.Attributes;
 
 namespace RDeF.Data
 {
-    [Class("class1")]
-    [Class("class2")]
+    [Class(Iri = "class1")]
+    [Class(Iri = "class2")]
     public interface IComplexEntity : IEntity
     {
-        [Collection("ordinals")]
+        [Collection(Iri = "ordinals")]
         ICollection<int> Ordinals { get; }
 
-        [Collection("related")]
+        [Collection(Iri = "related")]
         ICollection<IComplexEntity> Related { get; }
 
-        [Collection("floats")]
+        [Collection(Iri = "floats")]
         IList<float> Floats { get; }
 
-        [Collection("doubles")]
+        [Collection(Iri = "doubles")]
         IList<double> Doubles { get; }
 
-        [Collection("other")]
+        [Collection(Iri = "other")]
         IList<IComplexEntity> Other { get; }
     }
 }

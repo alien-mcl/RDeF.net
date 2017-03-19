@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using RDeF.Entities;
+using RDeF.Mapping.Providers;
 
 namespace RDeF.Mapping
 {
@@ -15,16 +16,24 @@ namespace RDeF.Mapping
     {
         /// <summary>Initializes a new instance of the <see cref="DefaultMappingRepository"/> class.</summary>
         /// <param name="mappingSources">Collection of mapping sources.</param>
-        public DefaultMappingRepository(IEnumerable<IMappingSource> mappingSources)
+        /// <param name="converters">Possible converters.</param>
+        /// <param name="qiriMappings">QIri mappings.</param>
+        public DefaultMappingRepository(IEnumerable<IMappingSource> mappingSources, IEnumerable<IConverter> converters, IEnumerable<QIriMapping> qiriMappings)
         {
             Mappings = new ConcurrentDictionary<Type, MergingEntityMapping>();
+            Converters = converters;
+            QIriMappings = qiriMappings;
             BuildMappings(mappingSources);
         }
 
         internal ConcurrentDictionary<Type, MergingEntityMapping> Mappings { get; }
 
+        internal IEnumerable<IConverter> Converters { get; }
+
+        internal IEnumerable<QIriMapping> QIriMappings { get; }
+
         /// <inheritdoc />
-        public IEntityMapping FindEntityMappingFor(Iri @class)
+        public IEntityMapping FindEntityMappingFor(Iri @class, Iri graph = null)
         {
             if (@class == null)
             {
@@ -33,7 +42,7 @@ namespace RDeF.Mapping
 
             return (from entityMapping in Mappings.Values
                     from mappedClass in entityMapping.Classes
-                    where mappedClass == @class
+                    where mappedClass.Term == @class && (graph == null || mappedClass.Graph == graph)
                     select entityMapping).FirstOrDefault();
         }
 
@@ -51,7 +60,7 @@ namespace RDeF.Mapping
         }
 
         /// <inheritdoc />
-        public IPropertyMapping FindPropertyMappingFor(Iri predicate)
+        public IPropertyMapping FindPropertyMappingFor(Iri predicate, Iri graph = null)
         {
             if (predicate == null)
             {
@@ -60,7 +69,7 @@ namespace RDeF.Mapping
 
             return (from entityMapping in Mappings.Values
                     from propertyMapping in entityMapping.Properties
-                    where propertyMapping.Predicate == predicate
+                    where propertyMapping.Term == predicate && (graph == null || propertyMapping.Graph == graph)
                     select propertyMapping).FirstOrDefault();
         }
 
@@ -87,6 +96,7 @@ namespace RDeF.Mapping
 
         /// <inheritdoc />
         [ExcludeFromCodeCoverage]
+        [SuppressMessage("TS0000", "NoUnitTests", Justification = "Implemented only to match the requirements. No special logic to be tested here.")]
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
@@ -98,26 +108,75 @@ namespace RDeF.Mapping
             {
                 foreach (var mappingSource in mappingSources)
                 {
-                    foreach (var entityMapping in mappingSource.GatherEntityMappings())
+                    foreach (var mappingProvider in mappingSource.GatherEntityMappingProviders())
                     {
-                        MergingEntityMapping existingEntityMapping;
-                        if (!Mappings.TryGetValue(entityMapping.Type, out existingEntityMapping))
-                        {
-                            Mappings[entityMapping.Type] = existingEntityMapping = new MergingEntityMapping(entityMapping.Type);
-                        }
-
-                        foreach (var @class in entityMapping.Classes)
-                        {
-                            existingEntityMapping.Classes.Add(@class);
-                        }
-
-                        foreach (var propertyMapping in entityMapping.Properties)
-                        {
-                            existingEntityMapping.Properties.Add(propertyMapping);
-                        }
+                        MergingEntityMapping existingEntityMapping = BuildEntityMapping(mappingProvider);
+                        BuildPropertyMapping(existingEntityMapping, mappingProvider as IPropertyMappingProvider);
                     }
                 }
             }
+        }
+
+        private MergingEntityMapping BuildEntityMapping(ITermMappingProvider mappingProvider)
+        {
+            MergingEntityMapping existingEntityMapping;
+            if (!Mappings.TryGetValue(mappingProvider.EntityType, out existingEntityMapping))
+            {
+                Mappings[mappingProvider.EntityType] = existingEntityMapping = new MergingEntityMapping(mappingProvider.EntityType);
+            }
+
+            var entityMappingProvider = mappingProvider as IEntityMappingProvider;
+            if (entityMappingProvider == null)
+            {
+                return existingEntityMapping;
+            }
+
+            var term = entityMappingProvider.GetTerm(QIriMappings);
+            if (term != null)
+            {
+                existingEntityMapping.Classes.Add(new StatementMapping(entityMappingProvider.GetGraph(QIriMappings), term));
+            }
+
+            return existingEntityMapping;
+        }
+
+        private void BuildPropertyMapping(MergingEntityMapping existingEntityMapping, IPropertyMappingProvider propertyMappingProvider)
+        {
+            if (propertyMappingProvider == null)
+            {
+                return;
+            }
+
+            IConverter valueConverter = null;
+            if (propertyMappingProvider.ValueConverterType != null)
+            {
+                valueConverter = (from converter in Converters
+                                  let match = propertyMappingProvider.ValueConverterType == converter.GetType() ? 2 :
+                                      (propertyMappingProvider.ValueConverterType.IsInstanceOfType(converter) ? 1 : 0)
+                                  where match > 0
+                                  orderby match descending
+                                  select converter).First();
+            }
+
+            var propertyMapping = new PropertyMapping(
+                existingEntityMapping,
+                propertyMappingProvider.Property.Name,
+                propertyMappingProvider.GetGraph(QIriMappings),
+                propertyMappingProvider.GetTerm(QIriMappings),
+                valueConverter);
+            var existingPropertyMapping = existingEntityMapping.Properties.FirstOrDefault(mapping => mapping.Name == propertyMappingProvider.Property.Name);
+            if (existingPropertyMapping != null)
+            {
+                if (!PropertyMappingEqualityComparer.Default.Equals(propertyMapping, existingPropertyMapping))
+                {
+                    throw new AmbiguousMappingException(
+                        $"Mapping for ${propertyMappingProvider.Property.Name} for type ${existingEntityMapping.Type} is already defined.");
+                }
+
+                return;
+            }
+
+            existingEntityMapping.Properties.Add(propertyMapping);
         }
     }
 }

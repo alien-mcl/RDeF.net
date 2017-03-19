@@ -145,11 +145,10 @@ namespace RDeF.Entities
             var inMemoryEntitySource = _entitySource as IInMemoryEntitySource;
             if (inMemoryEntitySource != null)
             {
-                return inMemoryEntitySource.Create(id, this) as Entity;
+                return _entityCache[id] = inMemoryEntitySource.Create(id, this) as Entity;
             }
 
-            _entityCache[id] = result = new Entity(id, this) { IsInitialized = isInitialized };
-            return result;
+            return _entityCache[id] = new Entity(id, this) { IsInitialized = isInitialized };
         }
 
         private TEntity CreateInternal<TEntity>(Iri id, bool isInitialized = true) where TEntity : IEntity

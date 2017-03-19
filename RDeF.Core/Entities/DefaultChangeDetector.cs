@@ -19,24 +19,29 @@ namespace RDeF.Entities
 
         public void Process(Entity entity, IDictionary<IEntity, ISet<Statement>> retractedStatements, IDictionary<IEntity, ISet<Statement>> addedStatements)
         {
-            ProcessTypes(entity, retractedStatements, addedStatements);
-            ProcessProperties(entity, retractedStatements, addedStatements);
+            Process<Type>(entity, entity.OriginalTypes, entity.CastedTypes, retractedStatements, addedStatements);
+            Process<MulticastPropertyValue>(entity, entity.OriginalValues, entity.PropertyValues, retractedStatements, addedStatements);
         }
 
-        private void ProcessTypes(Entity entity, IDictionary<IEntity, ISet<Statement>> retractedStatements, IDictionary<IEntity, ISet<Statement>> addedStatements)
+        private void Process<T>(
+            Entity entity,
+            IEnumerable<T> originalValues,
+            IEnumerable<T> values,
+            IDictionary<IEntity, ISet<Statement>> retractedStatements,
+            IDictionary<IEntity, ISet<Statement>> addedStatements)
         {
-            var matchedTypes = new HashSet<Type>();
-            foreach (var originalType in entity.OriginalTypes)
+            var matched = new HashSet<T>();
+            foreach (var originalValue in originalValues)
             {
                 bool isMatch = false;
-                foreach (var propertyValue in entity.CastedTypes)
+                foreach (var value in values)
                 {
-                    if ((propertyValue.GetHashCode() != originalType.GetHashCode()) || (!propertyValue.Equals(originalType)))
+                    if ((value.GetHashCode() != originalValue.GetHashCode()) || (!value.Equals(originalValue)))
                     {
                         continue;
                     }
 
-                    matchedTypes.Add(propertyValue);
+                    matched.Add(value);
                     isMatch = true;
                     break;
                 }
@@ -46,63 +51,31 @@ namespace RDeF.Entities
                     continue;
                 }
 
-                AddStatements(ref retractedStatements, entity, originalType);
+                AddStatements(ref retractedStatements, entity, originalValue);
             }
 
-            foreach (var type in entity.CastedTypes.Except(matchedTypes))
+            foreach (var value in values.Except(matched))
             {
-                AddStatements(ref addedStatements, entity, type);
+                AddStatements(ref addedStatements, entity, value);
             }
         }
 
-        private void ProcessProperties(Entity entity, IDictionary<IEntity, ISet<Statement>> retractedStatements, IDictionary<IEntity, ISet<Statement>> addedStatements)
+        private void AddStatements<T>(ref IDictionary<IEntity, ISet<Statement>> statements, IEntity entity, T value)
         {
-            bool isFirstPass = true;
-            var currentProperties = new HashSet<MulticastPropertyValue>();
-            var matchedProperties = new HashSet<MulticastPropertyValue>();
-            foreach (var originalPropertyValue in entity.OriginalValues)
+            var type = value as Type;
+            if (type != null)
             {
-                bool isMatch = false;
-                foreach (var propertyValue in (isFirstPass ? (IEnumerable<MulticastPropertyValue>)entity.PropertyValues : currentProperties))
+                foreach (var @class in _mappingsRepository.FindEntityMappingFor(type).Classes)
                 {
-                    currentProperties.AddIf(propertyValue, isFirstPass);
-                    if ((propertyValue.GetHashCode() != originalPropertyValue.GetHashCode()) || (!propertyValue.Equals(originalPropertyValue)))
-                    {
-                        continue;
-                    }
-
-                    matchedProperties.Add(propertyValue);
-                    isMatch = true;
-                    break;
+                    statements.EnsureKey(entity).Add(new Statement(entity.Iri, rdfs.type, @class.Term, @class.Graph));
                 }
 
-                isFirstPass = false;
-                if (isMatch)
-                {
-                    continue;
-                }
-
-                AddStatements(ref retractedStatements, entity, originalPropertyValue);
+                return;
             }
 
-            foreach (var propertyValue in currentProperties.Except(matchedProperties))
-            {
-                AddStatements(ref addedStatements, entity, propertyValue);
-            }
-        }
-
-        private void AddStatements(ref IDictionary<IEntity, ISet<Statement>> statements, IEntity entity, MulticastPropertyValue propertyValue)
-        {
+            var propertyValue = value as MulticastPropertyValue;
             var propertyMapping = _mappingsRepository.FindPropertyMappingFor(propertyValue.Property);
-            statements.EnsureKey(entity).Add(propertyMapping.ValueConverter.ConvertTo(entity.Iri, propertyMapping.Predicate, propertyValue.Value));
-        }
-
-        private void AddStatements(ref IDictionary<IEntity, ISet<Statement>> statements, IEntity entity, Type castedType)
-        {
-            foreach (var @class in _mappingsRepository.FindEntityMappingFor(castedType).Classes)
-            {
-                statements.EnsureKey(entity).Add(new Statement(entity.Iri, rdfs.type, @class));
-            }
+            statements.EnsureKey(entity).Add(propertyMapping.ValueConverter.ConvertTo(entity.Iri, propertyMapping.Term, propertyValue.Value));
         }
     }
 }
