@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace RDeF.Reflection
 {
@@ -29,7 +30,7 @@ namespace RDeF.Reflection
         }
 
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Assemblies with incomplete dependencies would throw, which is not the expected behavior at that stage.")]
-        internal static IEnumerable<Type> FindAllTypesImplementing<T>()
+        internal static IEnumerable<Type> FindAllTypesImplementing<T>(Regex assemblyNamePattern = null)
         {
             ISet<Type> result;
             if (TypeImplementations.TryGetValue(typeof(T), out result))
@@ -38,7 +39,8 @@ namespace RDeF.Reflection
             }
 
             TypeImplementations[typeof(T)] = result = new HashSet<Type>();
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies().Where(assembly => !assembly.IsDynamic))
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies()
+                .Where(assembly => (!assembly.IsDynamic) && ((assemblyNamePattern == null) || (assemblyNamePattern.IsMatch(assembly.FullName)))))
             {
                 try
                 {

@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using RDeF.Collections;
 using RDeF.Reflection;
 using RollerCaster.Reflection;
@@ -18,10 +19,10 @@ namespace RDeF.ComponentModel
         private bool _areStandardLibrariesLoaded;
 
         /// <inheritdoc />
-        public void Register<TService>()
+        public void Register<TService>(Regex assemblyNamePattern = null)
         {
             EnsureStandardLibraries();
-            foreach (var implementingType in CustomAttributeProviderExtensions.FindAllTypesImplementing<TService>())
+            foreach (var implementingType in CustomAttributeProviderExtensions.FindAllTypesImplementing<TService>(assemblyNamePattern))
             {
                 Register<TService>(implementingType);
             }
@@ -139,7 +140,7 @@ namespace RDeF.ComponentModel
 
             foreach (var implementationRegistered in serviceRegistration.Keys.ToArray())
             {
-                var instance = BuildInstance(serviceRegistration, serviceType, implementationRegistered, visitedDependencies);
+                var instance = BuildInstance(serviceRegistration, itemType, implementationRegistered, visitedDependencies);
                 if (instance != null)
                 {
                     result.Add(instance);

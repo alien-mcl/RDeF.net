@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 namespace RDeF.ComponentModel
 {
     internal interface IContainer
     {
-        void Register<TService>();
+        void Register<TService>(Regex assemblyNamePattern = null);
 
         void Register<TService, TImplementation>() where TImplementation : TService;
 

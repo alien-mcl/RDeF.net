@@ -37,7 +37,7 @@ namespace RDeF.Mapping.Providers
         public PropertyInfo Property { get; }
 
         /// <inheritdoc />
-        public Type ValueConverterType { get; }
+        public Type ValueConverterType { get; set; }
 
         /// <inheritdoc />
         public override void Accept(IMappingProviderVisitor visitor)

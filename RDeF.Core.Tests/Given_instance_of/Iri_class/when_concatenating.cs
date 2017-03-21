@@ -14,6 +14,18 @@ namespace Given_instance_of.Iri_class
         private static readonly Iri UriB = new Iri(new Uri("test", UriKind.Relative));
 
         [Test]
+        public void Should_throw_when_right_operand_is_a_blank_id()
+        {
+            OperandA.Invoking(left => { var result = left + new Iri(); }).ShouldThrow<InvalidOperationException>();
+        }
+
+        [Test]
+        public void Should_throw_when_left_operand_is_a_blank_id()
+        {
+            OperandB.Invoking(right => { var result = new Iri() + right; }).ShouldThrow<InvalidOperationException>();
+        }
+
+        [Test]
         public void Should_return_null_for_both_null_operands()
         {
             ((Iri)null + (Iri)null).Should().BeNull();

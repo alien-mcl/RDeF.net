@@ -10,7 +10,8 @@ namespace RDeF.Collections
             TValue result = default(TValue);
             if (!dictionary.TryGetValue(key, out result))
             {
-                dictionary[key] = result = (TValue)typeof(TValue).GetDefaultValue(concurrent);
+                dictionary[key] = result = (TValue)typeof(TValue)
+                    .GetDefaultValue(concurrent ? CollectionOptions.Concurrent : CollectionOptions.None);
             }
 
             return result;

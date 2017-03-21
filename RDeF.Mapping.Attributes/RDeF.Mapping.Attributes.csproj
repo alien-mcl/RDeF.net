@@ -49,6 +49,7 @@
     <Compile Include="..\.build\VersionAssemblyInfo.cs">
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Mapping\AttributesMappingModule.cs" />
     <Compile Include="Mapping\AttributesMappingSource.cs" />
     <Compile Include="Mapping\Attributes\CollectionAttribute.cs" />
     <Compile Include="Mapping\Attributes\PropertyAttribute.cs" />

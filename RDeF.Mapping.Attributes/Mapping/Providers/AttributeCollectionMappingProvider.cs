@@ -52,7 +52,7 @@ namespace RDeF.Mapping.Providers
         }
 
         /// <inheritdoc />
-        public CollectionStorageModel StoreAs { get; }
+        public CollectionStorageModel StoreAs { get; set; }
 
         /// <inheritdoc />
         public override void Accept(IMappingProviderVisitor visitor)

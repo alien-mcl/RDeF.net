@@ -50,8 +50,10 @@
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Collections\DictionaryExtensions.cs" />
+    <Compile Include="ComponentModel\VisitorsModule.cs" />
     <Compile Include="ComponentModel\IContainer.cs" />
     <Compile Include="ComponentModel\SimpleContainer.cs" />
+    <Compile Include="ComponentModel\ConvertersModule.cs" />
     <Compile Include="Duration.cs" />
     <Compile Include="Entities\EntityExtensions.cs" />
     <Compile Include="Entities\EntityInitializationContext.cs" />
@@ -80,10 +82,14 @@
     <Compile Include="Mapping\DefaultMappingRepository.cs" />
     <Compile Include="Mapping\DefaultMappingsBuilder.cs" />
     <Compile Include="Mapping\MergingEntityMapping.cs" />
+    <Compile Include="Mapping\CollectionMapping.cs" />
     <Compile Include="Mapping\StatementMapping.cs" />
     <Compile Include="Mapping\PropertyMapping.cs" />
     <Compile Include="Mapping\StatementMappingEqualityComparer.cs" />
     <Compile Include="Mapping\PropertyMappingEqualityComparer.cs" />
+    <Compile Include="Mapping\Visitors\ConverterConventionVisitor.cs" />
+    <Compile Include="Mapping\Visitors\CollectionStorageModelConventionVisitor.cs" />
+    <Compile Include="Mapping\Visitors\TermMappingProviderExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reflection\CustomAttributeProviderExtensions.cs" />
   </ItemGroup>

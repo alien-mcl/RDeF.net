@@ -78,7 +78,6 @@
     <Compile Include="Entities\Statement.cs" />
     <Compile Include="Mapping\ICollectionMapping.cs" />
     <Compile Include="Mapping\IConverter.cs" />
-    <Compile Include="Mapping\IDictionaryMapping.cs" />
     <Compile Include="Mapping\IEntityMapping.cs" />
     <Compile Include="Mapping\IMappingsBuilder.cs" />
     <Compile Include="Mapping\IMappingSource.cs" />

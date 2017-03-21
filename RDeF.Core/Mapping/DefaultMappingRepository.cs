@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using RDeF.Entities;
 using RDeF.Mapping.Providers;
+using RDeF.Mapping.Visitors;
 
 namespace RDeF.Mapping
 {
@@ -16,17 +17,40 @@ namespace RDeF.Mapping
     {
         /// <summary>Initializes a new instance of the <see cref="DefaultMappingRepository"/> class.</summary>
         /// <param name="mappingSources">Collection of mapping sources.</param>
+        /// <param name="mappingProviderVisitors">Mapping provider visitors.</param>
         /// <param name="converters">Possible converters.</param>
         /// <param name="qiriMappings">QIri mappings.</param>
-        public DefaultMappingRepository(IEnumerable<IMappingSource> mappingSources, IEnumerable<IConverter> converters, IEnumerable<QIriMapping> qiriMappings)
+        public DefaultMappingRepository(
+            IEnumerable<IMappingSource> mappingSources,
+            IEnumerable<IMappingProviderVisitor> mappingProviderVisitors,
+            IEnumerable<ILiteralConverter> converters,
+            IEnumerable<QIriMapping> qiriMappings)
         {
-            Mappings = new ConcurrentDictionary<Type, MergingEntityMapping>();
+            if (mappingProviderVisitors == null)
+            {
+                throw new ArgumentNullException(nameof(mappingProviderVisitors));
+            }
+
+            if (converters == null)
+            {
+                throw new ArgumentNullException(nameof(converters));
+            }
+
+            if (qiriMappings == null)
+            {
+                throw new ArgumentNullException(nameof(qiriMappings));
+            }
+
+            MappingProviderVisitors = mappingProviderVisitors;
             Converters = converters;
             QIriMappings = qiriMappings;
+            Mappings = new ConcurrentDictionary<Type, MergingEntityMapping>();
             BuildMappings(mappingSources);
         }
 
         internal ConcurrentDictionary<Type, MergingEntityMapping> Mappings { get; }
+
+        internal IEnumerable<IMappingProviderVisitor> MappingProviderVisitors { get; }
 
         internal IEnumerable<IConverter> Converters { get; }
 
@@ -106,13 +130,11 @@ namespace RDeF.Mapping
         {
             lock (Mappings)
             {
-                foreach (var mappingSource in mappingSources)
+                foreach (var mappingProvider in mappingSources.SelectMany(mappingSource => mappingSource.GatherEntityMappingProviders()))
                 {
-                    foreach (var mappingProvider in mappingSource.GatherEntityMappingProviders())
-                    {
-                        MergingEntityMapping existingEntityMapping = BuildEntityMapping(mappingProvider);
-                        BuildPropertyMapping(existingEntityMapping, mappingProvider as IPropertyMappingProvider);
-                    }
+                    mappingProvider.Visit(MappingProviderVisitors);
+                    MergingEntityMapping existingEntityMapping = BuildEntityMapping(mappingProvider);
+                    BuildPropertyMapping(existingEntityMapping, mappingProvider as IPropertyMappingProvider);
                 }
             }
         }
@@ -158,12 +180,28 @@ namespace RDeF.Mapping
                                   select converter).First();
             }
 
-            var propertyMapping = new PropertyMapping(
-                existingEntityMapping,
-                propertyMappingProvider.Property.Name,
-                propertyMappingProvider.GetGraph(QIriMappings),
-                propertyMappingProvider.GetTerm(QIriMappings),
-                valueConverter);
+            IPropertyMapping propertyMapping;
+            var collectionMapping = propertyMappingProvider as ICollectionMappingProvider;
+            if (collectionMapping != null)
+            {
+                propertyMapping = new CollectionMapping(
+                    existingEntityMapping,
+                    collectionMapping.Property.Name,
+                    collectionMapping.GetGraph(QIriMappings),
+                    collectionMapping.GetTerm(QIriMappings),
+                    valueConverter,
+                    collectionMapping.StoreAs);
+            }
+            else
+            {
+                propertyMapping = new PropertyMapping(
+                    existingEntityMapping,
+                    propertyMappingProvider.Property.Name,
+                    propertyMappingProvider.GetGraph(QIriMappings),
+                    propertyMappingProvider.GetTerm(QIriMappings),
+                    valueConverter);
+            }
+
             var existingPropertyMapping = existingEntityMapping.Properties.FirstOrDefault(mapping => mapping.Name == propertyMappingProvider.Property.Name);
             if (existingPropertyMapping != null)
             {

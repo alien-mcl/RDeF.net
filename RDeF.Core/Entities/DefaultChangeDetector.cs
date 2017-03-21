@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using RDeF.Collections;
@@ -21,6 +22,49 @@ namespace RDeF.Entities
         {
             Process<Type>(entity, entity.OriginalTypes, entity.CastedTypes, retractedStatements, addedStatements);
             Process<MulticastPropertyValue>(entity, entity.OriginalValues, entity.PropertyValues, retractedStatements, addedStatements);
+        }
+
+        private static void AddStatements(ISet<Statement> entityStatements, ICollectionMapping collectionMapping, IEntity entity, IEnumerable values)
+        {
+            if (collectionMapping.StoreAs == CollectionStorageModel.Simple)
+            {
+                AddStatements(entityStatements, collectionMapping, entity.Iri, values);
+                return;
+            }
+
+            var iri = entity.Iri;
+            var term = collectionMapping.Term;
+            foreach (var value in values)
+            {
+                var auxIri = new Iri();
+                if (iri != entity.Iri)
+                {
+                    entityStatements.Add(new Statement(iri, rdf.last, auxIri));
+                }
+                else
+                {
+                    entityStatements.Add(new Statement(iri, term, auxIri));
+                }
+
+                var entityValue = value as IEntity;
+                entityStatements.Add(entityValue != null
+                    ? new Statement(auxIri, rdf.first, entityValue.Iri)
+                    : collectionMapping.ValueConverter.ConvertTo(auxIri, rdf.first, value, collectionMapping.Graph));
+                iri = auxIri;
+            }
+
+            entityStatements.Add(new Statement(iri, rdf.last, rdf.nil));
+        }
+
+        private static void AddStatements(ISet<Statement> entityStatements, ICollectionMapping collectionMapping, Iri iri, IEnumerable values)
+        {
+            foreach (var value in values)
+            {
+                var entityValue = value as IEntity;
+                entityStatements.Add(entityValue != null
+                    ? new Statement(iri, collectionMapping.Term, entityValue.Iri)
+                    : collectionMapping.ValueConverter.ConvertTo(iri, collectionMapping.Term, value, collectionMapping.Graph));
+            }
         }
 
         private void Process<T>(
@@ -51,16 +95,16 @@ namespace RDeF.Entities
                     continue;
                 }
 
-                AddStatements(ref retractedStatements, entity, originalValue);
+                AddStatements(retractedStatements, entity, originalValue);
             }
 
             foreach (var value in values.Except(matched))
             {
-                AddStatements(ref addedStatements, entity, value);
+                AddStatements(addedStatements, entity, value);
             }
         }
 
-        private void AddStatements<T>(ref IDictionary<IEntity, ISet<Statement>> statements, IEntity entity, T value)
+        private void AddStatements<T>(IDictionary<IEntity, ISet<Statement>> statements, IEntity entity, T value)
         {
             var type = value as Type;
             if (type != null)
@@ -75,7 +119,15 @@ namespace RDeF.Entities
 
             var propertyValue = value as MulticastPropertyValue;
             var propertyMapping = _mappingsRepository.FindPropertyMappingFor(propertyValue.Property);
-            statements.EnsureKey(entity).Add(propertyMapping.ValueConverter.ConvertTo(entity.Iri, propertyMapping.Term, propertyValue.Value));
+            var collectionMapping = propertyMapping as ICollectionMapping;
+            if (collectionMapping != null)
+            {
+                AddStatements(statements.EnsureKey(entity), collectionMapping, entity, (IEnumerable)propertyValue.Value);
+                return;
+            }
+
+            statements.EnsureKey(entity).Add(propertyMapping.ValueConverter
+                .ConvertTo(entity.Iri, propertyMapping.Term, propertyValue.Value, propertyMapping.Graph));
         }
     }
 }

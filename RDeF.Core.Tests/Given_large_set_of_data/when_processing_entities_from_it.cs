@@ -29,11 +29,11 @@ namespace Given_large_set_of_data
             FinishedAt = DateTime.Now;
         }
 
-        ////[TestCase(100)]
+        [TestCase(100)]
         public void Should_process_those_entities_in_timely_fashion(int expectedMilliseconds)
         {
             (FinishedAt - StartedAt).TotalMilliseconds.Should().BeLessThan(expectedMilliseconds);
-            Console.Write((FinishedAt - StartedAt).TotalMilliseconds);
+            Console.Write($"Completed in {FinishedAt - StartedAt}");
         }
     }
 }

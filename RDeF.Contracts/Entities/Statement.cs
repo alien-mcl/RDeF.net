@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 
 namespace RDeF.Entities
 {
     /// <summary>Represents an RDF statement.</summary>
+    [DebuggerDisplay("<{Subject,nq}> <{Predicate,nq}> {Object!=null?\"<\"+Object.ToString()+\">\":\"\\\"\"+Value+\"\\\"\",nq}")]
     public class Statement
     {
         /// <summary>Initializes a new instance of the <see cref="Statement"/> class.</summary>

@@ -54,6 +54,15 @@
     <Compile Include="Data\IProduct.cs" />
     <Compile Include="Data\IService.cs" />
     <Compile Include="Data\IThing.cs" />
+    <Compile Include="Given_instance_of\CollectionStorageModelConventionVisitor_class\CollectionStorageModelConventionVisitorTest.cs" />
+    <Compile Include="Given_instance_of\CollectionStorageModelConventionVisitor_class\when_visiting_a_property_mapping.cs" />
+    <Compile Include="Given_instance_of\CollectionStorageModelConventionVisitor_class\when_visiting_a_list_property_mapping.cs" />
+    <Compile Include="Given_instance_of\CollectionStorageModelConventionVisitor_class\when_visiting_a_collection_property_mapping.cs" />
+    <Compile Include="Given_instance_of\ConverterConventionVisitor_class\ConverterConventionVisitorTest.cs" />
+    <Compile Include="Given_instance_of\ConverterConventionVisitor_class\when_initializing.cs" />
+    <Compile Include="Given_instance_of\ConverterConventionVisitor_class\when_visiting_a_collection_property_mapping.cs" />
+    <Compile Include="Given_instance_of\ConverterConventionVisitor_class\when_visiting_a_property_mapping.cs" />
+    <Compile Include="Given_instance_of\ConverterConventionVisitor_class\when_visiting_a_simple_property_mapping.cs" />
     <Compile Include="Given_instance_of\converter_of_type\Base64BinaryConverter_class.cs" />
     <Compile Include="Given_instance_of\converter_of_type\UntypedConverter_class.cs" />
     <Compile Include="Given_instance_of\converter_of_type\UriConverter_class.cs" />
@@ -67,7 +76,9 @@
     <Compile Include="Given_instance_of\converter_of_type\StringConverter_class.cs" />
     <Compile Include="Given_instance_of\converter_of_type\LiteralConverterTest.cs" />
     <Compile Include="Given_instance_of\DefaultChangeDetector_class\DefaultChangeDetectorTest.cs" />
-    <Compile Include="Given_instance_of\DefaultChangeDetector_class\when_processing_an_entity.cs" />
+    <Compile Include="Given_instance_of\DefaultChangeDetector_class\when_processing\a_complex_entity.cs" />
+    <Compile Include="Given_instance_of\DefaultChangeDetector_class\when_processing\a_simple_entity.cs" />
+    <Compile Include="Given_instance_of\DefaultChangeDetector_class\when_processing\ScenarioTest.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContextFactory_class\DefaultEntityContextFactoryTest.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContextFactory_class\when_creating_an_entity_context.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContext_class\DefaultEntityContextTest.cs" />

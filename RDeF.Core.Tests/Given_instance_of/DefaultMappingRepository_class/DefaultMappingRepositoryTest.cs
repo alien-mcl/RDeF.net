@@ -5,12 +5,15 @@ using RDeF.Data;
 using RDeF.Entities;
 using RDeF.Mapping;
 using RDeF.Mapping.Providers;
+using RDeF.Mapping.Visitors;
 
 namespace Given_instance_of.DefaultMappingRepository_class
 {
     public abstract class DefaultMappingRepositoryTest
     {
         protected DefaultMappingRepository MappingRepository { get; set; }
+
+        protected Mock<IMappingProviderVisitor> MappingProviderVisitor { get; private set; }
 
         protected Mock<IMappingSource> MappingSource { get; private set; }
 
@@ -21,6 +24,7 @@ namespace Given_instance_of.DefaultMappingRepository_class
         [SetUp]
         public void Setup()
         {
+            MappingProviderVisitor = new Mock<IMappingProviderVisitor>(MockBehavior.Strict);
             MappingSource = new Mock<IMappingSource>(MockBehavior.Strict);
             ScenarioSetup();
             TheTest();
@@ -28,14 +32,14 @@ namespace Given_instance_of.DefaultMappingRepository_class
 
         protected static IEnumerable<Mock<ITermMappingProvider>> SetupMappingProviders(string @class, params string[] properties)
         {
-            yield return SetupEntityMappingProviders(@class);
+            yield return SetupEntityMappingProvider(@class);
             foreach (var property in properties)
             {
                 yield return SetupPropertyMapping(property);
             }
         }
 
-        protected static Mock<ITermMappingProvider> SetupEntityMappingProviders(string @class)
+        protected static Mock<ITermMappingProvider> SetupEntityMappingProvider(string @class)
         {
             var result = new Mock<IEntityMappingProvider>(MockBehavior.Strict);
             var termMappingProvider = result.As<ITermMappingProvider>();

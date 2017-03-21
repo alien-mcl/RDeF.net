@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using RollerCaster;
+using RollerCaster.Collections;
 
 namespace RDeF.Entities
 {
@@ -51,7 +54,21 @@ namespace RDeF.Entities
                     lock (Sync)
                     {
                         OriginalTypes = new HashSet<Type>(CastedTypes);
-                        OriginalValues = new HashSet<MulticastPropertyValue>(PropertyValues);
+                        OriginalValues = new HashSet<MulticastPropertyValue>();
+                        foreach (var propertyValue in PropertyValues)
+                        {
+                            OriginalValues.Add(propertyValue);
+                            var observableCollection = propertyValue.Value as INotifyCollectionChanged;
+                            if (observableCollection == null)
+                            {
+                                continue;
+                            }
+
+                            NotifyCollectionChangedEventHandler eventHandler = null;
+                            eventHandler = (sender, e) => OnCollectionChanged(sender, e, propertyValue);
+                            observableCollection.CollectionChanged += eventHandler;
+                        }
+
                         IsChanged = false;
                     }
                 }
@@ -109,6 +126,34 @@ namespace RDeF.Entities
                 IsInitialized = true;
                 _context.Initialize(this);
             }
+        }
+
+        private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e, MulticastPropertyValue propertyValue)
+        {
+            var originalValue = (IList)typeof(ObservableList<>).MakeGenericType(propertyValue.Value.GetType().GetGenericArguments()[0])
+                .GetConstructor(Type.EmptyTypes).Invoke(null);
+            if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                foreach (var removed in e.OldItems)
+                {
+                    originalValue.Add(removed);
+                }
+            }
+
+            foreach (var item in (IEnumerable)propertyValue.Value)
+            {
+                if (((e.Action == NotifyCollectionChangedAction.Remove) && (e.OldItems.Contains(item))) ||
+                    (e.Action == NotifyCollectionChangedAction.Add))
+                {
+                    continue;
+                }
+
+                originalValue.Add(item);
+            }
+
+            OriginalValues.Remove(propertyValue);
+            OriginalValues.Add(new MulticastPropertyValue(propertyValue.CastedType, propertyValue.Property, originalValue));
+            ((IObservableCollection)sender).ClearCollectionChanged();
         }
     }
 }

@@ -9,7 +9,15 @@ namespace RDeF.Entities
     [TypeConverter(typeof(IriTypeConverter))]
     public class Iri
     {
+        private const string BlankSuffix = "_:blank";
+        private static long _id = 0;
         private readonly string _iri;
+
+        /// <summary>Initializes a new instance of the <see cref="Iri" /> class.</summary>
+        public Iri()
+        {
+            _iri = BlankSuffix + (++_id);
+        }
 
         /// <summary>Initializes a new instance of the <see cref="Iri"/> class.</summary>
         /// <param name="uri">The URI.</param>
@@ -40,6 +48,10 @@ namespace RDeF.Entities
 
             _iri = iri;
         }
+
+        /// <summary>Gets a value indicating whether this <see cref="Iri" /> is a blank identifier.</summary>
+        [SuppressMessage("Microsoft.Globalization", "CA1307:SpecifyStringComparison", MessageId = "System.String.StartsWith(System.String)", Justification = "Text being compared is culture invariant.")]
+        public bool IsBlank { get { return _iri.StartsWith(BlankSuffix); } }
 
         internal Uri Uri { get; }
 
@@ -112,6 +124,11 @@ namespace RDeF.Entities
             if (ReferenceEquals(operandB, null))
             {
                 return operandA;
+            }
+
+            if ((operandA.IsBlank) || (operandB.IsBlank))
+            {
+                throw new InvalidOperationException($"Unable to concatenate blank identifier.");
             }
 
             var uriA = operandA.Uri;

@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using RDeF.ComponentModel;
 using RDeF.Mapping;
+using RDeF.Mapping.Visitors;
 
 namespace RDeF.Entities
 {
@@ -41,7 +43,11 @@ namespace RDeF.Entities
             _container.Register<IEntityContext, DefaultEntityContext>();
             _container.Register<IChangeDetector, DefaultChangeDetector>();
             _container.Register<IMappingsRepository, DefaultMappingRepository>();
-            _container.Register<IMappingSourceProvider>();
+            _container.Register<IModule>(new Regex("^RDeF\\.*"));
+            foreach (var module in _container.Resolve<IEnumerable<IModule>>())
+            {
+                module.Initialize(this);
+            }
         }
 
         /// <inheritdoc />
@@ -97,7 +103,20 @@ namespace RDeF.Entities
         /// <inheritdoc />
         IComponentConfigurator IComponentConfigurator.WithConverter<TConverter>()
         {
-            _container.Register<IConverter, TConverter>();
+            _container.Register<ILiteralConverter, TConverter>();
+            return this;
+        }
+
+        /// <inheritdoc />
+        IComponentConfigurator IComponentConfigurator.WithMappingsProvidedBy<TMappingSourceProvider>()
+        {
+            _container.Register<IMappingSourceProvider, TMappingSourceProvider>();
+            return this;
+        }
+
+        IComponentConfigurator IComponentConfigurator.WithMappingsProviderVisitor<TMappingProviderVisitor>()
+        {
+            _container.Register<IMappingProviderVisitor, TMappingProviderVisitor>();
             return this;
         }
     }

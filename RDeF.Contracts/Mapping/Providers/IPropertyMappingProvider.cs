@@ -9,7 +9,7 @@ namespace RDeF.Mapping.Providers
         /// <summary>Gets the property being mapped.</summary>
         PropertyInfo Property { get; }
 
-        /// <summary>Gets the value converter type the mapping.</summary>
-        Type ValueConverterType { get; }
+        /// <summary>Gets or sets the value converter type the mapping.</summary>
+        Type ValueConverterType { get; set; }
     }
 }
