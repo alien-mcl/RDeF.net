@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace RDeF.ComponentModel
 {
-    internal interface IContainer
+    internal interface IContainer : IDisposable
     {
         void Register<TService>(Regex assemblyNamePattern = null);
 
@@ -16,6 +16,10 @@ namespace RDeF.ComponentModel
         void Unregister<TService>();
 
         void Unregister<TService>(TService instance);
+
+        bool IsRegistered<TService>();
+
+        IContainer BeginScope();
 
         TService Resolve<TService>();
     }

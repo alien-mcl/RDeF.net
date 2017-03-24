@@ -73,6 +73,7 @@
     <Compile Include="Given_instance_of\ClassAttribute_class\when_initializing.cs" />
     <Compile Include="Given_instance_of\PropertyAttribute_class\PropertyAttributeTest.cs" />
     <Compile Include="Given_instance_of\PropertyAttribute_class\when_initializing.cs" />
+    <Compile Include="Given_instance_of\PropertyAttribute_class\which_is_already_initialized.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

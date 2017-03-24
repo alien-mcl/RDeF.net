@@ -1,0 +1,29 @@
+﻿{
+    "@graph": [
+        {
+            "@graph": [
+                {
+                    "@id": "http://test.uri/entity",
+                    "doubles": [
+                        { "@list": [ 1.0, 2.0 ] }
+                    ],
+                    "floats": [
+                        {
+                            "@list": [
+                                { "@type": "http://www.w3.org/2001/XMLSchema#float", "@value": 0.1 },
+                                { "@type": "http://www.w3.org/2001/XMLSchema#float", "@value": 0.2 }
+                            ] 
+                        }
+                    ],
+                    "@type": [ "class1", "class2" ],
+                    "other": [
+                        { "@list": [ { "@id": "http://test.uri/entity" } ] }
+                    ],
+                    "related": [
+                        { "@id": "http://test.uri/entity" }
+                    ]
+                }
+            ] 
+        }
+    ] 
+}

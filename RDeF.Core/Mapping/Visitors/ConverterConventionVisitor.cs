@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using RDeF.Entities;
 using RDeF.Mapping.Providers;
@@ -56,11 +57,15 @@ namespace RDeF.Mapping.Visitors
         }
 
         /// <inheritdoc />
+        [ExcludeFromCodeCoverage]
+        [SuppressMessage("UnitTests", "TS0000:NoUnitTests", Justification = "Method is not used.")]
         public void Visit(IDictionaryMappingProvider dictionaryMappingProvider)
         {
         }
 
         /// <inheritdoc />
+        [ExcludeFromCodeCoverage]
+        [SuppressMessage("UnitTests", "TS0000:NoUnitTests", Justification = "Method is not used.")]
         public void Visit(IEntityMappingProvider entityMappingProvider)
         {
         }

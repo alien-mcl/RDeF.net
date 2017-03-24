@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using RDeF.Collections;
+using RDeF.Serialization;
 using RollerCaster;
 
 namespace RDeF.Entities
@@ -75,6 +77,26 @@ namespace RDeF.Entities
             }
 
             return Entities.Keys.Where(entity => entity.Is<TEntity>()).Select(entity => entity.ActLike<TEntity>()).AsQueryable();
+        }
+
+        /// <inheritdoc />
+        public void Write(StreamWriter streamWriter, IRdfWriter rdfWriter)
+        {
+            if (streamWriter == null)
+            {
+                throw new ArgumentNullException(nameof(streamWriter));
+            }
+
+            if (rdfWriter == null)
+            {
+                throw new ArgumentNullException(nameof(rdfWriter));
+            }
+
+            var graphs = from entity in Entities
+                         from statement in entity.Value
+                         group statement by statement.Graph into graph
+                         select new KeyValuePair<Iri, IEnumerable<Statement>>(graph.Key, graph);
+            rdfWriter.Write(streamWriter, graphs);
         }
 
         private void ProcessStatements(IEnumerable<KeyValuePair<IEntity, ISet<Statement>>> entityStatements, Action<ISet<Statement>, Statement> action)

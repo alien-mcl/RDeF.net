@@ -94,8 +94,30 @@ namespace RDeF.Entities
         /// <inheritdoc />
         public override bool Equals(object obj)
         {
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
             Entity anotherEntity = obj as Entity;
-            return (ReferenceEquals(this, obj)) || ((obj != null) && (Equals(Iri, anotherEntity.Iri)));
+            if ((anotherEntity != null) && (Equals(Iri, anotherEntity.Iri)))
+            {
+                return true;
+            }
+
+            MulticastObject entity;
+            if ((obj.TryUnwrap(out entity)) && ((anotherEntity = entity as Entity) != null))
+            {
+                return (ReferenceEquals(this, anotherEntity)) || (Equals(Iri, anotherEntity.Iri));
+            }
+
+            IEntity someEntity = obj as IEntity;
+            if ((someEntity != null) && (Equals(Iri, someEntity.Iri)))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         /// <inheritdoc />

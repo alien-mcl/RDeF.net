@@ -11,12 +11,40 @@ using RollerCaster.Reflection;
 
 namespace RDeF.ComponentModel
 {
-    internal class SimpleContainer : IContainer
+    internal sealed class SimpleContainer : IContainer
     {
         private const string AttributeMappingsAssembly = "RDeF.Mapping.Attributes";
         private readonly IDictionary<Type, IDictionary<Type, Type>> _serviceRegistrations = new ConcurrentDictionary<Type, IDictionary<Type, Type>>();
         private readonly IDictionary<Type, IDictionary<Type, object>> _instanceRegistrations = new ConcurrentDictionary<Type, IDictionary<Type, object>>();
+        private readonly SimpleContainer _owner;
         private bool _areStandardLibrariesLoaded;
+
+        internal SimpleContainer()
+        {
+        }
+
+        internal SimpleContainer(SimpleContainer owner)
+        {
+            _owner = owner;
+        }
+
+        /// <summary>Begins a new scope.</summary>
+        /// <returns>New scope container.</returns>
+        public SimpleContainer BeginScope()
+        {
+            return new SimpleContainer(this);
+        }
+
+        IContainer IContainer.BeginScope()
+        {
+            return BeginScope();
+        }
+
+        /// <inheritdoc />
+        public bool IsRegistered<TService>()
+        {
+            return (_serviceRegistrations.ContainsKey(typeof(TService))) || (_instanceRegistrations.ContainsKey(typeof(TService)));
+        }
 
         /// <inheritdoc />
         public void Register<TService>(Regex assemblyNamePattern = null)
@@ -97,6 +125,18 @@ namespace RDeF.ComponentModel
             return (TService)Resolve(typeof(TService), new HashSet<Type>());
         }
 
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            foreach (var serviceRegistration in _instanceRegistrations)
+            {
+                foreach (var instanceRegistration in serviceRegistration.Value)
+                {
+                    (instanceRegistration.Value as IDisposable)?.Dispose();
+                }
+            }
+        }
+
         private object Resolve(Type serviceType, ISet<Type> visitedDependencies)
         {
             if (serviceType.IsADirectEnumerableType())
@@ -113,7 +153,7 @@ namespace RDeF.ComponentModel
             IDictionary<Type, Type> serviceRegistration;
             if ((!_serviceRegistrations.TryGetValue(serviceType, out serviceRegistration)) || (serviceRegistration.Count == 0))
             {
-                return null;
+                return _owner?.Resolve(serviceType, new HashSet<Type>());
             }
 
             return BuildInstance(serviceRegistration, serviceType, serviceRegistration.Values.First(), visitedDependencies);
@@ -142,6 +182,14 @@ namespace RDeF.ComponentModel
             {
                 var instance = BuildInstance(serviceRegistration, itemType, implementationRegistered, visitedDependencies);
                 if (instance != null)
+                {
+                    result.Add(instance);
+                }
+            }
+
+            if (_owner != null)
+            {
+                foreach (var instance in _owner.ResolveAll(serviceType, new HashSet<Type>()))
                 {
                     result.Add(instance);
                 }
@@ -202,6 +250,7 @@ namespace RDeF.ComponentModel
                 return ctor.Invoke(arguments?.ToArray());
             }
 
+            visitedDependencies.Remove(type);
             return null;
         }
 

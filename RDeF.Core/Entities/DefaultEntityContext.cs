@@ -15,6 +15,7 @@ namespace RDeF.Entities
         private readonly IEntitySource _entitySource;
         private readonly IChangeDetector _changeDetector;
         private readonly IDictionary<Iri, Entity> _entityCache;
+        private bool _disposed;
 
         internal DefaultEntityContext(IEntitySource entitySource, IMappingsRepository mappingsRepository, IChangeDetector changeDetector)
         {
@@ -25,7 +26,13 @@ namespace RDeF.Entities
         }
 
         /// <inheritdoc />
+        public event EventHandler Disposed;
+
+        /// <inheritdoc />
         public IMappingsRepository MappingsRepository { get; }
+
+        /// <inheritdoc />
+        public IReadableEntitySource EntitySource { get { return _entitySource; } }
 
         /// <inheritdoc />
         public TEntity Load<TEntity>(Iri iri) where TEntity : IEntity
@@ -127,6 +134,13 @@ namespace RDeF.Entities
             }
         }
 
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
         internal virtual void Initialize(Entity entity)
         {
             //// TODO: Think about currating the resulting data set against i.e. ontology to trim unnecessary proxy property values.
@@ -149,6 +163,19 @@ namespace RDeF.Entities
             }
 
             return _entityCache[id] = new Entity(id, this) { IsInitialized = isInitialized };
+        }
+
+        /// <summary>Performs an actual disposal.</summary>
+        /// <param name="disposing">Value indicating whether the disposal actually happens.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if ((_disposed) || (!disposing))
+            {
+                return;
+            }
+
+            _disposed = true;
+            Disposed?.Invoke(this, EventArgs.Empty);
         }
 
         private TEntity CreateInternal<TEntity>(Iri id, bool isInitialized = true) where TEntity : IEntity

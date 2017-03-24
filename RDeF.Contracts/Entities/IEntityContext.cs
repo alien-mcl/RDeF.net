@@ -1,13 +1,20 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using RDeF.Mapping;
 
 namespace RDeF.Entities
 {
     /// <summary>Describes an abstract entity context.</summary>
-    public interface IEntityContext
+    public interface IEntityContext : IDisposable
     {
+        /// <summary>Notifies on disposal.</summary>
+        event EventHandler Disposed;
+
         /// <summary>Gets the mappings repository.</summary>
         IMappingsRepository MappingsRepository { get; }
+
+        /// <summary>Gets an underlying entity source.</summary>
+        IReadableEntitySource EntitySource { get; }
 
         /// <summary>Loads a specified entity.</summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>

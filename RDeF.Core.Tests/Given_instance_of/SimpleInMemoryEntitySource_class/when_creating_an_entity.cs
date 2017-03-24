@@ -26,6 +26,12 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
             ((Entity)Result.Unwrap()).IsInitialized.Should().BeTrue();
         }
 
+        [Test]
+        public void Should_create_new_entity_only_once()
+        {
+            EntitySource.Create<IProduct>(new Iri("test"), Context).Should().Be(Result);
+        }
+
         protected override void ScenarioSetup()
         {
             Context = new DefaultEntityContext(EntitySource, new Mock<IMappingsRepository>(MockBehavior.Strict).Object, new Mock<IChangeDetector>(MockBehavior.Strict).Object);

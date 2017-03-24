@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using RDeF.Entities;
@@ -32,7 +33,7 @@ namespace RDeF.Serialization
         };
 
         /// <inheritdoc />
-        public void Write(StreamWriter streamWriter, IEnumerable<KeyValuePair<Iri, IEnumerable<Statement> >>graphs)
+        public void Write(StreamWriter streamWriter, IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>>graphs)
         {
             if (streamWriter == null)
             {
@@ -71,10 +72,16 @@ namespace RDeF.Serialization
         {
             bool requiresSubjectSeparator = false;
             WriteBeginGraph(streamWriter, graph, requiresGraphSeparator);
-            foreach (var subject in statements.GroupBy(statement => statement.Subject))
+            var subjects = statements.GroupBy(statement => statement.Subject).ToList();
+            for (var index = 0; index < subjects.Count; index++)
             {
-                WriteSubject(streamWriter, subject.Key, subject, requiresSubjectSeparator);
+                var subject = subjects[index];
+                WriteSubject(streamWriter, subject.Key, subject, subjects, requiresSubjectSeparator);
                 requiresSubjectSeparator = true;
+                if ((index < subjects.Count) && (subject != subjects[index]))
+                {
+                    index--;
+                }
             }
             
             WriteEndGraph(streamWriter);
@@ -101,13 +108,13 @@ namespace RDeF.Serialization
             streamWriter.Write("]}");
         }
 
-        private static void WriteSubject(StreamWriter streamWriter, Iri subject, IEnumerable<Statement> statements, bool requiresSubjectSeparator = true)
+        private static void WriteSubject(StreamWriter streamWriter, Iri subject, IEnumerable<Statement> statements, ICollection<IGrouping<Iri, Statement>> subjects, bool requiresSubjectSeparator = true)
         {
             bool requiresPredicateSeparator = false;
             WriteBeginSubject(streamWriter, subject, requiresSubjectSeparator);
             foreach (var predicate in statements.GroupBy(statement => statement.Predicate).OrderBy(predicate => predicate.Key, IriComparer.Default))
             {
-                WritePredicate(streamWriter, predicate.Key, predicate, requiresPredicateSeparator);
+                WritePredicate(streamWriter, predicate.Key, predicate, subjects, requiresPredicateSeparator);
                 requiresPredicateSeparator = true;
             }
 
@@ -133,13 +140,24 @@ namespace RDeF.Serialization
             streamWriter.Write(" }");
         }
 
-        private static void WritePredicate(StreamWriter streamWriter, Iri predicate, IEnumerable<Statement> statements, bool requiresPredicateSeparator = true)
+        private static void WritePredicate(StreamWriter streamWriter, Iri predicate, IEnumerable<Statement> statements, ICollection<IGrouping<Iri, Statement>> subjects, bool requiresPredicateSeparator = true)
         {
             bool requiresValueSeparator = false;
             WriteBeginPredicate(streamWriter, predicate, requiresPredicateSeparator);
             foreach (var value in statements)
             {
-                WriteValue(streamWriter, value, requiresValueSeparator);
+                var isLinkedList = (value.Object == rdf.nil) ||
+                                   ((value.Object != null) && (value.Object.IsBlank) &&
+                                    (subjects.Any(subject => subject.Key == value.Object && subject.Any(statement => statement.Predicate == rdf.first))));
+                if (isLinkedList)
+                {
+                    WriteList(streamWriter, value, subjects, requiresValueSeparator);
+                }
+                else
+                {
+                    WriteValue(streamWriter, value, requiresValueSeparator);
+                }
+
                 requiresValueSeparator = true;
             }
 
@@ -167,6 +185,36 @@ namespace RDeF.Serialization
             streamWriter.Write(" ]");
         }
 
+        private static void WriteList(StreamWriter streamWriter, Statement list, ICollection<IGrouping<Iri, Statement>> subjects, bool requiresValueSeparator = true)
+        {
+            if (requiresValueSeparator)
+            {
+                streamWriter.Write(", ");
+            }
+
+            var requiresSeparator = false;
+            streamWriter.Write("{ \"@list\": [");
+            if (list.Object != rdf.nil)
+            {
+                var item = subjects.FirstOrDefault(subject => subject.Key == list.Object);
+                do
+                {
+                    subjects.Remove(item);
+                    var value = item.FirstOrDefault(statement => statement.Predicate == rdf.first);
+                    if (value != null)
+                    {
+                        WriteValue(streamWriter, value, requiresSeparator);
+                        requiresSeparator = true;
+                    }
+
+                    var rest = item.FirstOrDefault(statement => statement.Predicate == rdf.last);
+                    item = (rest != null ? subjects.FirstOrDefault(subject => subject.Key == rest.Object) : null);
+                } while (item != null);
+            }
+
+            streamWriter.Write("]}");
+        }
+
         private static void WriteValue(StreamWriter streamWriter, Statement value, bool requiresValueSeparator = true)
         {
             if (requiresValueSeparator)
@@ -186,7 +234,7 @@ namespace RDeF.Serialization
                 return;
             }
 
-            if (value.DataType != null)
+            if ((value.DataType != null) && (value.DataType != xsd.boolean) && (value.DataType != xsd.@int) && (value.DataType != xsd.@double))
             {
                 streamWriter.Write("{{ \"@type\": \"{0}\", \"@value\": {1} }}", value.DataType, FormatLiteral(value));
                 return;
@@ -201,9 +249,15 @@ namespace RDeF.Serialization
             streamWriter.Write(FormatLiteral(value));
         }
 
+        [SuppressMessage("Microsoft.Globalization", "CA1307:SpecifyStringComparison", MessageId = "System.String.IndexOf(System.String)", Justification = "String used is culture invariant.")]
         private static string FormatLiteral(Statement value)
         {
-            return (UnquotedLiterals.Contains(value.DataType) ? value.Value : String.Format("\"{0}\"", value.Value));
+            if (UnquotedLiterals.Contains(value.DataType))
+            {
+                return value.Value + ((value.DataType == xsd.@double) && (value.Value.IndexOf(".") == -1) ? ".0" : String.Empty);
+            }
+
+            return String.Format("\"{0}\"", value.Value);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -10,6 +11,7 @@ using RDeF.Mapping.Visitors;
 namespace RDeF.Entities
 {
     /// <summary>Provides a default implementation of the <see cref="IEntityContextFactory" />.</summary>
+    [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "Instances are disposed correctly.")]
     public sealed class DefaultEntityContextFactory : IEntityContextFactory, IComponentConfigurator
     {
         private readonly object _sync = new object();
@@ -17,7 +19,7 @@ namespace RDeF.Entities
         private readonly IContainer _container;
 
         /// <summary>Initializes a new instance of the <see cref="DefaultEntityContextFactory"/> class.</summary>
-        internal DefaultEntityContextFactory()
+        public DefaultEntityContextFactory()
         {
             var mappingsAssemblies = new HashSet<Assembly>();
             _mappingsBuilder = new DefaultMappingsBuilder(assembly =>
@@ -39,8 +41,6 @@ namespace RDeF.Entities
                 _container.Register<IMappingsRepository, DefaultMappingRepository>();
             });
             _container = new SimpleContainer();
-            _container.Register<IEntitySource, SimpleInMemoryEntitySource>();
-            _container.Register<IEntityContext, DefaultEntityContext>();
             _container.Register<IChangeDetector, DefaultChangeDetector>();
             _container.Register<IMappingsRepository, DefaultMappingRepository>();
             _container.Register<IModule>(new Regex("^RDeF\\.*"));
@@ -53,7 +53,16 @@ namespace RDeF.Entities
         /// <inheritdoc />
         public IEntityContext Create()
         {
-            return _container.Resolve<IEntityContext>();
+            var scope = _container.BeginScope();
+            scope.Register<IEntityContext, DefaultEntityContext>();
+            if (!scope.IsRegistered<IEntitySource>())
+            {
+                scope.Register<IEntitySource, SimpleInMemoryEntitySource>();
+            }
+
+            var result = scope.Resolve<IEntityContext>();
+            result.Disposed += (sender, e) => scope.Dispose();
+            return result;
         }
 
         /// <inheritdoc />

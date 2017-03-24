@@ -48,6 +48,8 @@
     <Compile Include="ComponentModel\IModule.cs" />
     <Compile Include="ComponentModel\IriTypeConverter.cs" />
     <Compile Include="Entities\IEntity.cs" />
+    <Compile Include="Entities\IReadableEntitySource.cs" />
+    <Compile Include="Entities\ISerializableEntitySource.cs" />
     <Compile Include="Mapping\AmbiguousMappingException.cs" />
     <Compile Include="Mapping\ILiteralConverter.cs" />
     <Compile Include="Mapping\IMappingSourceProvider.cs" />

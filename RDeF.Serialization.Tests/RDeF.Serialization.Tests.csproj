@@ -48,10 +48,17 @@
     <Compile Include="..\.build\VersionAssemblyInfo.cs">
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="..\RDeF.Core.Tests\Data\IComplexEntity.cs">
+      <Link>Data\IComplexEntity.cs</Link>
+    </Compile>
+    <Compile Include="Given_a_data_model\when_serializing_it.cs" />
     <Compile Include="Given_instance_of\JsonLdWriter_class\JsonLdWriterTest.cs" />
     <Compile Include="Given_instance_of\JsonLdWriter_class\when_initializing.cs" />
-    <Compile Include="Given_instance_of\JsonLdWriter_class\when_serializing_named_graphs.cs" />
+    <Compile Include="Given_instance_of\JsonLdWriter_class\when_serializing\named_graphs_with_lists_and_collections.cs" />
+    <Compile Include="Given_instance_of\JsonLdWriter_class\when_serializing\named_graphs.cs" />
+    <Compile Include="Given_instance_of\JsonLdWriter_class\when_serializing\ScenarioTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
@@ -59,9 +66,17 @@
     </CodeAnalysisDictionary>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Given_instance_of\JsonLdWriter_class\when_serializing_named_graphs.json">
-      <DependentUpon>when_serializing_named_graphs.cs</DependentUpon>
-      <LogicalName>Given_instance_of\JsonLdWriter_class\when_serializing_named_graphs.json</LogicalName>
+    <EmbeddedResource Include="Given_instance_of\JsonLdWriter_class\when_serializing\\named_graphs.json">
+      <DependentUpon>named_graphs.cs</DependentUpon>
+      <LogicalName>Given_instance_of\JsonLdWriter_class\when_serializing\named_graphs.json</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Given_a_data_model\when_serializing_it.json">
+      <DependentUpon>when_serializing_it.cs</DependentUpon>
+      <LogicalName>Given_a_data_model\when_serializing_it.json</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Given_instance_of\JsonLdWriter_class\when_serializing\\named_graphs_with_lists_and_collections.json">
+      <DependentUpon>named_graphs_with_lists_and_collections.cs</DependentUpon>
+      <LogicalName>Given_instance_of\JsonLdWriter_class\when_serializing\named_graphs_with_lists_and_collections.json</LogicalName>
     </EmbeddedResource>
     <None Include="RDeF.Serialization.Tests.project.json" />
   </ItemGroup>
@@ -69,6 +84,14 @@
     <ProjectReference Include="..\RDeF.Contracts\RDeF.Contracts.csproj">
       <Project>{b0f60589-f1ed-4cb5-9c42-4004f02536eb}</Project>
       <Name>RDeF.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RDeF.Core\RDeF.Core.csproj">
+      <Project>{f07900af-8275-48ad-a7ce-7a7de267de2a}</Project>
+      <Name>RDeF.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RDeF.Mapping.Attributes\RDeF.Mapping.Attributes.csproj">
+      <Project>{c2c8ca10-8703-498e-851b-bd8c7010bf89}</Project>
+      <Name>RDeF.Mapping.Attributes</Name>
     </ProjectReference>
     <ProjectReference Include="..\RDeF.Serialization\RDeF.Serialization.csproj">
       <Project>{d20315ca-9f4f-4073-a205-ed66bdc5a177}</Project>

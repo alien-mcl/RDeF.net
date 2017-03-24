@@ -43,11 +43,11 @@ namespace Given_instance_of.DefaultChangeDetector_class.when_processing
                     propertyMapping.SetupGet(instance => instance.ValueConverter).Returns(Converter.Object);
                     propertyMapping.SetupGet(instance => instance.Term).Returns(new Iri(property.Name.ToLower()));
                     propertyMapping.SetupGet(instance => instance.Graph).Returns((Iri)null);
-                    if (property.PropertyType.IsAnEnumerableType())
+                    if (property.PropertyType.IsAnEnumerable())
                     {
                         var collectionMapping = propertyMapping.As<ICollectionMapping>();
                         collectionMapping.SetupGet(instance => instance.StoreAs)
-                            .Returns(property.PropertyType.IsAListType() ? CollectionStorageModel.LinkedList : CollectionStorageModel.Simple);
+                            .Returns(property.PropertyType.IsAList() ? CollectionStorageModel.LinkedList : CollectionStorageModel.Simple);
                         return collectionMapping.Object;
                     }
 

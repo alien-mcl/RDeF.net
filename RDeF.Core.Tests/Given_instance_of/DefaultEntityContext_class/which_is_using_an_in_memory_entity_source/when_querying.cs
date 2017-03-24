@@ -29,6 +29,12 @@ namespace Given_instance_of.DefaultEntityContext_class.which_is_using_an_in_memo
             InMemoryEntitySource.Verify(instance => instance.AsQueryable<IProduct>(), Times.Once);
         }
 
+        [Test]
+        public void Should_obtain_an_underlying_entity_source()
+        {
+            Context.EntitySource.Should().Be(InMemoryEntitySource.Object);
+        }
+
         protected override void ScenarioSetup()
         {
             base.ScenarioSetup();

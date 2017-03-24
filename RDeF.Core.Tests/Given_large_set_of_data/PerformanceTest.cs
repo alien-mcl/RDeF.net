@@ -26,6 +26,12 @@ namespace Given_large_set_of_data
             TheTest();
         }
 
+        [TearDown]
+        public void Teardown()
+        {
+            Context.Dispose();
+        }
+
         protected virtual void ScenarioSetup()
         {
         }
