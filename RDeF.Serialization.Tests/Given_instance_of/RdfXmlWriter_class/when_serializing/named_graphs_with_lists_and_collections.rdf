@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <rdf:Description rdf:about="subject1">
+        <predicate1 rdf:parseType="Collection">
+            <rdf:li rdf:parseType="Literal" rdf:datatype="http://www.w3.org/2001/XMLSchema#int">1</rdf:li>
+            <rdf:li rdf:parseType="Literal" rdf:datatype="http://www.w3.org/2001/XMLSchema#int">2</rdf:li>
+        </predicate1>
+        <predicate1 rdf:parseType="Collection">
+            <rdf:li rdf:parseType="Literal" rdf:datatype="http://www.w3.org/2001/XMLSchema#double">1</rdf:li>
+            <rdf:li rdf:parseType="Literal" rdf:datatype="http://www.w3.org/2001/XMLSchema#double">2.1</rdf:li>
+        </predicate1>
+    </rdf:Description>
+</rdf:RDF>

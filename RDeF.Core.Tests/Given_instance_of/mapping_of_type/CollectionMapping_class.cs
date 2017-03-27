@@ -4,7 +4,7 @@ using NUnit.Framework;
 using RDeF.Entities;
 using RDeF.Mapping;
 
-namespace RDeF.Given_instance_of.mapping_of_type
+namespace Given_instance_of.mapping_of_type
 {
     [TestFixture]
     public class CollectionMapping_class

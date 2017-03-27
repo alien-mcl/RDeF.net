@@ -1,9 +1,9 @@
 ﻿using NUnit.Framework;
 using RDeF.Serialization;
 
-namespace Given_instance_of.JsonLdWriter_class
+namespace RDeF.Testing
 {
-    public class JsonLdWriterTest
+    public class RdfWriterTest<T> where T : IRdfWriter, new()
     {
         protected IRdfWriter Writer { get; private set; }
 
@@ -14,7 +14,7 @@ namespace Given_instance_of.JsonLdWriter_class
         [SetUp]
         public void Setup()
         {
-            Writer = new JsonLdWriter();
+            Writer = new T();
             ScenarioSetup();
             TheTest();
         }

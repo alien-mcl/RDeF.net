@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <rdf:Description rdf:about="subject1">
+        <predicate1 rdf:resource="object1" />
+        <predicate1 rdf:parseType="Literal">value</predicate1>
+        <predicate1 rdf:parseType="Literal" rdf:datatype="http://www.w3.org/2001/XMLSchema#int">123</predicate1>
+        <predicate2 rdf:resource="object2" />
+        <predicate2 rdf:parseType="Literal" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">value</predicate2>
+        <predicate2 rdf:parseType="Literal" xml:lang="en">text</predicate2>
+        <rdfs:type rdf:resource="type1" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" />
+        <rdfs:type rdf:resource="type2" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" />
+    </rdf:Description>
+    <rdf:Description rdf:about="subject2">
+        <predicate1 rdf:resource="object1" />
+        <predicate1 rdf:parseType="Literal">value</predicate1>
+        <predicate1 rdf:parseType="Literal" rdf:datatype="http://www.w3.org/2001/XMLSchema#int">123</predicate1>
+        <predicate2 rdf:resource="object2" />
+        <predicate2 rdf:parseType="Literal" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">value</predicate2>
+        <predicate2 rdf:parseType="Literal" xml:lang="en">text</predicate2>
+        <rdfs:type rdf:resource="type1" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" />
+        <rdfs:type rdf:resource="type2" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" />
+    </rdf:Description>
+    <rdf:Description rdf:about="subject3">
+        <predicate1 rdf:resource="object1" />
+        <predicate1 rdf:parseType="Literal">value</predicate1>
+        <predicate1 rdf:parseType="Literal" rdf:datatype="http://www.w3.org/2001/XMLSchema#int">123</predicate1>
+        <predicate2 rdf:resource="object2" />
+        <predicate2 rdf:parseType="Literal" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">value</predicate2>
+        <predicate2 rdf:parseType="Literal" xml:lang="en">text</predicate2>
+        <rdfs:type rdf:resource="type1" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" />
+        <rdfs:type rdf:resource="type2" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" />
+    </rdf:Description>
+</rdf:RDF>

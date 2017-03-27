@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using RDeF.Entities;
 
-namespace RDeF.Given_instance_of.IriComparer_class
+namespace Given_instance_of.IriComparer_class
 {
     [TestFixture]
     public class when_comparing

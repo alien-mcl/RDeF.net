@@ -3,7 +3,7 @@ using NUnit.Framework;
 using RDeF.Data;
 using RDeF.Mapping;
 
-namespace RDeF.Given_instance_of.mapping_of_type
+namespace Given_instance_of.mapping_of_type
 {
     [TestFixture]
     public class MergingEntityMapping_class

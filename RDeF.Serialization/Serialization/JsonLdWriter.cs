@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
 using RDeF.Entities;
 using RDeF.Vocabularies;
 
@@ -33,7 +35,7 @@ namespace RDeF.Serialization
         };
 
         /// <inheritdoc />
-        public void Write(StreamWriter streamWriter, IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>>graphs)
+        public async Task Write(StreamWriter streamWriter, IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>>graphs)
         {
             if (streamWriter == null)
             {
@@ -45,155 +47,113 @@ namespace RDeF.Serialization
                 throw new ArgumentNullException(nameof(graphs));
             }
 
-            bool requiresGraphSeparator = false;
-            WriteBegin(streamWriter);
-            foreach (var graph in graphs)
+            using (var jsonWriter = new JsonTextWriter(streamWriter))
             {
-                WriteGraph(streamWriter, graph.Key, graph.Value, requiresGraphSeparator);
-                requiresGraphSeparator = true;
+                await WriteInternal(jsonWriter, graphs);
+            }
+        }
+
+
+        /// <summary>Serializes given <paramref name="graphs" /> into an <see cref="JsonWriter" />,</summary>
+        /// <param name="jsonWriter">Target writer to receive data.</param>
+        /// <param name="graphs">Graphs to be serialized.</param>
+        /// <returns>Task of this operation.</returns>
+        public async Task Write(JsonWriter jsonWriter, IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>> graphs)
+        {
+            if (jsonWriter == null)
+            {
+                throw new ArgumentNullException(nameof(jsonWriter));
             }
 
-            WriteEnd(streamWriter);
-            streamWriter.Flush();
+            if (graphs == null)
+            {
+                throw new ArgumentNullException(nameof(graphs));
+            }
+
+            await WriteInternal(jsonWriter, graphs);
         }
 
-        private static void WriteBegin(StreamWriter streamWriter)
+        private async Task WriteInternal(JsonWriter jsonWriter, IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>> graphs)
         {
-            streamWriter.Write("{ ");
-            streamWriter.Write("\"@graph\": [");
+            await jsonWriter.WriteStartObjectAsync();
+            await jsonWriter.WritePropertyNameAsync("@graph");
+            await jsonWriter.WriteStartArrayAsync();
+            foreach (var graph in graphs)
+            {
+                await WriteGraph(jsonWriter, graph.Key, graph.Value);
+            }
+
+            await jsonWriter.WriteEndArrayAsync();
+            await jsonWriter.WriteEndObjectAsync();
         }
 
-        private static void WriteEnd(StreamWriter streamWriter)
+        private static async Task WriteGraph(JsonWriter jsonWriter, Iri graph, IEnumerable<Statement> statements)
         {
-            streamWriter.Write("]}");
-        }
+            await jsonWriter.WriteStartObjectAsync();
+            if (graph != null)
+            {
+                await jsonWriter.WritePropertyNameAsync("@id");
+                await jsonWriter.WriteValueAsync((string)graph);
+            }
 
-        private static void WriteGraph(StreamWriter streamWriter, Iri graph, IEnumerable<Statement> statements, bool requiresGraphSeparator = true)
-        {
-            bool requiresSubjectSeparator = false;
-            WriteBeginGraph(streamWriter, graph, requiresGraphSeparator);
+            await jsonWriter.WritePropertyNameAsync("@graph");
+            await jsonWriter.WriteStartArrayAsync();
             var subjects = statements.GroupBy(statement => statement.Subject).ToList();
             for (var index = 0; index < subjects.Count; index++)
             {
                 var subject = subjects[index];
-                WriteSubject(streamWriter, subject.Key, subject, subjects, requiresSubjectSeparator);
-                requiresSubjectSeparator = true;
+                await WriteSubject(jsonWriter, subject.Key, subject, subjects);
                 if ((index < subjects.Count) && (subject != subjects[index]))
                 {
                     index--;
                 }
             }
-            
-            WriteEndGraph(streamWriter);
+
+            await jsonWriter.WriteEndArrayAsync();
+            await jsonWriter.WriteEndObjectAsync();
         }
 
-        private static void WriteBeginGraph(StreamWriter streamWriter, Iri graph, bool requiresSeparator)
+        private static async Task WriteSubject(JsonWriter jsonWriter, Iri subject, IEnumerable<Statement> statements, ICollection<IGrouping<Iri, Statement>> subjects)
         {
-            if (requiresSeparator)
-            {
-                streamWriter.Write(",");
-            }
-
-            streamWriter.Write("{ ");
-            if (graph != null)
-            {
-                streamWriter.Write("\"@id\": \"{0}\", ", graph);
-            }
-
-            streamWriter.Write("\"@graph\": [");
-        }
-
-        private static void WriteEndGraph(StreamWriter streamWriter)
-        {
-            streamWriter.Write("]}");
-        }
-
-        private static void WriteSubject(StreamWriter streamWriter, Iri subject, IEnumerable<Statement> statements, ICollection<IGrouping<Iri, Statement>> subjects, bool requiresSubjectSeparator = true)
-        {
-            bool requiresPredicateSeparator = false;
-            WriteBeginSubject(streamWriter, subject, requiresSubjectSeparator);
-            foreach (var predicate in statements.GroupBy(statement => statement.Predicate).OrderBy(predicate => predicate.Key, IriComparer.Default))
-            {
-                WritePredicate(streamWriter, predicate.Key, predicate, subjects, requiresPredicateSeparator);
-                requiresPredicateSeparator = true;
-            }
-
-            WriteEndSubject(streamWriter);
-        }
-
-        private static void WriteBeginSubject(StreamWriter streamWriter, Iri subject, bool requiresSeparator)
-        {
-            if (requiresSeparator)
-            {
-                streamWriter.Write(",");
-            }
-
-            streamWriter.Write("{ ");
+            await jsonWriter.WriteStartObjectAsync();
             if (subject != null)
             {
-                streamWriter.Write("\"@id\": \"{0}\", ", subject);
+                await jsonWriter.WritePropertyNameAsync("@id");
+                await jsonWriter.WriteValueAsync((string)subject);
             }
+
+            foreach (var predicate in statements.GroupBy(statement => statement.Predicate).OrderBy(predicate => predicate.Key, IriComparer.Default))
+            {
+                await WritePredicate(jsonWriter, predicate.Key, predicate, subjects);
+            }
+
+            await jsonWriter.WriteEndObjectAsync();
         }
 
-        private static void WriteEndSubject(StreamWriter streamWriter)
+        private static async Task WritePredicate(JsonWriter jsonWriter, Iri predicate, IEnumerable<Statement> statements, ICollection<IGrouping<Iri, Statement>> subjects)
         {
-            streamWriter.Write(" }");
-        }
-
-        private static void WritePredicate(StreamWriter streamWriter, Iri predicate, IEnumerable<Statement> statements, ICollection<IGrouping<Iri, Statement>> subjects, bool requiresPredicateSeparator = true)
-        {
-            bool requiresValueSeparator = false;
-            WriteBeginPredicate(streamWriter, predicate, requiresPredicateSeparator);
+            await jsonWriter.WritePropertyNameAsync(predicate == rdfs.type ? "@type" : predicate);
+            await jsonWriter.WriteStartArrayAsync();
             foreach (var value in statements)
             {
-                var isLinkedList = (value.Object == rdf.nil) ||
-                                   ((value.Object != null) && (value.Object.IsBlank) &&
-                                    (subjects.Any(subject => subject.Key == value.Object && subject.Any(statement => statement.Predicate == rdf.first))));
-                if (isLinkedList)
+                if (value.IsLinkedList(subjects))
                 {
-                    WriteList(streamWriter, value, subjects, requiresValueSeparator);
+                    await WriteList(jsonWriter, value, subjects);
                 }
                 else
                 {
-                    WriteValue(streamWriter, value, requiresValueSeparator);
+                    await WriteValue(jsonWriter, value);
                 }
-
-                requiresValueSeparator = true;
             }
 
-            WriteEndPredicate(streamWriter);
+            await jsonWriter.WriteEndArrayAsync();
         }
 
-        private static void WriteBeginPredicate(StreamWriter streamWriter, Iri predicate, bool requiresSeparator)
+        private static async Task WriteList(JsonWriter jsonWriter, Statement list, ICollection<IGrouping<Iri, Statement>> subjects)
         {
-            if (requiresSeparator)
-            {
-                streamWriter.Write(",");
-            }
-
-            if (predicate == rdfs.type)
-            {
-                streamWriter.Write("\"@type\": [");
-                return;
-            }
-
-            streamWriter.Write("\"{0}\": [", predicate);
-        }
-
-        private static void WriteEndPredicate(StreamWriter streamWriter)
-        {
-            streamWriter.Write(" ]");
-        }
-
-        private static void WriteList(StreamWriter streamWriter, Statement list, ICollection<IGrouping<Iri, Statement>> subjects, bool requiresValueSeparator = true)
-        {
-            if (requiresValueSeparator)
-            {
-                streamWriter.Write(", ");
-            }
-
-            var requiresSeparator = false;
-            streamWriter.Write("{ \"@list\": [");
+            await jsonWriter.WriteStartObjectAsync();
+            await jsonWriter.WritePropertyNameAsync("@list");
+            await jsonWriter.WriteStartArrayAsync();
             if (list.Object != rdf.nil)
             {
                 var item = subjects.FirstOrDefault(subject => subject.Key == list.Object);
@@ -203,8 +163,7 @@ namespace RDeF.Serialization
                     var value = item.FirstOrDefault(statement => statement.Predicate == rdf.first);
                     if (value != null)
                     {
-                        WriteValue(streamWriter, value, requiresSeparator);
-                        requiresSeparator = true;
+                        await WriteValue(jsonWriter, value);
                     }
 
                     var rest = item.FirstOrDefault(statement => statement.Predicate == rdf.last);
@@ -212,52 +171,62 @@ namespace RDeF.Serialization
                 } while (item != null);
             }
 
-            streamWriter.Write("]}");
+            await jsonWriter.WriteEndArrayAsync();
+            await jsonWriter.WriteEndObjectAsync();
         }
 
-        private static void WriteValue(StreamWriter streamWriter, Statement value, bool requiresValueSeparator = true)
+        private static async Task WriteValue(JsonWriter jsonWriter, Statement value)
         {
-            if (requiresValueSeparator)
-            {
-                streamWriter.Write(", ");
-            }
-
             if (value.Object != null)
             {
                 if (value.Predicate == rdfs.type)
                 {
-                    streamWriter.Write("\"{0}\"", value.Object);
+                    await jsonWriter.WriteValueAsync((string)value.Object);
                     return;
                 }
 
-                streamWriter.Write("{{ \"@id\": \"{0}\" }}", value.Object);
+                await jsonWriter.WriteStartObjectAsync();
+                await jsonWriter.WritePropertyNameAsync("@id");
+                await jsonWriter.WriteValueAsync((string)value.Object);
+                await jsonWriter.WriteEndObjectAsync();
                 return;
             }
 
             if ((value.DataType != null) && (value.DataType != xsd.boolean) && (value.DataType != xsd.@int) && (value.DataType != xsd.@double))
             {
-                streamWriter.Write("{{ \"@type\": \"{0}\", \"@value\": {1} }}", value.DataType, FormatLiteral(value));
+                await jsonWriter.WriteStartObjectAsync();
+                await jsonWriter.WritePropertyNameAsync("@type");
+                await jsonWriter.WriteValueAsync((string)value.DataType);
+                await jsonWriter.WritePropertyNameAsync("@value");
+                await WriteLiteral(jsonWriter, value);
+                await jsonWriter.WriteEndObjectAsync();
                 return;
             }
 
             if (value.Language != null)
             {
-                streamWriter.Write("{{ \"@lang\": \"{0}\", \"@value\": {1} }}", value.Language, FormatLiteral(value));
+                await jsonWriter.WriteStartObjectAsync();
+                await jsonWriter.WritePropertyNameAsync("@lang");
+                await jsonWriter.WriteValueAsync(value.Language);
+                await jsonWriter.WritePropertyNameAsync("@value");
+                await WriteLiteral(jsonWriter, value);
+                await jsonWriter.WriteEndObjectAsync();
                 return;
             }
 
-            streamWriter.Write(FormatLiteral(value));
+            await WriteLiteral(jsonWriter, value);
         }
 
         [SuppressMessage("Microsoft.Globalization", "CA1307:SpecifyStringComparison", MessageId = "System.String.IndexOf(System.String)", Justification = "String used is culture invariant.")]
-        private static string FormatLiteral(Statement value)
+        private static async Task WriteLiteral(JsonWriter jsonWriter, Statement value)
         {
             if (UnquotedLiterals.Contains(value.DataType))
             {
-                return value.Value + ((value.DataType == xsd.@double) && (value.Value.IndexOf(".") == -1) ? ".0" : String.Empty);
+                await jsonWriter.WriteRawValueAsync(value.Value + ((value.DataType == xsd.@double) && (value.Value.IndexOf(".") == -1) ? ".0" : String.Empty));
+                return;
             }
 
-            return String.Format("\"{0}\"", value.Value);
+            await jsonWriter.WriteValueAsync(value.Value);
         }
     }
 }

@@ -55,7 +55,7 @@ namespace RDeF.Entities
 
         internal Uri Uri { get; }
 
-        /// <summary>Performs an implicit conversion from <see cref="Iri"/> to <see cref="Uri"/>.</summary>
+        /// <summary>Performs an implicit conversion from <see cref="Iri" /> to <see cref="Uri" />.</summary>
         /// <param name="iri">The International Resource Identifier to be converted.</param>
         /// <returns>The result of the conversion.</returns>n
         public static implicit operator Uri(Iri iri)
@@ -74,12 +74,20 @@ namespace RDeF.Entities
             return (Uri.TryCreate(iri._iri, UriKind.RelativeOrAbsolute, out result) ? result : null);
         }
 
-        /// <summary>Performs an implicit conversion from <see cref="Uri"/> to <see cref="Iri"/>.</summary>
+        /// <summary>Performs an implicit conversion from <see cref="Uri" /> to <see cref="Iri" />.</summary>
         /// <param name="uri">The Universal Resource Identifier to be converted.</param>
         /// <returns>The result of the conversion.</returns>
         public static implicit operator Iri(Uri uri)
         {
             return (uri != null ? new Iri(uri) : null);
+        }
+
+        /// <summary>Performs an implicit conversion from <see cref="Iri"/> to <see cref="String" />.</summary>
+        /// <param name="iri">The Universal Resource Identifier to be converted.</param>
+        /// <returns>The result of the conversion.</returns>
+        public static implicit operator string(Iri iri)
+        {
+            return iri?.ToString();
         }
 
         /// <summary>Compares two <see cref="Iri" />s for equality.</summary>
