@@ -24,22 +24,23 @@ namespace RDeF.Xml
             }
 
             string newPrefix = "ns" + (namespaces.Keys.Where(prefix => prefix.StartsWith("ns")).Select(prefix => Int32.Parse(prefix.Substring(2))).FirstOrDefault() + 1);
-            string uri;
+            string uri = null;
             var position = address.IndexOf('#');
             if (position != -1)
             {
-                uri = address.Substring(0, position);
+                uri = address.Substring(0, position + 1);
             }
             else if ((position = address.IndexOf('?')) != -1)
             {
                 address = address.Substring(0, position);
             }
 
-            if ((position = address.LastIndexOf('/')) != -1)
+            if ((uri == null) && ((position = address.LastIndexOf('/')) != -1))
             {
-                uri = address.Substring(0, position);
+                uri = address.Substring(0, position + 1);
             }
-            else
+            
+            if (uri == null)
             {
                 await xmlTextWriter.WriteStartElementAsync(String.Empty, address, String.Empty);
                 return;
