@@ -52,8 +52,12 @@
     <Compile Include="ComponentModel\TestModule.cs" />
     <Compile Include="Data\IComplexEntity.cs" />
     <Compile Include="Data\IProduct.cs" />
+    <Compile Include="Data\IProductOffering.cs" />
     <Compile Include="Data\IService.cs" />
+    <Compile Include="Data\ISpecialProduct.cs" />
     <Compile Include="Data\IThing.cs" />
+    <Compile Include="Given_complex_mappings\DefaultMappingBuilder_class\when_building_mappings.cs" />
+    <Compile Include="Given_complex_mappings\DefaultMappingRepository_class\when_obtaining_a_generic_type_mappings.cs" />
     <Compile Include="Given_instance_of\CollectionStorageModelConventionVisitor_class\CollectionStorageModelConventionVisitorTest.cs" />
     <Compile Include="Given_instance_of\CollectionStorageModelConventionVisitor_class\when_visiting_a_property_mapping.cs" />
     <Compile Include="Given_instance_of\CollectionStorageModelConventionVisitor_class\when_visiting_a_list_property_mapping.cs" />
@@ -91,13 +95,14 @@
     <Compile Include="Given_instance_of\DefaultEntityContext_class\when_creating_an_entity.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContext_class\when_committing_changes.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContext_class\when_rolling_back_changes.cs" />
+    <Compile Include="Given_instance_of\DefaultMappingBuilder_class\when_building_mapping.cs" />
     <Compile Include="Given_instance_of\DefaultMappingRepository_class\DefaultMappingRepositoryTest.cs" />
-    <Compile Include="Given_instance_of\DefaultMappingRepository_class\when_initializing.cs" />
-    <Compile Include="Given_instance_of\DefaultMappingRepository_class\which_is_already_initialized\and_searching_for_class_mapping.cs" />
-    <Compile Include="Given_instance_of\DefaultMappingRepository_class\which_is_already_initialized\and_searching_for_property_mapping.cs" />
-    <Compile Include="Given_instance_of\DefaultMappingRepository_class\which_is_already_initialized\and_searching_for_type_mapping.cs" />
-    <Compile Include="Given_instance_of\DefaultMappingRepository_class\which_is_already_initialized\and_searching_for_predicate_mapping.cs" />
-    <Compile Include="Given_instance_of\DefaultMappingRepository_class\which_is_already_initialized\ScenarioTest.cs" />
+    <Compile Include="Given_instance_of\DefaultMappingBuilder_class\when_building_mappings.cs" />
+    <Compile Include="Given_instance_of\DefaultMappingRepository_class\and_searching_for_class_mapping.cs" />
+    <Compile Include="Given_instance_of\DefaultMappingRepository_class\and_searching_for_predicate_mapping.cs" />
+    <Compile Include="Given_instance_of\DefaultMappingRepository_class\and_searching_for_property_mapping.cs" />
+    <Compile Include="Given_instance_of\DefaultMappingRepository_class\and_searching_for_type_mapping.cs" />
+    <Compile Include="Given_instance_of\DefaultMappingBuilder_class\DefaultMappingBuilderTest.cs" />
     <Compile Include="Given_instance_of\Entity_class\EntityTest.cs" />
     <Compile Include="Given_instance_of\Entity_class\when_comparing_for_equality.cs" />
     <Compile Include="Given_instance_of\Entity_class\when_initializing.cs" />
@@ -144,10 +149,6 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\RollerCaster\RollerCaster\RollerCaster.csproj">
-      <Project>{a0131536-8084-4d67-b24b-78e670914034}</Project>
-      <Name>RollerCaster</Name>
-    </ProjectReference>
     <ProjectReference Include="..\RDeF.Contracts\RDeF.Contracts.csproj">
       <Project>{b0f60589-f1ed-4cb5-9c42-4004f02536eb}</Project>
       <Name>RDeF.Contracts</Name>
@@ -161,6 +162,7 @@
       <Name>RDeF.Mapping.Attributes</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

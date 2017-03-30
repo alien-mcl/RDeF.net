@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using RDeF.Collections;
 using RDeF.Serialization;
 using RollerCaster;
@@ -80,7 +81,7 @@ namespace RDeF.Entities
         }
 
         /// <inheritdoc />
-        public void Write(StreamWriter streamWriter, IRdfWriter rdfWriter)
+        public async Task Write(StreamWriter streamWriter, IRdfWriter rdfWriter)
         {
             if (streamWriter == null)
             {
@@ -96,7 +97,7 @@ namespace RDeF.Entities
                          from statement in entity.Value
                          group statement by statement.Graph into graph
                          select new KeyValuePair<Iri, IEnumerable<Statement>>(graph.Key, graph);
-            rdfWriter.Write(streamWriter, graphs);
+            await rdfWriter.Write(streamWriter, graphs);
         }
 
         private void ProcessStatements(IEnumerable<KeyValuePair<IEntity, ISet<Statement>>> entityStatements, Action<ISet<Statement>, Statement> action)

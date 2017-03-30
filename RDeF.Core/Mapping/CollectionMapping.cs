@@ -1,4 +1,6 @@
-﻿using RDeF.Entities;
+﻿using System.Collections.Generic;
+using RDeF.Entities;
+using RDeF.Mapping.Providers;
 
 namespace RDeF.Mapping
 {
@@ -13,5 +15,20 @@ namespace RDeF.Mapping
 
         /// <inheritdoc />
         public CollectionStorageModel StoreAs { get; }
+
+        internal static CollectionMapping CreateFrom(
+            IEntityMapping entityMapping,
+            ICollectionMappingProvider collectionMappingProvider,
+            IConverter valueConverter,
+            IEnumerable<QIriMapping> qiriMappings)
+        {
+            return new CollectionMapping(
+                entityMapping,
+                collectionMappingProvider.Property.Name,
+                collectionMappingProvider.GetGraph(qiriMappings),
+                collectionMappingProvider.GetTerm(qiriMappings),
+                valueConverter,
+                collectionMappingProvider.StoreAs);
+        }
     }
 }

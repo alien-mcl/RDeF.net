@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using RDeF.Entities;
@@ -21,7 +22,7 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
 
         public override void TheTest()
         {
-            EntitySource.Write(Buffer, RdfWriter.Object);
+            EntitySource.Write(Buffer, RdfWriter.Object).GetAwaiter().GetResult();
         }
 
         [Test]
@@ -40,7 +41,8 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
         {
             Buffer = new StreamWriter(new MemoryStream());
             RdfWriter = new Mock<IRdfWriter>(MockBehavior.Strict);
-            RdfWriter.Setup(instance => instance.Write(It.IsAny<StreamWriter>(), It.IsAny<IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>>>()));
+            RdfWriter.Setup(instance => instance.Write(It.IsAny<StreamWriter>(), It.IsAny<IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>>>()))
+                .Returns(Task.FromResult(0));
             var entityContext = new DefaultEntityContext(EntitySource, new Mock<IMappingsRepository>(MockBehavior.Strict).Object, new Mock<IChangeDetector>(MockBehavior.Strict).Object);
             var entity = new Entity(new Iri("test"), entityContext);
             EntitySource.Entities[entity] = new HashSet<Statement>()

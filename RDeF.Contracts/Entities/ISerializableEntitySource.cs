@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 using RDeF.Serialization;
 
 namespace RDeF.Entities
@@ -9,6 +10,7 @@ namespace RDeF.Entities
         /// <summary>Writes the content of the entity source into a given <paramref name="rdfWriter" />.</summary>
         /// <param name="streamWriter">Target stream writer.</param>
         /// <param name="rdfWriter">Target RDF writer.</param>
-        void Write(StreamWriter streamWriter, IRdfWriter rdfWriter);
+        /// <returns>Task of this operation.</returns>
+        Task Write(StreamWriter streamWriter, IRdfWriter rdfWriter);
     }
 }

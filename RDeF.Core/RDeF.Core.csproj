@@ -81,12 +81,23 @@
     <Compile Include="Entities\SimpleInMemoryEntitySource.cs" />
     <Compile Include="Mapping\DefaultMappingRepository.cs" />
     <Compile Include="Mapping\DefaultMappingsBuilder.cs" />
+    <Compile Include="Mapping\EntityMappingProvider.cs" />
+    <Compile Include="Mapping\IMappingBuilder.cs" />
+    <Compile Include="Mapping\DefaultMappingBuilder.cs" />
     <Compile Include="Mapping\MergingEntityMapping.cs" />
     <Compile Include="Mapping\CollectionMapping.cs" />
+    <Compile Include="Mapping\CollectionMappingProvider.cs" />
+    <Compile Include="Mapping\PropertyMappingProvider.cs" />
+    <Compile Include="Mapping\Providers\ClosedGenericCollectionMappingProvider.cs" />
+    <Compile Include="Mapping\Providers\ClosedGenericTermMappingProvider.cs" />
+    <Compile Include="Mapping\Providers\ClosedGenericPropertyMappingProvider.cs" />
+    <Compile Include="Mapping\Providers\ClosedGenericEntityMappingProvider.cs" />
+    <Compile Include="Mapping\Providers\TermMappingProviderExtensions.cs" />
     <Compile Include="Mapping\StatementMapping.cs" />
     <Compile Include="Mapping\PropertyMapping.cs" />
     <Compile Include="Mapping\StatementMappingEqualityComparer.cs" />
     <Compile Include="Mapping\PropertyMappingEqualityComparer.cs" />
+    <Compile Include="Mapping\TermMappingProviderExtensions.cs" />
     <Compile Include="Mapping\Visitors\ConverterConventionVisitor.cs" />
     <Compile Include="Mapping\Visitors\CollectionStorageModelConventionVisitor.cs" />
     <Compile Include="Mapping\Visitors\TermMappingProviderExtensions.cs" />
@@ -94,10 +105,6 @@
     <Compile Include="Reflection\CustomAttributeProviderExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\RollerCaster\RollerCaster\RollerCaster.csproj">
-      <Project>{a0131536-8084-4d67-b24b-78e670914034}</Project>
-      <Name>RollerCaster</Name>
-    </ProjectReference>
     <ProjectReference Include="..\RDeF.Contracts\RDeF.Contracts.csproj">
       <Project>{b0f60589-f1ed-4cb5-9c42-4004f02536eb}</Project>
       <Name>RDeF.Contracts</Name>

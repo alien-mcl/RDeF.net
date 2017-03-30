@@ -1,14 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
+using Moq;
 using NUnit.Framework;
+using RDeF.Data;
 using RDeF.Entities;
 using RDeF.Mapping;
+using RDeF.Mapping.Providers;
 
 namespace Given_instance_of.DefaultMappingRepository_class.which_is_already_initialized
 {
     [TestFixture]
-    public class and_searching_for_class_mapping : ScenarioTest
+    public class and_searching_for_class_mapping : DefaultMappingRepositoryTest
     {
         private const string ExpectedClass = "Product";
 
@@ -33,9 +37,14 @@ namespace Given_instance_of.DefaultMappingRepository_class.which_is_already_init
 
         protected override void ScenarioSetup()
         {
-            MappingSource.Setup(instance => instance.GatherEntityMappingProviders())
-                .Returns(SetupMappingProviders(ExpectedClass, "Name", "Price").Select(provider => provider.Object));
-            base.ScenarioSetup();
+            var entityMapping = new Mock<IEntityMapping>(MockBehavior.Strict);
+            entityMapping.SetupGet(instance => instance.Type).Returns(typeof(IProduct));
+            var classMapping = new Mock<IStatementMapping>(MockBehavior.Strict);
+            classMapping.SetupGet(instance => instance.Term).Returns(new Iri(ExpectedClass));
+            classMapping.SetupGet(instance => instance.Graph).Returns((Iri)null);
+            entityMapping.SetupGet(instance => instance.Classes).Returns(new[] { classMapping.Object });
+            MappingBuilder.Setup(instance => instance.BuildMappings(It.IsAny<IEnumerable<IMappingSource>>(), It.IsAny<IDictionary<Type, ICollection<ITermMappingProvider>>>()))
+                .Returns(new Dictionary<Type, IEntityMapping>() { { typeof(IProduct), entityMapping.Object } });
         }
     }
 }

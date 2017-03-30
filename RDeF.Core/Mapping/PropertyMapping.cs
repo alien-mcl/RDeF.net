@@ -1,4 +1,6 @@
-﻿using RDeF.Entities;
+﻿using System.Collections.Generic;
+using RDeF.Entities;
+using RDeF.Mapping.Providers;
 
 namespace RDeF.Mapping
 {
@@ -20,5 +22,19 @@ namespace RDeF.Mapping
 
         /// <inheritdoc />
         public IConverter ValueConverter { get; }
+
+        internal static PropertyMapping CreateFrom(
+            IEntityMapping entityMapping,
+            IPropertyMappingProvider propertyMappingProvider,
+            IConverter valueConverter,
+            IEnumerable<QIriMapping> qiriMappings)
+        {
+            return new PropertyMapping(
+                entityMapping,
+                propertyMappingProvider.Property.Name,
+                propertyMappingProvider.GetGraph(qiriMappings),
+                propertyMappingProvider.GetTerm(qiriMappings),
+                valueConverter);
+        }
     }
 }

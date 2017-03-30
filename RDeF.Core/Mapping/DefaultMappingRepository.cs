@@ -7,7 +7,6 @@ using System.Linq;
 using System.Reflection;
 using RDeF.Entities;
 using RDeF.Mapping.Providers;
-using RDeF.Mapping.Visitors;
 
 namespace RDeF.Mapping
 {
@@ -15,46 +14,30 @@ namespace RDeF.Mapping
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Justification = "The type is not considered a collection.")]
     public sealed class DefaultMappingRepository : IMappingsRepository
     {
+        private readonly IMappingBuilder _mappingBuilder;
+        private readonly IDictionary<Type, IEntityMapping> _mappings;
+        private readonly IDictionary<Type, ICollection<ITermMappingProvider>> _openGenericProviders;
+
         /// <summary>Initializes a new instance of the <see cref="DefaultMappingRepository"/> class.</summary>
         /// <param name="mappingSources">Collection of mapping sources.</param>
-        /// <param name="mappingProviderVisitors">Mapping provider visitors.</param>
-        /// <param name="converters">Possible converters.</param>
-        /// <param name="qiriMappings">QIri mappings.</param>
+        /// <param name="mappingsBuilder">Mapping builder.</param>
         public DefaultMappingRepository(
             IEnumerable<IMappingSource> mappingSources,
-            IEnumerable<IMappingProviderVisitor> mappingProviderVisitors,
-            IEnumerable<ILiteralConverter> converters,
-            IEnumerable<QIriMapping> qiriMappings)
+            IMappingBuilder mappingsBuilder)
         {
-            if (mappingProviderVisitors == null)
+            if (mappingSources == null)
             {
-                throw new ArgumentNullException(nameof(mappingProviderVisitors));
+                throw new ArgumentNullException(nameof(mappingSources));
             }
 
-            if (converters == null)
+            if (mappingsBuilder == null)
             {
-                throw new ArgumentNullException(nameof(converters));
+                throw new ArgumentNullException(nameof(mappingsBuilder));
             }
 
-            if (qiriMappings == null)
-            {
-                throw new ArgumentNullException(nameof(qiriMappings));
-            }
-
-            MappingProviderVisitors = mappingProviderVisitors;
-            Converters = converters;
-            QIriMappings = qiriMappings;
-            Mappings = new ConcurrentDictionary<Type, MergingEntityMapping>();
-            BuildMappings(mappingSources);
+            _openGenericProviders = new ConcurrentDictionary<Type, ICollection<ITermMappingProvider>>();
+            _mappings = (_mappingBuilder = mappingsBuilder).BuildMappings(mappingSources, _openGenericProviders);
         }
-
-        internal ConcurrentDictionary<Type, MergingEntityMapping> Mappings { get; }
-
-        internal IEnumerable<IMappingProviderVisitor> MappingProviderVisitors { get; }
-
-        internal IEnumerable<IConverter> Converters { get; }
-
-        internal IEnumerable<QIriMapping> QIriMappings { get; }
 
         /// <inheritdoc />
         public IEntityMapping FindEntityMappingFor(Iri @class, Iri graph = null)
@@ -64,7 +47,7 @@ namespace RDeF.Mapping
                 throw new ArgumentNullException(nameof(@class));
             }
 
-            return (from entityMapping in Mappings.Values
+            return (from entityMapping in _mappings.Values
                     from mappedClass in entityMapping.Classes
                     where mappedClass.Term == @class && (graph == null || mappedClass.Graph == graph)
                     select entityMapping).FirstOrDefault();
@@ -78,7 +61,12 @@ namespace RDeF.Mapping
                 throw new ArgumentNullException(nameof(type));
             }
 
-            return (from entityMapping in Mappings.Values
+            if ((type.IsGenericType) && (!type.IsGenericTypeDefinition))
+            {
+                _mappingBuilder.BuildMapping(_mappings, type, _openGenericProviders[type.GetGenericTypeDefinition()]);
+            }
+
+            return (from entityMapping in _mappings.Values
                     where entityMapping.Type == type
                     select entityMapping).FirstOrDefault();
         }
@@ -91,7 +79,7 @@ namespace RDeF.Mapping
                 throw new ArgumentNullException(nameof(predicate));
             }
 
-            return (from entityMapping in Mappings.Values
+            return (from entityMapping in _mappings.Values
                     from propertyMapping in entityMapping.Properties
                     where propertyMapping.Term == predicate && (graph == null || propertyMapping.Graph == graph)
                     select propertyMapping).FirstOrDefault();
@@ -105,7 +93,12 @@ namespace RDeF.Mapping
                 throw new ArgumentNullException(nameof(property));
             }
 
-            return (from entityMapping in Mappings.Values
+            if ((property.DeclaringType.IsGenericType) && (!property.DeclaringType.IsGenericTypeDefinition))
+            {
+                _mappingBuilder.BuildMapping(_mappings, property.DeclaringType, _openGenericProviders[property.DeclaringType.GetGenericTypeDefinition()]);
+            }
+
+            return (from entityMapping in _mappings.Values
                     where entityMapping.Type == property.DeclaringType
                     from propertyMapping in entityMapping.Properties
                     where propertyMapping.Name == property.Name
@@ -115,7 +108,7 @@ namespace RDeF.Mapping
         /// <inheritdoc />
         public IEnumerator<IEntityMapping> GetEnumerator()
         {
-            return Mappings.Values.GetEnumerator();
+            return _mappings.Values.GetEnumerator();
         }
 
         /// <inheritdoc />
@@ -124,97 +117,6 @@ namespace RDeF.Mapping
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
-        }
-
-        private void BuildMappings(IEnumerable<IMappingSource> mappingSources)
-        {
-            lock (Mappings)
-            {
-                foreach (var mappingProvider in mappingSources.SelectMany(mappingSource => mappingSource.GatherEntityMappingProviders()))
-                {
-                    mappingProvider.Visit(MappingProviderVisitors);
-                    MergingEntityMapping existingEntityMapping = BuildEntityMapping(mappingProvider);
-                    BuildPropertyMapping(existingEntityMapping, mappingProvider as IPropertyMappingProvider);
-                }
-            }
-        }
-
-        private MergingEntityMapping BuildEntityMapping(ITermMappingProvider mappingProvider)
-        {
-            MergingEntityMapping existingEntityMapping;
-            if (!Mappings.TryGetValue(mappingProvider.EntityType, out existingEntityMapping))
-            {
-                Mappings[mappingProvider.EntityType] = existingEntityMapping = new MergingEntityMapping(mappingProvider.EntityType);
-            }
-
-            var entityMappingProvider = mappingProvider as IEntityMappingProvider;
-            if (entityMappingProvider == null)
-            {
-                return existingEntityMapping;
-            }
-
-            var term = entityMappingProvider.GetTerm(QIriMappings);
-            if (term != null)
-            {
-                existingEntityMapping.Classes.Add(new StatementMapping(entityMappingProvider.GetGraph(QIriMappings), term));
-            }
-
-            return existingEntityMapping;
-        }
-
-        private void BuildPropertyMapping(MergingEntityMapping existingEntityMapping, IPropertyMappingProvider propertyMappingProvider)
-        {
-            if (propertyMappingProvider == null)
-            {
-                return;
-            }
-
-            IConverter valueConverter = null;
-            if (propertyMappingProvider.ValueConverterType != null)
-            {
-                valueConverter = (from converter in Converters
-                                  let match = propertyMappingProvider.ValueConverterType == converter.GetType() ? 2 :
-                                      (propertyMappingProvider.ValueConverterType.IsInstanceOfType(converter) ? 1 : 0)
-                                  where match > 0
-                                  orderby match descending
-                                  select converter).First();
-            }
-
-            IPropertyMapping propertyMapping;
-            var collectionMapping = propertyMappingProvider as ICollectionMappingProvider;
-            if (collectionMapping != null)
-            {
-                propertyMapping = new CollectionMapping(
-                    existingEntityMapping,
-                    collectionMapping.Property.Name,
-                    collectionMapping.GetGraph(QIriMappings),
-                    collectionMapping.GetTerm(QIriMappings),
-                    valueConverter,
-                    collectionMapping.StoreAs);
-            }
-            else
-            {
-                propertyMapping = new PropertyMapping(
-                    existingEntityMapping,
-                    propertyMappingProvider.Property.Name,
-                    propertyMappingProvider.GetGraph(QIriMappings),
-                    propertyMappingProvider.GetTerm(QIriMappings),
-                    valueConverter);
-            }
-
-            var existingPropertyMapping = existingEntityMapping.Properties.FirstOrDefault(mapping => mapping.Name == propertyMappingProvider.Property.Name);
-            if (existingPropertyMapping != null)
-            {
-                if (!PropertyMappingEqualityComparer.Default.Equals(propertyMapping, existingPropertyMapping))
-                {
-                    throw new AmbiguousMappingException(
-                        $"Mapping for ${propertyMappingProvider.Property.Name} for type ${existingEntityMapping.Type} is already defined.");
-                }
-
-                return;
-            }
-
-            existingEntityMapping.Properties.Add(propertyMapping);
         }
     }
 }

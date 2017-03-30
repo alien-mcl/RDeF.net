@@ -1,14 +1,16 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using FluentAssertions;
+using Moq;
 using NUnit.Framework;
 using RDeF.Data;
 using RDeF.Mapping;
+using RDeF.Mapping.Providers;
 
 namespace Given_instance_of.DefaultMappingRepository_class.which_is_already_initialized
 {
     [TestFixture]
-    public class and_searching_for_type_mapping : ScenarioTest
+    public class and_searching_for_type_mapping : DefaultMappingRepositoryTest
     {
         private static readonly Type ExpectedType = typeof(IProduct);
 
@@ -28,14 +30,15 @@ namespace Given_instance_of.DefaultMappingRepository_class.which_is_already_init
         [Test]
         public void Should_throw_when_no_type_is_given()
         {
-            MappingRepository.Invoking(instance => instance.FindEntityMappingFor((Type)null)).ShouldThrow<ArgumentNullException>();
+            MappingRepository.Invoking(instance => instance.FindEntityMappingFor(null)).ShouldThrow<ArgumentNullException>();
         }
 
         protected override void ScenarioSetup()
         {
-            MappingSource.Setup(instance => instance.GatherEntityMappingProviders())
-                .Returns(SetupMappingProviders("Product", "Name", "Price").Select(provider => provider.Object));
-            base.ScenarioSetup();
+            var entityMapping = new Mock<IEntityMapping>(MockBehavior.Strict);
+            entityMapping.SetupGet(instance => instance.Type).Returns(typeof(IProduct));
+            MappingBuilder.Setup(instance => instance.BuildMappings(It.IsAny<IEnumerable<IMappingSource>>(), It.IsAny<IDictionary<Type, ICollection<ITermMappingProvider>>>()))
+                .Returns(new Dictionary<Type, IEntityMapping>() { { typeof(IProduct), entityMapping.Object } });
         }
     }
 }
