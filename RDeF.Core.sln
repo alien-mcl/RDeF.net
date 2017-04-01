@@ -1,0 +1,71 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDeF.Contracts.Core", "RDeF.Contracts\RDeF.Contracts.Core.csproj", "{F821081F-ACFC-4192-9B68-5E0B80C8ADD6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDeF.Core.Core", "RDeF.Core\RDeF.Core.Core.csproj", "{699F9D30-D5CB-439D-99B1-DC18A81328DF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDeF.Core.Tests.Core", "RDeF.Core.Tests\RDeF.Core.Tests.Core.csproj", "{4FC5BA2C-9E3E-4510-A610-16E9B830C3E2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDeF.Mapping.Attributes.Core", "RDeF.Mapping.Attributes\RDeF.Mapping.Attributes.Core.csproj", "{CAAED8C0-0A2A-4351-B293-7EBAB5FC0D49}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDeF.Mapping.Attributes.Tests.Core", "RDeF.Mapping.Attributes.Tests\RDeF.Mapping.Attributes.Tests.Core.csproj", "{7E09FE97-9647-4613-88BD-D3C2F599F52A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDeF.Serialization.Core", "RDeF.Serialization\RDeF.Serialization.Core.csproj", "{927DA292-8349-4522-A91F-F2E4F84FA3DD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDeF.Serialization.Tests.Core", "RDeF.Serialization.Tests\RDeF.Serialization.Tests.Core.csproj", "{2C7ED009-D244-4F06-AE6B-EEE311D27F70}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{97F2A73A-AFB8-4731-9066-618CAC21A05D}"
+	ProjectSection(SolutionItems) = preProject
+		.build\CommonAssemblyInfo.cs = .build\CommonAssemblyInfo.cs
+		.build\VersionAssemblyInfo.cs = .build\VersionAssemblyInfo.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".config", ".config", "{4E24B705-077C-4288-81FD-740905346465}"
+	ProjectSection(SolutionItems) = preProject
+		CustomDictionary.xml = CustomDictionary.xml
+		RDeF.ruleset = RDeF.ruleset
+		RDeF.Tests.ruleset = RDeF.Tests.ruleset
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F821081F-ACFC-4192-9B68-5E0B80C8ADD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F821081F-ACFC-4192-9B68-5E0B80C8ADD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F821081F-ACFC-4192-9B68-5E0B80C8ADD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F821081F-ACFC-4192-9B68-5E0B80C8ADD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{699F9D30-D5CB-439D-99B1-DC18A81328DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{699F9D30-D5CB-439D-99B1-DC18A81328DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{699F9D30-D5CB-439D-99B1-DC18A81328DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{699F9D30-D5CB-439D-99B1-DC18A81328DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FC5BA2C-9E3E-4510-A610-16E9B830C3E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FC5BA2C-9E3E-4510-A610-16E9B830C3E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FC5BA2C-9E3E-4510-A610-16E9B830C3E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FC5BA2C-9E3E-4510-A610-16E9B830C3E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CAAED8C0-0A2A-4351-B293-7EBAB5FC0D49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CAAED8C0-0A2A-4351-B293-7EBAB5FC0D49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CAAED8C0-0A2A-4351-B293-7EBAB5FC0D49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CAAED8C0-0A2A-4351-B293-7EBAB5FC0D49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E09FE97-9647-4613-88BD-D3C2F599F52A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E09FE97-9647-4613-88BD-D3C2F599F52A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E09FE97-9647-4613-88BD-D3C2F599F52A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E09FE97-9647-4613-88BD-D3C2F599F52A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{927DA292-8349-4522-A91F-F2E4F84FA3DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{927DA292-8349-4522-A91F-F2E4F84FA3DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{927DA292-8349-4522-A91F-F2E4F84FA3DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{927DA292-8349-4522-A91F-F2E4F84FA3DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C7ED009-D244-4F06-AE6B-EEE311D27F70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C7ED009-D244-4F06-AE6B-EEE311D27F70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C7ED009-D244-4F06-AE6B-EEE311D27F70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C7ED009-D244-4F06-AE6B-EEE311D27F70}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

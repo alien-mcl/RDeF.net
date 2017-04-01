@@ -6,7 +6,6 @@ namespace RDeF.Mapping
 {
     /// <summary>Represents a situation, when multiple mappings where detected.</summary>
     [Serializable]
-    [ExcludeFromCodeCoverage]
     [SuppressMessage("TS0000", "NoUnitTests", Justification = "Implemented only to match the requirements. No special logic to be tested here.")]
     public class AmbiguousMappingException : Exception
     {
@@ -27,12 +26,13 @@ namespace RDeF.Mapping
         public AmbiguousMappingException(string message, Exception innerException) : base(message, innerException)
         {
         }
-
+#if !NETSTANDARD1_6
         /// <summary>Initializes a new instance of the <see cref="AmbiguousMappingException" /> class.</summary>
         /// <param name="info">Serialization info.</param>
         /// <param name="context">Serialization context.</param>
         protected AmbiguousMappingException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
+#endif
     }
 }

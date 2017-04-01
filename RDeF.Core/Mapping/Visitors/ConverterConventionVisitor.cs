@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Reflection;
 using RDeF.Entities;
 using RDeF.Mapping.Providers;
 using RollerCaster.Reflection;

@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Reflection;
 using System.Text;
 using FluentAssertions;
 using NUnit.Framework;
@@ -13,7 +14,7 @@ namespace Given_a_data_model
     public class when_serializing_it
     {
         private static readonly string ExpectedSerializationResourceName = typeof(when_serializing_it).FullName.Replace(".", "\\") + ".json";
-        private static readonly string Expected = new StreamReader(typeof(when_serializing_it).Assembly.GetManifestResourceStream(ExpectedSerializationResourceName)).ReadToEnd().Cleaned();
+        private static readonly string Expected = new StreamReader(typeof(when_serializing_it).GetTypeInfo().Assembly.GetManifestResourceStream(ExpectedSerializationResourceName)).ReadToEnd().Cleaned();
 
         private MemoryStream Buffer { get; set; }
 

@@ -61,7 +61,7 @@ namespace RDeF.Mapping
                 throw new ArgumentNullException(nameof(type));
             }
 
-            if ((type.IsGenericType) && (!type.IsGenericTypeDefinition))
+            if ((type.GetTypeInfo().IsGenericType) && (!type.GetTypeInfo().IsGenericTypeDefinition))
             {
                 _mappingBuilder.BuildMapping(_mappings, type, _openGenericProviders[type.GetGenericTypeDefinition()]);
             }
@@ -93,7 +93,7 @@ namespace RDeF.Mapping
                 throw new ArgumentNullException(nameof(property));
             }
 
-            if ((property.DeclaringType.IsGenericType) && (!property.DeclaringType.IsGenericTypeDefinition))
+            if ((property.DeclaringType.GetTypeInfo().IsGenericType) && (!property.DeclaringType.GetTypeInfo().IsGenericTypeDefinition))
             {
                 _mappingBuilder.BuildMapping(_mappings, property.DeclaringType, _openGenericProviders[property.DeclaringType.GetGenericTypeDefinition()]);
             }

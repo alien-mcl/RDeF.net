@@ -5,6 +5,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+#if NETSTANDARD1_6
+using Microsoft.Extensions.DependencyModel;
+#endif
 
 namespace RDeF.Reflection
 {
@@ -20,7 +23,7 @@ namespace RDeF.Reflection
                 return true;
             }
 
-            if (!type.IsGenericType)
+            if (!type.GetTypeInfo().IsGenericType)
             {
                 return false;
             }
@@ -39,8 +42,18 @@ namespace RDeF.Reflection
             }
 
             TypeImplementations[typeof(T)] = result = new HashSet<Type>();
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies()
-                .Where(assembly => (!assembly.IsDynamic) && ((assemblyNamePattern == null) || (assemblyNamePattern.IsMatch(assembly.FullName)))))
+#if NETSTANDARD1_6
+            var assemblies = from library in DependencyContext.Default.RuntimeLibraries
+                             from runtimeAssembly in library.Assemblies
+                             let assembly = Assembly.Load(runtimeAssembly.Name)
+                             where (!assembly.IsDynamic) && ((assemblyNamePattern == null) || (assemblyNamePattern.IsMatch(assembly.FullName)))
+                             select assembly;
+#else
+            var assemblies = from assembly in AppDomain.CurrentDomain.GetAssemblies()
+                             where (!assembly.IsDynamic) && ((assemblyNamePattern == null) || (assemblyNamePattern.IsMatch(assembly.FullName)))
+                             select assembly;
+#endif
+            foreach (var assembly in assemblies)
             {
                 try
                 {
@@ -69,11 +82,12 @@ namespace RDeF.Reflection
 
         private static bool IsValidImplementourOf<T>(this Type implementationType)
         {
-            return !implementationType.IsValueType &&
-                !implementationType.IsInterface &&
-                !implementationType.IsEnum &&
-                !implementationType.IsAbstract &&
-                !implementationType.IsArray &&
+            var implementationTypeInfo = implementationType.GetTypeInfo();
+            return !implementationTypeInfo.IsValueType &&
+                !implementationTypeInfo.IsInterface &&
+                !implementationTypeInfo.IsEnum &&
+                !implementationTypeInfo.IsAbstract &&
+                !implementationTypeInfo.IsArray &&
                 typeof(T).IsAssignableFrom(implementationType);
         }
     }

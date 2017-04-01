@@ -34,7 +34,7 @@ namespace RDeF
                 assertion.Subject.Should().Contain(statement =>
                     statement.Subject == iri &&
                     statement.Predicate == term &&
-                    (typeof(TValue).IsValueType ? statement.Value == String.Format(CultureInfo.InvariantCulture, "{0}", value) : statement.Object == ((IEntity)value).Iri));
+                    (typeof(TValue).GetTypeInfo().IsValueType ? statement.Value == String.Format(CultureInfo.InvariantCulture, "{0}", value) : statement.Object == ((IEntity)value).Iri));
             }
         }
 
@@ -51,7 +51,7 @@ namespace RDeF
                 assertion.Subject.Should().Contain(statement =>
                     statement.Subject == iri &&
                     statement.Predicate == rdf.first &&
-                    (typeof(TValue).IsValueType ? statement.Value == String.Format(CultureInfo.InvariantCulture, "{0}", value) : statement.Object == ((IEntity)value).Iri));
+                    (typeof(TValue).GetTypeInfo().IsValueType ? statement.Value == String.Format(CultureInfo.InvariantCulture, "{0}", value) : statement.Object == ((IEntity)value).Iri));
                 var next = assertion.Subject.First(statement => 
                     statement.Subject == iri &&
                     statement.Predicate == rdf.last &&
@@ -77,7 +77,7 @@ namespace RDeF
 
         private static void ContainClassesFor(this IEntityMapping entityMapping, IEnumerable<Type> allTypes)
         {
-            var expectedClasses = allTypes.SelectMany(entityType => entityType.GetCustomAttributes<ClassAttribute>(true));
+            var expectedClasses = allTypes.SelectMany(entityType => entityType.GetTypeInfo().GetCustomAttributes<ClassAttribute>(true));
             var matchedClasses = from @class in entityMapping.Classes
                                  from expectedClass in expectedClasses
                                  where @class.Term == expectedClass.MappedIri && @class.Graph == expectedClass.GraphIri

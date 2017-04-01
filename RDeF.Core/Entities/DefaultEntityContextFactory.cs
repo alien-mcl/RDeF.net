@@ -108,7 +108,7 @@ namespace RDeF.Entities
         /// <inheritdoc />
         public IEntityContextFactory WithModule<TModule>() where TModule : IModule
         {
-            ((IModule)typeof(TModule).GetTypeInfo().GetConstructor(Type.EmptyTypes).Invoke(null)).Initialize(this);
+            ((IModule)typeof(TModule).GetConstructor(Type.EmptyTypes).Invoke(null)).Initialize(this);
             return this;
         }
 

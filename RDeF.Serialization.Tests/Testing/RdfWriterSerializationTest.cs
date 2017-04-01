@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using RDeF.Entities;
 using RDeF.Serialization;
@@ -28,7 +29,7 @@ namespace RDeF.Testing
             ExpectedSerializationResourceName = GetType().FullName.Replace(".", "\\");
             var extension = Regex.Match(ExpectedSerializationResourceName, "\\\\([A-Z][a-z]+)").Groups[1].Value.ToLower();
             ExpectedSerializationResourceName += "." + extension;
-            Expected = new StreamReader(GetType().Assembly.GetManifestResourceStream(ExpectedSerializationResourceName)).ReadToEnd();
+            Expected = new StreamReader(GetType().GetTypeInfo().Assembly.GetManifestResourceStream(ExpectedSerializationResourceName)).ReadToEnd();
             if (extension != "rdf")
             {
                 Expected = Expected.Cleaned();

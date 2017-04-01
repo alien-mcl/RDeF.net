@@ -10,6 +10,7 @@ using RDeF.Xml;
 
 namespace RDeF.Serialization
 {
+    /// <summary>Provides a simple RDF over XML serialization.</summary>
     public class RdfXmlWriter : IRdfWriter
     {
         /// <inheritdoc />

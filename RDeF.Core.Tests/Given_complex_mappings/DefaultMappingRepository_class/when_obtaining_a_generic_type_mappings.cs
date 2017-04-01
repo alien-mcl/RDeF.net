@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using FluentAssertions;
 using NUnit.Framework;
 using RDeF;
@@ -38,7 +39,7 @@ namespace Given_complex_mappings.DefaultMappingRepository_class
                 new CollectionStorageModelConventionVisitor()
             };
             Repository = new DefaultMappingRepository(
-                new[] { new AttributesMappingSource(typeof(IProduct).Assembly) },
+                new[] { new AttributesMappingSource(typeof(IProduct).GetTypeInfo().Assembly) },
                 new DefaultMappingBuilder(converters, Array.Empty<QIriMapping>(), mappingProviderVisitors));
         }
     }

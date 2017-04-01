@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using RDeF.Entities;
 using RDeF.Mapping.Attributes;
@@ -58,8 +59,14 @@ namespace RDeF.Mapping.Providers
             types.Add(typeof(Type));
             parameters.Add(propertyMapping.ValueConverterType);
             AddTerm(types, parameters, propertyMapping.GraphIri, propertyMapping.GraphPrefix, propertyMapping.GraphTerm);
+#if NETSTANDARD1_6
+            return (AttributePropertyMappingProvider)typeof(AttributePropertyMappingProvider)
+                .GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance)
+                .First(ctor => ctor.GetParameters().Select(parameter => parameter.ParameterType).SequenceEqual(types)).Invoke(parameters.ToArray());
+#else
             return (AttributePropertyMappingProvider)typeof(AttributePropertyMappingProvider)
                 .GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, types.ToArray(), null).Invoke(parameters.ToArray());
+#endif
         }
     }
 }

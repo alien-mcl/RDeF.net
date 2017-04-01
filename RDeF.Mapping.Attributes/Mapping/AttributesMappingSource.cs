@@ -54,7 +54,7 @@ namespace RDeF.Mapping
                         select type;
             foreach (var type in types)
             {
-                foreach (var classAttribute in type.GetCustomAttributes<ClassAttribute>())
+                foreach (var classAttribute in type.GetTypeInfo().GetCustomAttributes<ClassAttribute>())
                 {
                     _entityMappingProviders.Add(AttributeEntityMappingProvider.FromAttribute(type, classAttribute));
                 }

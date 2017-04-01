@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Reflection;
 using FluentAssertions;
 using NUnit.Framework;
 using RDeF.Data;
@@ -14,7 +15,7 @@ namespace Given_instance_of.AttributesMappingSourceProvider_class
         [Test]
         public void Should_gather_all_mapping_sources_for_that_assembly()
         {
-            Provider.GetMappingSourcesFor(typeof(IProduct).Assembly).Should().HaveCount(1).And.Subject.First().Should().BeOfType<AttributesMappingSource>();
+            Provider.GetMappingSourcesFor(typeof(IProduct).GetTypeInfo().Assembly).Should().HaveCount(1).And.Subject.First().Should().BeOfType<AttributesMappingSource>();
         }
 
         [SetUp]

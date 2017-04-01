@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+#if NETSTANDARD1_6
+using Microsoft.Extensions.DependencyModel;
+#endif
 using RDeF.Collections;
 using RDeF.Reflection;
 using RollerCaster.Reflection;
@@ -162,7 +165,7 @@ namespace RDeF.ComponentModel
         private IEnumerable ResolveAll(Type serviceType, ISet<Type> visitedDependencies)
         {
             var itemType = serviceType.GetItemType();
-            IList result = (IList)typeof(List<>).MakeGenericType(itemType).GetTypeInfo().GetConstructor(Type.EmptyTypes).Invoke(null);
+            IList result = (IList)typeof(List<>).MakeGenericType(itemType).GetConstructor(Type.EmptyTypes).Invoke(null);
             IDictionary<Type, object> instanceRegistrations;
             if (_instanceRegistrations.TryGetValue(itemType, out instanceRegistrations))
             {
@@ -223,7 +226,7 @@ namespace RDeF.ComponentModel
             }
 
             visitedDependencies.Add(type);
-            foreach (var ctor in type.GetTypeInfo().GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).OrderByDescending(ctor => ctor.GetParameters().Length))
+            foreach (var ctor in type.GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).OrderByDescending(ctor => ctor.GetParameters().Length))
             {
                 bool canCreateInstance = true;
                 List<object> arguments = null;
@@ -260,8 +263,13 @@ namespace RDeF.ComponentModel
             {
                 return;
             }
-
+#if NETSTANDARD1_6
+            var loadedAssemblies = DependencyContext.Default.RuntimeLibraries
+                .SelectMany(library => library.Assemblies)
+                .Select(assembly => Assembly.Load(assembly.Name));
+#else
             var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+#endif
             if (loadedAssemblies.Any(assembly => assembly.GetName().Name == AttributeMappingsAssembly))
             {
                 return;

@@ -35,16 +35,16 @@ namespace Given_instance_of.converter_of_type
         [SetUp]
         public void Setup()
         {
-            CurrentCulture = Thread.CurrentThread.CurrentCulture;
-            CurrentUICulture = Thread.CurrentThread.CurrentUICulture;
+            CurrentCulture = CultureInfo.CurrentCulture;
+            CurrentUICulture = CultureInfo.CurrentUICulture;
             Converter = new TConverter();
         }
 
         [TearDown]
         public void Teardown()
         {
-            Thread.CurrentThread.CurrentCulture = CurrentCulture;
-            Thread.CurrentThread.CurrentUICulture = CurrentUICulture;
+            CultureInfo.CurrentCulture = CurrentCulture;
+            CultureInfo.CurrentUICulture = CurrentUICulture;
         }
 
         protected Statement StatementFor(string value, Iri dataType = null)

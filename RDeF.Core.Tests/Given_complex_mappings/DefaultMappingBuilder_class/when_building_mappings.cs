@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using FluentAssertions;
 using NUnit.Framework;
 using RDeF;
@@ -22,7 +23,7 @@ namespace Given_complex_mappings.DefaultMappingBuilder_class
 
         public void TheTest()
         {
-            Mappings = Builder.BuildMappings(new AttributesMappingSourceProvider().GetMappingSourcesFor(typeof(IProduct).Assembly), OpenGenericMappingProviders);
+            Mappings = Builder.BuildMappings(new AttributesMappingSourceProvider().GetMappingSourcesFor(typeof(IProduct).GetTypeInfo().Assembly), OpenGenericMappingProviders);
         }
 
         [TestCase(typeof(IThing))]
