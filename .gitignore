@@ -63,3 +63,4 @@ UpgradeLog*.XML
 UpgradeLog*.htm
 **/Lib/*
 *.lock.json
+NugetBuild

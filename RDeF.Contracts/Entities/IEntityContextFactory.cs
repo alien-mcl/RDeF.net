@@ -8,6 +8,9 @@ namespace RDeF.Entities
     /// <summary>Represents an <see cref="IEntityContext" /> factory.</summary>
     public interface IEntityContextFactory
     {
+        /// <summary>Gets the mappings repository.</summary>
+        IMappingsRepository Mappings { get; }
+
         /// <summary>Creates a new instance of the <see cref="IEntityContext" />.</summary>
         /// <returns>Newly created instance of the <see cref="IEntityContext" />.</returns>
         IEntityContext Create();

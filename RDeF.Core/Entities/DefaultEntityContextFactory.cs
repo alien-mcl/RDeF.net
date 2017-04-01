@@ -54,6 +54,12 @@ namespace RDeF.Entities
         }
 
         /// <inheritdoc />
+        public IMappingsRepository Mappings
+        {
+            get { return _container.Resolve<IMappingsRepository>(); }
+        }
+
+        /// <inheritdoc />
         public IEntityContext Create()
         {
             var scope = _container.BeginScope();
