@@ -12,6 +12,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{D22B90A9-FC81-4D6C-8B2C-2DEE25E678B6}"
 	ProjectSection(SolutionItems) = preProject
 		.build\CommonAssemblyInfo.cs = .build\CommonAssemblyInfo.cs
+		.build\Make.bat = .build\Make.bat
+		.build\Version.bat = .build\Version.bat
 		.build\VersionAssemblyInfo.cs = .build\VersionAssemblyInfo.cs
 	EndProjectSection
 EndProject
@@ -20,8 +22,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".config", ".config", "{8E0D
 		CustomDictionary.xml = CustomDictionary.xml
 		RDeF.ruleset = RDeF.ruleset
 		RDeF.Tests.ruleset = RDeF.Tests.ruleset
-		Settings.StyleCop = Settings.StyleCop
-		TestSettings.StyleCop = TestSettings.StyleCop
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDeF.Mapping.Attributes", "RDeF.Mapping.Attributes\RDeF.Mapping.Attributes.csproj", "{C2C8CA10-8703-498E-851B-BD8C7010BF89}"
@@ -31,6 +31,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDeF.Serialization", "RDeF.Serialization\RDeF.Serialization.csproj", "{D20315CA-9F4F-4073-A205-ED66BDC5A177}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDeF.Serialization.Tests", "RDeF.Serialization.Tests\RDeF.Serialization.Tests.csproj", "{57F8549E-302F-4F92-BC68-921A542BB6DA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E59AD171-0552-408B-BC74-0E2432344986}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\RDeF.Contracts.nuspec = .nuget\RDeF.Contracts.nuspec
+		.nuget\RDeF.Core.nuspec = .nuget\RDeF.Core.nuspec
+		.nuget\RDeF.Mapping.Attributes.nuspec = .nuget\RDeF.Mapping.Attributes.nuspec
+		.nuget\RDeF.Serialization.nuspec = .nuget\RDeF.Serialization.nuspec
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
