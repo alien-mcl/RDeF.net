@@ -67,6 +67,7 @@
     <Compile Include="Entities\IriComparer.cs" />
     <Compile Include="Entities\MulticastPropertyValueExtensions.cs" />
     <Compile Include="Entities\StatementExtensions.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Mapping\Converters\BooleanConverter.cs" />
     <Compile Include="Mapping\Converters\Base64BinaryConverter.cs" />
     <Compile Include="Mapping\Converters\GuidConverter.cs" />

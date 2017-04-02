@@ -19,11 +19,15 @@ namespace RDeF.Vocabularies
 
         /// <summary>Defines rdf:first predicate.</summary>
         [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "This is due to compliance with RDF namespace convention.")]
-        public static readonly Iri first = Namespace + "first";
+        public static readonly Iri List = Namespace + "List";
 
         /// <summary>Defines rdf:first predicate.</summary>
         [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "This is due to compliance with RDF namespace convention.")]
-        public static readonly Iri last = Namespace + "last";
+        public static readonly Iri first = Namespace + "first";
+
+        /// <summary>Defines rdf:rest predicate.</summary>
+        [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "This is due to compliance with RDF namespace convention.")]
+        public static readonly Iri rest = Namespace + "rest";
 
         /// <summary>Defines rdf:first predicate.</summary>
         [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "This is due to compliance with RDF namespace convention.")]

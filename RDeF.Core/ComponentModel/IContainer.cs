@@ -7,9 +7,9 @@ namespace RDeF.ComponentModel
     {
         void Register<TService>(Regex assemblyNamePattern = null);
 
-        void Register<TService, TImplementation>() where TImplementation : TService;
+        void Register<TService, TImplementation>(Lifestyle lifestyle = Lifestyle.Singleton) where TImplementation : TService;
 
-        void Register<TService>(Type implementationType);
+        void Register<TService>(Type implementationType, Lifestyle lifestyle = Lifestyle.Singleton);
 
         void Register<TService>(TService instance);
 
@@ -22,5 +22,7 @@ namespace RDeF.ComponentModel
         IContainer BeginScope();
 
         TService Resolve<TService>();
+
+        object Resolve(Type type);
     }
 }

@@ -18,7 +18,7 @@ namespace Given_instance_of.DefaultMappingRepository_class.which_is_already_init
 
         public override void TheTest()
         {
-            Result = MappingRepository.FindEntityMappingFor(ExpectedType);
+            Result = MappingRepository.FindEntityMappingFor<IProduct>();
         }
 
         [Test]
@@ -31,6 +31,12 @@ namespace Given_instance_of.DefaultMappingRepository_class.which_is_already_init
         public void Should_throw_when_no_type_is_given()
         {
             MappingRepository.Invoking(instance => instance.FindEntityMappingFor(null)).ShouldThrow<ArgumentNullException>();
+        }
+
+        [Test]
+        public void Should_throw_when_invalid_type_is_given()
+        {
+            MappingRepository.Invoking(instance => instance.FindEntityMappingFor(typeof(string))).ShouldThrow<ArgumentOutOfRangeException>();
         }
 
         protected override void ScenarioSetup()

@@ -65,9 +65,8 @@ namespace RDeF.Entities
                                 continue;
                             }
 
-                            NotifyCollectionChangedEventHandler eventHandler = null;
-                            eventHandler = (sender, e) => OnCollectionChanged(sender, e, propertyValue);
-                            observableCollection.CollectionChanged += eventHandler;
+                            //// TODO: Check if that won't add another handler after comitting values.
+                            observableCollection.CollectionChanged += (sender, e) => OnCollectionChanged(sender, e, propertyValue);
                         }
 
                         IsChanged = false;

@@ -36,7 +36,7 @@ namespace RDeF.Entities
                     {
                         entity.SetProperty(statement, collectionMapping, context);
                     }
-                    else if (statement.Predicate == rdf.last)
+                    else if (statement.Predicate == rdf.rest)
                     {
                         head = statement.Object;
                     }

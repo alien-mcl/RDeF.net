@@ -61,6 +61,11 @@ namespace RDeF.Mapping
                 throw new ArgumentNullException(nameof(type));
             }
 
+            if (!typeof(IEntity).IsAssignableFrom(type))
+            {
+                throw new ArgumentOutOfRangeException(nameof(type));
+            }
+
             if ((type.GetTypeInfo().IsGenericType) && (!type.GetTypeInfo().IsGenericTypeDefinition))
             {
                 _mappingBuilder.BuildMapping(_mappings, type, _openGenericProviders[type.GetGenericTypeDefinition()]);
@@ -69,6 +74,12 @@ namespace RDeF.Mapping
             return (from entityMapping in _mappings.Values
                     where entityMapping.Type == type
                     select entityMapping).FirstOrDefault();
+        }
+
+        /// <inheritdoc />
+        public IEntityMapping FindEntityMappingFor<TEntity>() where TEntity : IEntity
+        {
+            return FindEntityMappingFor(typeof(TEntity));
         }
 
         /// <inheritdoc />

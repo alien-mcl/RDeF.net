@@ -23,21 +23,27 @@ namespace Given_instance_of.Iri_class
         }
 
         [Test]
-        public void Should_return_original_Uri()
+        public void Should_return_an_original_Uri()
         {
             ((Uri)new Iri(Uri)).Should().Be(Uri);
         }
 
         [Test]
-        public void Should_return_Uri()
+        public void Should_return_a_Uri()
         {
             ((Uri)new Iri("test")).ToString().Should().Be("test");
         }
 
         [Test]
-        public void Should_return_Iri()
+        public void Should_return_an_Iri()
         {
             ((Iri)Uri).ToString().Should().Be(Uri.ToString());
+        }
+
+        [Test]
+        public void Should_return_an_original_string_passed_to_Iri()
+        {
+            ((string)new Iri("test")).Should().Be("test");
         }
     }
 }

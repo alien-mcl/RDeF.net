@@ -10,7 +10,7 @@ namespace Given_instance_of.DefaultEntityContext_class.which_is_using_an_in_memo
         protected override void ScenarioSetup()
         {
             EntitySource = (InMemoryEntitySource = new Mock<IInMemoryEntitySource>(MockBehavior.Strict)).As<IEntitySource>();
-            Context = new DefaultEntityContext(EntitySource.Object, MappingsRepository.Object, ChangeDetector.Object);
+            Context = new DefaultEntityContext(EntitySource.Object, MappingsRepository.Object, ChangeDetector.Object, type => null);
         }
     }
 }

@@ -48,8 +48,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ComponentModel\IComponentConfigurator.cs" />
+    <Compile Include="ComponentModel\IComponentScope.cs" />
     <Compile Include="ComponentModel\IModule.cs" />
     <Compile Include="ComponentModel\IriTypeConverter.cs" />
+    <Compile Include="ComponentModel\Lifestyle.cs" />
     <Compile Include="Entities\IEntity.cs" />
     <Compile Include="Entities\IReadableEntitySource.cs" />
     <Compile Include="Entities\ISerializableEntitySource.cs" />

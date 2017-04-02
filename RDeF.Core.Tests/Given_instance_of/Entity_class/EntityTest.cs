@@ -25,7 +25,8 @@ namespace Given_instance_of.Entity_class
                 MockBehavior.Strict,
                 new Mock<IEntitySource>(MockBehavior.Strict).Object,
                 new Mock<IMappingsRepository>(MockBehavior.Strict).Object,
-                new Mock<IChangeDetector>(MockBehavior.Strict).Object);
+                new Mock<IChangeDetector>(MockBehavior.Strict).Object,
+                new Func<Type, object>(type => null));
             Entity = new Entity(Iri = new Iri(new Uri("http://test.com/")), Context.Object);
             ScenarioSetup();
             TheTest();

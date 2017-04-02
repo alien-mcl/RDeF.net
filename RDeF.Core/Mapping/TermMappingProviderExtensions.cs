@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using RDeF.Mapping.Providers;
 
 namespace RDeF.Mapping

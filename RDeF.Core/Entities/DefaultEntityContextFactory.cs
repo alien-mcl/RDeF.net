@@ -64,11 +64,12 @@ namespace RDeF.Entities
         {
             var scope = _container.BeginScope();
             scope.Register<IEntityContext, DefaultEntityContext>();
-            if (!scope.IsRegistered<IEntitySource>())
+            if (!_container.IsRegistered<IEntitySource>())
             {
                 scope.Register<IEntitySource, SimpleInMemoryEntitySource>();
             }
 
+            scope.Register<Func<Type, object>>(type => scope.Resolve(type));
             var result = scope.Resolve<IEntityContext>();
             result.Disposed += (sender, e) => scope.Dispose();
             return result;
@@ -132,9 +133,16 @@ namespace RDeF.Entities
             return this;
         }
 
+        /// <inheritdoc />
         IComponentConfigurator IComponentConfigurator.WithMappingsProviderVisitor<TMappingProviderVisitor>()
         {
             _container.Register<IMappingProviderVisitor, TMappingProviderVisitor>();
+            return this;
+        }
+
+        IComponentConfigurator IComponentConfigurator.WithComponent<TService, TComponent>(Lifestyle lifestyle)
+        {
+            _container.Register<TService, TComponent>(lifestyle);
             return this;
         }
     }

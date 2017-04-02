@@ -75,14 +75,14 @@ namespace RDeF.Testing
             {
                 new Statement(new Iri("subject1"), new Iri("predicate1"), new Iri("_:blank001")),
                 new Statement(new Iri("_:blank001"), rdf.first, "1", xsd.@int),
-                new Statement(new Iri("_:blank001"), rdf.last, new Iri("_:blank002")),
+                new Statement(new Iri("_:blank001"), rdf.rest, new Iri("_:blank002")),
                 new Statement(new Iri("_:blank002"), rdf.first, "2", xsd.@int),
-                new Statement(new Iri("_:blank002"), rdf.last, rdf.nil),
+                new Statement(new Iri("_:blank002"), rdf.rest, rdf.nil),
                 new Statement(new Iri("subject1"), new Iri("predicate1"), new Iri("_:blank011")),
                 new Statement(new Iri("_:blank011"), rdf.first, "1", xsd.@double),
-                new Statement(new Iri("_:blank011"), rdf.last, new Iri("_:blank012")),
+                new Statement(new Iri("_:blank011"), rdf.rest, new Iri("_:blank012")),
                 new Statement(new Iri("_:blank012"), rdf.first, "2.1", xsd.@double),
-                new Statement(new Iri("_:blank012"), rdf.last, rdf.nil)
+                new Statement(new Iri("_:blank012"), rdf.rest, rdf.nil)
             }.GroupBy(statement => statement.Graph).Select(group => new KeyValuePair<Iri, IEnumerable<Statement>>(group.Key, group));
         }
     }

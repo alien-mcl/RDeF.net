@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using RDeF.Collections;
+using RDeF.ComponentModel;
 using RDeF.Mapping;
 using RollerCaster;
 
@@ -15,13 +16,17 @@ namespace RDeF.Entities
         private readonly IEntitySource _entitySource;
         private readonly IChangeDetector _changeDetector;
         private readonly IDictionary<Iri, Entity> _entityCache;
+        private readonly ICollection<Iri> _deletedEntities;
+        private readonly Func<Type, object> _componentResolver;
         private bool _disposed;
 
-        internal DefaultEntityContext(IEntitySource entitySource, IMappingsRepository mappingsRepository, IChangeDetector changeDetector)
+        internal DefaultEntityContext(IEntitySource entitySource, IMappingsRepository mappingsRepository, IChangeDetector changeDetector, Func<Type, object> componentResolver)
         {
             _entitySource = entitySource;
-            MappingsRepository = mappingsRepository;
+            Mappings = mappingsRepository;
             _changeDetector = changeDetector;
+            _componentResolver = componentResolver;
+            _deletedEntities = new List<Iri>();
             _entityCache = new ConcurrentDictionary<Iri, Entity>();
         }
 
@@ -29,10 +34,16 @@ namespace RDeF.Entities
         public event EventHandler Disposed;
 
         /// <inheritdoc />
-        public IMappingsRepository MappingsRepository { get; }
+        public IMappingsRepository Mappings { get; }
 
         /// <inheritdoc />
         public IReadableEntitySource EntitySource { get { return _entitySource; } }
+
+        /// <inheritdoc />
+        TService IComponentScope.Resolve<TService>()
+        {
+            return (TService)_componentResolver(typeof(TService));
+        }
 
         /// <inheritdoc />
         public TEntity Load<TEntity>(Iri iri) where TEntity : IEntity
@@ -54,6 +65,32 @@ namespace RDeF.Entities
             }
 
             return CreateInternal<TEntity>(iri);
+        }
+
+        /// <inheritdoc />
+        public void Delete(Iri iri)
+        {
+            if (iri == null)
+            {
+                throw new ArgumentNullException(nameof(iri));
+            }
+
+            if (iri.IsBlank)
+            {
+                throw new ArgumentOutOfRangeException(nameof(iri));
+            }
+
+            lock (_sync)
+            {
+                Entity result;
+                if (_entityCache.TryGetValue(iri, out result))
+                {
+                    _entityCache.Remove(iri);
+                    _deletedEntities.Add(iri);
+                }
+            }
+
+            (_entitySource as IInMemoryEntitySource)?.Delete(iri);
         }
 
         /// <inheritdoc />
@@ -83,7 +120,11 @@ namespace RDeF.Entities
                     }
                 }
 
-                _entitySource.Commit(retractedStatements, addedStatements);
+                _entitySource.Commit(_deletedEntities, retractedStatements, addedStatements);
+                foreach (var entity in _entityCache)
+                {
+                    entity.Value.IsInitialized = true;
+                }
             }
         }
 
@@ -92,6 +133,7 @@ namespace RDeF.Entities
         {
             lock (_sync)
             {
+                _deletedEntities.Clear();
                 foreach (var entity in _entityCache)
                 {
                     lock (entity.Value.SynchronizationContext)
@@ -148,10 +190,10 @@ namespace RDeF.Entities
             InitializeInternal(entity, _entitySource.Load(entity.Iri), context);
         }
 
-        internal Entity CreateInternal(Iri id, bool isInitialized = true)
+        internal Entity CreateInternal(Iri iri, bool isInitialized = true)
         {
             Entity result;
-            if (_entityCache.TryGetValue(id, out result))
+            if (_entityCache.TryGetValue(iri, out result))
             {
                 return result;
             }
@@ -159,10 +201,10 @@ namespace RDeF.Entities
             var inMemoryEntitySource = _entitySource as IInMemoryEntitySource;
             if (inMemoryEntitySource != null)
             {
-                return _entityCache[id] = inMemoryEntitySource.Create(id, this) as Entity;
+                return _entityCache[iri] = inMemoryEntitySource.Create(iri, this) as Entity;
             }
 
-            return _entityCache[id] = new Entity(id, this) { IsInitialized = isInitialized };
+            return _entityCache[iri] = new Entity(iri, this) { IsInitialized = isInitialized };
         }
 
         /// <summary>Performs an actual disposal.</summary>
@@ -178,9 +220,9 @@ namespace RDeF.Entities
             Disposed?.Invoke(this, EventArgs.Empty);
         }
 
-        private TEntity CreateInternal<TEntity>(Iri id, bool isInitialized = true) where TEntity : IEntity
+        private TEntity CreateInternal<TEntity>(Iri iri, bool isInitialized = true) where TEntity : IEntity
         {
-            return CreateInternal(id, isInitialized).ActLike<TEntity>();
+            return CreateInternal(iri, isInitialized).ActLike<TEntity>();
         }
 
         private void InitializeInternal(Entity entity, IEnumerable<Statement> statements, EntityInitializationContext context)
@@ -195,11 +237,11 @@ namespace RDeF.Entities
 
                 if (statement.IsTypeAssertion())
                 {
-                    entity.CastedTypes.Add(MappingsRepository.FindEntityMappingFor(statement.Object).Type);
+                    entity.CastedTypes.Add(Mappings.FindEntityMappingFor(statement.Object).Type);
                     continue;
                 }
 
-                var propertyMapping = MappingsRepository.FindPropertyMappingFor(statement.Predicate);
+                var propertyMapping = Mappings.FindPropertyMappingFor(statement.Predicate);
                 if (!statement.Matches(propertyMapping.Graph))
                 {
                     continue;

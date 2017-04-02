@@ -54,7 +54,7 @@ namespace RDeF
                     (typeof(TValue).GetTypeInfo().IsValueType ? statement.Value == String.Format(CultureInfo.InvariantCulture, "{0}", value) : statement.Object == ((IEntity)value).Iri));
                 var next = assertion.Subject.First(statement => 
                     statement.Subject == iri &&
-                    statement.Predicate == rdf.last &&
+                    statement.Predicate == rdf.rest &&
                     statement.Object != null && (statement.Object.IsBlank || statement.Object == rdf.nil));
                 iri = next.Object;
             }

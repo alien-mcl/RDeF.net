@@ -139,7 +139,7 @@ namespace RDeF.Serialization
                     await WriteValue(xmlWriter, value, namespaces, true);
                 }
 
-                var rest = item.FirstOrDefault(statement => statement.Predicate == rdf.last);
+                var rest = item.FirstOrDefault(statement => statement.Predicate == rdf.rest);
                 item = (rest != null ? subjects.FirstOrDefault(subject => subject.Key == rest.Object) : null);
             } while (item != null);
         }

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using RDeF.Collections;
 using RDeF.Mapping;
 using RDeF.Vocabularies;
@@ -13,15 +14,39 @@ namespace RDeF.Entities
     {
         private readonly IMappingsRepository _mappingsRepository;
 
+        /// <summary>Initializes a new instance of the <see cref="DefaultChangeDetector" /> class.</summary>
+        /// <param name="mappingsRepository">Mappings repository.</param>
         internal DefaultChangeDetector(IMappingsRepository mappingsRepository)
         {
+            if (mappingsRepository == null)
+            {
+                throw new ArgumentNullException(nameof(mappingsRepository));
+            }
+
             _mappingsRepository = mappingsRepository;
         }
 
+        /// <inheritdoc />
         public void Process(Entity entity, IDictionary<IEntity, ISet<Statement>> retractedStatements, IDictionary<IEntity, ISet<Statement>> addedStatements)
         {
-            Process<Type>(entity, entity.OriginalTypes, entity.CastedTypes, retractedStatements, addedStatements);
-            Process<MulticastPropertyValue>(entity, entity.OriginalValues, entity.PropertyValues, retractedStatements, addedStatements);
+            Process(entity, entity.OriginalTypes, entity.CastedTypes, retractedStatements, addedStatements);
+            Process(entity, entity.OriginalValues, entity.PropertyValues, retractedStatements, addedStatements);
+        }
+
+        /// <summary>Obtains an entity mapping.</summary>
+        /// <param name="type">Type for which to obtain mapping.</param>
+        /// <returns>Entity mapping.</returns>
+        protected virtual IEntityMapping GetEntityMapping(Type type)
+        {
+            return _mappingsRepository.FindEntityMappingFor(type);
+        }
+
+        /// <summary>Obtains a property mapping.</summary>
+        /// <param name="property">Property for which to obtain mapping.</param>
+        /// <returns>Property mapping.</returns>
+        protected virtual IPropertyMapping GetPropertyMapping(PropertyInfo property)
+        {
+            return _mappingsRepository.FindPropertyMappingFor(property);
         }
 
         private static void AddStatements(ISet<Statement> entityStatements, ICollectionMapping collectionMapping, IEntity entity, IEnumerable values)
@@ -37,15 +62,7 @@ namespace RDeF.Entities
             foreach (var value in values)
             {
                 var auxIri = new Iri();
-                if (iri != entity.Iri)
-                {
-                    entityStatements.Add(new Statement(iri, rdf.last, auxIri));
-                }
-                else
-                {
-                    entityStatements.Add(new Statement(iri, term, auxIri));
-                }
-
+                entityStatements.Add(iri != entity.Iri ? new Statement(iri, rdf.rest, auxIri) : new Statement(iri, term, auxIri));
                 var entityValue = value as IEntity;
                 entityStatements.Add(entityValue != null
                     ? new Statement(auxIri, rdf.first, entityValue.Iri)
@@ -53,7 +70,7 @@ namespace RDeF.Entities
                 iri = auxIri;
             }
 
-            entityStatements.Add(new Statement(iri, rdf.last, rdf.nil));
+            entityStatements.Add(new Statement(iri, rdf.rest, rdf.nil));
         }
 
         private static void AddStatements(ISet<Statement> entityStatements, ICollectionMapping collectionMapping, Iri iri, IEnumerable values)
@@ -109,7 +126,7 @@ namespace RDeF.Entities
             var type = value as Type;
             if (type != null)
             {
-                foreach (var @class in _mappingsRepository.FindEntityMappingFor(type).Classes)
+                foreach (var @class in GetEntityMapping(type).Classes)
                 {
                     statements.EnsureKey(entity).Add(new Statement(entity.Iri, rdfs.type, @class.Term, @class.Graph));
                 }
@@ -118,7 +135,7 @@ namespace RDeF.Entities
             }
 
             var propertyValue = value as MulticastPropertyValue;
-            var propertyMapping = _mappingsRepository.FindPropertyMappingFor(propertyValue.Property);
+            var propertyMapping = GetPropertyMapping(propertyValue.Property);
             var collectionMapping = propertyMapping as ICollectionMapping;
             if (collectionMapping != null)
             {

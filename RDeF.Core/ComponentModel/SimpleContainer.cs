@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -17,6 +18,7 @@ namespace RDeF.ComponentModel
     internal sealed class SimpleContainer : IContainer
     {
         private const string AttributeMappingsAssembly = "RDeF.Mapping.Attributes";
+        private readonly IDictionary<Type, IDictionary<Type, Type>> _entityContextBoundServiceRegistrations = new ConcurrentDictionary<Type, IDictionary<Type, Type>>();
         private readonly IDictionary<Type, IDictionary<Type, Type>> _serviceRegistrations = new ConcurrentDictionary<Type, IDictionary<Type, Type>>();
         private readonly IDictionary<Type, IDictionary<Type, object>> _instanceRegistrations = new ConcurrentDictionary<Type, IDictionary<Type, object>>();
         private readonly SimpleContainer _owner;
@@ -33,9 +35,20 @@ namespace RDeF.ComponentModel
 
         /// <summary>Begins a new scope.</summary>
         /// <returns>New scope container.</returns>
+        [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "Instance is disposed correctly in DefaultEntityContextFactory.Create method.")]
         public SimpleContainer BeginScope()
         {
-            return new SimpleContainer(this);
+            var result = new SimpleContainer(this);
+            foreach (var serviceRegistration in _entityContextBoundServiceRegistrations)
+            {
+                var registrations = result._serviceRegistrations.EnsureKey(serviceRegistration.Key);
+                foreach (var registration in serviceRegistration.Value)
+                {
+                    registrations[registration.Key] = registration.Value;
+                }
+            }
+
+            return result;
         }
 
         IContainer IContainer.BeginScope()
@@ -60,20 +73,21 @@ namespace RDeF.ComponentModel
         }
 
         /// <inheritdoc />
-        public void Register<TService, TImplementation>() where TImplementation : TService
+        public void Register<TService, TImplementation>(Lifestyle lifestyle = Lifestyle.Singleton) where TImplementation : TService
         {
-            Register<TService>(typeof(TImplementation));
+            Register<TService>(typeof(TImplementation), lifestyle);
         }
 
         /// <inheritdoc />
-        public void Register<TService>(Type implementationType)
+        public void Register<TService>(Type implementationType, Lifestyle lifestyle = Lifestyle.Singleton)
         {
             if (!typeof(TService).IsAssignableFrom(implementationType))
             {
                 throw new ArgumentOutOfRangeException($"Unable to register type '{implementationType}' as a service '{typeof(TService)}'.");
             }
 
-            _serviceRegistrations.EnsureKey(typeof(TService), true)[implementationType] = implementationType;
+            (lifestyle == Lifestyle.BoundToEntityContext ? _entityContextBoundServiceRegistrations : _serviceRegistrations)
+                .EnsureKey(typeof(TService), true)[implementationType] = implementationType;
         }
 
         /// <inheritdoc />
@@ -126,6 +140,12 @@ namespace RDeF.ComponentModel
         public TService Resolve<TService>()
         {
             return (TService)Resolve(typeof(TService), new HashSet<Type>());
+        }
+
+        /// <inheritdoc />
+        public object Resolve(Type type)
+        {
+            return Resolve(type, new HashSet<Type>());
         }
 
         /// <inheritdoc />

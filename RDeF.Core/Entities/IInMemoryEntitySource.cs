@@ -18,6 +18,10 @@ namespace RDeF.Entities
         /// <returns>Entity loaded.</returns>
         TEntity Create<TEntity>(Iri iri, IEntityContext entityContext) where TEntity : IEntity;
 
+        /// <summary>Deletes an entity of a given <paramref name="iri" />.</summary>
+        /// <param name="iri">Iri of the entity to be deleted.</param>
+        void Delete(Iri iri);
+
         /// <summary>Converts a given entity source into a queryable collection of types <typeparamref name="TEntity" />.</summary>
         /// <typeparam name="TEntity">Type of entities to search for.</typeparam>
         /// <returns>Queryable entity source.</returns>

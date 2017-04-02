@@ -33,7 +33,7 @@ namespace Given_instance_of.DefaultEntityContextFactory_class
         [Test]
         public void Should_build_the_mappings_correctly()
         {
-            Result.MappingsRepository.Should().HaveCount(5).And.Subject.First(entity => entity.Type == typeof(IProduct)).Properties.Should().HaveCount(6);
+            Result.Mappings.Should().HaveCount(5).And.Subject.First(entity => entity.Type == typeof(IProduct)).Properties.Should().HaveCount(6);
         }
 
         [Test]

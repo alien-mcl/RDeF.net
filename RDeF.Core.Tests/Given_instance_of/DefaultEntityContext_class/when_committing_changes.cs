@@ -10,6 +10,8 @@ namespace Given_instance_of.DefaultEntityContext_class
     [TestFixture]
     public class when_committing_changes : DefaultEntityContextTest
     {
+        private ICollection<Iri> DeletedEntities { get; set; }
+
         private IDictionary<IEntity, ISet<Statement>> RetractedStatements { get; set; }
 
         private IDictionary<IEntity, ISet<Statement>> AddedStatements { get; set; }
@@ -28,9 +30,9 @@ namespace Given_instance_of.DefaultEntityContext_class
         }
 
         [Test]
-        public void Should_cancel_name_change()
+        public void Should_pass_all_changes_to_the_underlying_EntitySource()
         {
-            EntitySource.Verify(instance => instance.Commit(RetractedStatements, AddedStatements), Times.Once);
+            EntitySource.Verify(instance => instance.Commit(DeletedEntities, RetractedStatements, AddedStatements), Times.Once);
         }
 
         protected override void ScenarioSetup()
@@ -42,7 +44,11 @@ namespace Given_instance_of.DefaultEntityContext_class
                     RetractedStatements = retracted;
                     AddedStatements = added;
                 });
-            EntitySource.Setup(instance => instance.Commit(It.IsAny<IDictionary<IEntity, ISet<Statement>>>(), It.IsAny<IDictionary<IEntity, ISet<Statement>>>()));
+            DeletedEntities = new List<Iri>();
+            EntitySource.Setup(instance => instance.Commit(
+                It.IsAny<IEnumerable<Iri>>(),
+                It.IsAny<IDictionary<IEntity, ISet<Statement>>>(),
+                It.IsAny<IDictionary<IEntity, ISet<Statement>>>()));
         }
     }
 }

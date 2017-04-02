@@ -55,7 +55,7 @@ namespace Given_instance_of.DefaultChangeDetector_class.when_processing
                 });
             RetractedStatements = new Dictionary<IEntity, ISet<Statement>>();
             AddedStatements = new Dictionary<IEntity, ISet<Statement>>();
-            Entity = new Entity(new Iri("test"), (Context = new Mock<DefaultEntityContext>(null, MappingsRepository.Object, Detector)).Object);
+            Entity = new Entity(new Iri("test"), (Context = new Mock<DefaultEntityContext>(null, MappingsRepository.Object, Detector, new Func<Type, object>(type => null))).Object);
         }
     }
 }

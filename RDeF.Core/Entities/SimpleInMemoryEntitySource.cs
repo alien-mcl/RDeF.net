@@ -30,14 +30,30 @@ namespace RDeF.Entities
 
         /// <inheritdoc />
         public void Commit(
+            IEnumerable<Iri> deletedEntities,
             IEnumerable<KeyValuePair<IEntity, ISet<Statement>>> retractedStatements,
             IEnumerable<KeyValuePair<IEntity, ISet<Statement>>> addedStatements)
         {
+            if (deletedEntities == null)
+            {
+                throw new ArgumentNullException(nameof(deletedEntities));
+            }
+
+            if (retractedStatements == null)
+            {
+                throw new ArgumentNullException(nameof(retractedStatements));
+            }
+
+            if (addedStatements == null)
+            {
+                throw new ArgumentNullException(nameof(addedStatements));
+            }
+
             lock (_sync)
             {
                 ProcessStatements(retractedStatements, (statements, statement) => statements.Remove(statement));
                 ProcessStatements(addedStatements, (statements, statement) => statements.Add(statement));
-                var toBeRemoved = Entities.Where(entity => entity.Value.Count == 0).Select(entity => entity.Key).ToList();
+                var toBeRemoved = Entities.Where(entity => entity.Value.Count == 0 || deletedEntities.Contains(entity.Key.Iri)).Select(entity => entity.Key).ToList();
                 foreach (var entity in toBeRemoved)
                 {
                     Entities.Remove(entity);
@@ -48,12 +64,28 @@ namespace RDeF.Entities
         /// <inheritdoc />
         public IEntity Create(Iri iri, IEntityContext entityContext)
         {
+            if (iri == null)
+            {
+                throw new ArgumentNullException(nameof(iri));
+            }
+
+            if (entityContext == null)
+            {
+                throw new ArgumentNullException(nameof(entityContext));
+            }
+
+            var defaultEntityContext = entityContext as DefaultEntityContext;
+            if (defaultEntityContext == null)
+            {
+                throw new ArgumentOutOfRangeException(nameof(entityContext));
+            }
+
             lock (_sync)
             {
                 var result = Entities.Where(entity => entity.Key.Iri == iri).Select(entity => entity.Key).FirstOrDefault();
                 if (result == null)
                 {
-                    Entities[result = new Entity(iri, entityContext as DefaultEntityContext) { IsInitialized = true }] = new HashSet<Statement>();
+                    Entities[result = new Entity(iri, defaultEntityContext) { IsInitialized = true }] = new HashSet<Statement>();
                 }
 
                 return result;
@@ -63,9 +95,21 @@ namespace RDeF.Entities
         /// <inheritdoc />
         public TEntity Create<TEntity>(Iri iri, IEntityContext entityContext) where TEntity : IEntity
         {
-            lock (_sync)
+            return Create(iri, entityContext).ActLike<TEntity>();
+        }
+
+        /// <inheritdoc />
+        public void Delete(Iri iri)
+        {
+            if (iri == null)
             {
-                return Create(iri, entityContext).ActLike<TEntity>();
+                throw new ArgumentNullException(nameof(iri));
+            }
+
+            var existingEntity = Entities.Where(entity => entity.Key.Iri == iri).Select(entity => entity.Key).FirstOrDefault();
+            if (existingEntity != null)
+            {
+                Entities.Remove(existingEntity);
             }
         }
 

@@ -21,6 +21,12 @@ namespace RDeF.Mapping
         /// <returns>Matching <see cref="IEntityMapping" />.</returns>
         IEntityMapping FindEntityMappingFor(Type type);
 
+        /// <summary>Finds the mapping for a given <typeparamref name="TEntity" />.</summary>
+        /// <typeparam name="TEntity">Type for which to obtain a mapping.</typeparam>
+        /// <returns>Matching <see cref="IEntityMapping" />.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "This is a part of a fluent-like API and works as intended.")]
+        IEntityMapping FindEntityMappingFor<TEntity>() where TEntity : IEntity;
+
         /// <summary>Finds the mapping for a given <paramref name="predicate" />.</summary>
         /// <param name="predicate">The predicate for which to obtain a mapping.</param>
         /// <param name="graph">Optional named graph.</param>

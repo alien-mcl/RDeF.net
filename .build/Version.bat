@@ -12,3 +12,4 @@ IF %version% gtr 0 SET /A version-=1
 ECHO [assembly: System.Reflection.AssemblyVersion("%tag:~1%.%version%.%release%")] > "%CD%\.build\VersionAssemblyInfo.cs""
 ECHO [assembly: System.Reflection.AssemblyFileVersion("%tag:~1%.%version%.%release%")] >> "%CD%\.build\VersionAssemblyInfo.cs""
 ECHO [assembly: System.Reflection.AssemblyInformationalVersion("%tag:~1%.%version%.%release%-%hash%")] >> "%CD%\.build\VersionAssemblyInfo.cs""
+ECHO [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2243:AttributeStringLiteralsShouldParseCorrectly", Justification = "Commit hash added to AssemblyInformationalVersion is on purpose.")] >> "%CD%\.build\VersionAssemblyInfo.cs""

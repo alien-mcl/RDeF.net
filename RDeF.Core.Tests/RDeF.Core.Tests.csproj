@@ -78,6 +78,7 @@
     <Compile Include="Data\IThing.cs" />
     <Compile Include="Given_complex_mappings\DefaultMappingBuilder_class\when_building_mappings.cs" />
     <Compile Include="Given_complex_mappings\DefaultMappingRepository_class\when_obtaining_a_generic_type_mappings.cs" />
+    <Compile Include="Given_instance_of\AmbiguousMappingException_class\when_initializing.cs" />
     <Compile Include="Given_instance_of\CollectionStorageModelConventionVisitor_class\CollectionStorageModelConventionVisitorTest.cs" />
     <Compile Include="Given_instance_of\CollectionStorageModelConventionVisitor_class\when_visiting_a_property_mapping.cs" />
     <Compile Include="Given_instance_of\CollectionStorageModelConventionVisitor_class\when_visiting_a_list_property_mapping.cs" />
@@ -106,6 +107,8 @@
     <Compile Include="Given_instance_of\DefaultEntityContextFactory_class\DefaultEntityContextFactoryTest.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContextFactory_class\when_creating_an_entity_context.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContext_class\DefaultEntityContextTest.cs" />
+    <Compile Include="Given_instance_of\DefaultEntityContext_class\when_resolving_a_component.cs" />
+    <Compile Include="Given_instance_of\DefaultEntityContext_class\when_deleting_an_entity.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContext_class\which_is_using_an_in_memory_entity_source\ScenarioTest.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContext_class\which_is_using_an_in_memory_entity_source\when_creating_an_entity.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContext_class\which_is_using_an_in_memory_entity_source\when_querying.cs" />
@@ -143,6 +146,7 @@
     <Compile Include="Given_instance_of\QIriMapping_class\when_initializing.cs" />
     <Compile Include="Given_instance_of\SimpleInMemoryEntitySource_class\SimpleInMemoryEntitySourceTest.cs" />
     <Compile Include="Given_instance_of\SimpleInMemoryEntitySource_class\when_loading_an_entity.cs" />
+    <Compile Include="Given_instance_of\SimpleInMemoryEntitySource_class\when_deleting.cs" />
     <Compile Include="Given_instance_of\SimpleInMemoryEntitySource_class\when_serializing.cs" />
     <Compile Include="Given_instance_of\SimpleInMemoryEntitySource_class\when_querying.cs" />
     <Compile Include="Given_instance_of\SimpleInMemoryEntitySource_class\when_creating_an_entity.cs" />

@@ -6,7 +6,7 @@ namespace RDeF.Entities
     {
         internal static bool IsRelatedTo(this Statement statement, IEntity entity)
         {
-            return (statement.Subject == entity.Iri) && (statement.Predicate != rdf.first) && (statement.Predicate != rdf.last);
+            return (statement.Subject == entity.Iri) && (statement.Predicate != rdf.first) && (statement.Predicate != rdf.rest);
         }
 
         internal static bool Matches(this Statement statement, Iri graph)

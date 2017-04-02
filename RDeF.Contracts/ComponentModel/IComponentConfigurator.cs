@@ -24,5 +24,13 @@ namespace RDeF.ComponentModel
         /// <returns>Current instance of the <see cref="IComponentConfigurator" />.</returns>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "This is a part of the fluent-like API and it is as intended.")]
         IComponentConfigurator WithMappingsProviderVisitor<TMappingProviderVisitor>() where TMappingProviderVisitor : IMappingProviderVisitor;
+
+        /// <summary>Allows to register a custom component.</summary>
+        /// <typeparam name="TService">Type of the service to register.</typeparam>
+        /// <typeparam name="TComponent">Type of the implementation of the <typeparamref name="TService" />.</typeparam>
+        /// <param name="lifestyle">Lifestyle of the component.</param>
+        /// <returns>Current instance of the <see cref="IComponentConfigurator" />.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "This is a part of the fluent-like API and it is as intended.")]
+        IComponentConfigurator WithComponent<TService, TComponent>(Lifestyle lifestyle = Lifestyle.Singleton) where TComponent : TService;
     }
 }

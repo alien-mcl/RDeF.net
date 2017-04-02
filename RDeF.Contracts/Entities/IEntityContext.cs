@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Linq;
+using RDeF.ComponentModel;
 using RDeF.Mapping;
 
 namespace RDeF.Entities
 {
     /// <summary>Describes an abstract entity context.</summary>
-    public interface IEntityContext : IDisposable
+    public interface IEntityContext : IComponentScope, IDisposable
     {
         /// <summary>Notifies on disposal.</summary>
         event EventHandler Disposed;
 
         /// <summary>Gets the mappings repository.</summary>
-        IMappingsRepository MappingsRepository { get; }
+        IMappingsRepository Mappings { get; }
 
         /// <summary>Gets an underlying entity source.</summary>
         IReadableEntitySource EntitySource { get; }
@@ -27,6 +28,10 @@ namespace RDeF.Entities
         /// <param name="iri">The identifier of the entity to be loaded.</param>
         /// <returns>Instance of the entity of a given <paramref name="iri" />.</returns>
         TEntity Create<TEntity>(Iri iri) where TEntity : IEntity;
+
+        /// <summary>Deletes a specified entity.</summary>
+        /// <param name="iri">The identifier of the entity to be deleted.</param>
+        void Delete(Iri iri);
 
         /// <summary>Converts a context to be LINQ queryable.</summary>
         /// <typeparam name="TEntity">Type of entities to query for.</typeparam>
