@@ -6,7 +6,7 @@ using RDeF.Mapping;
 namespace RDeF.Entities
 {
     /// <summary>Represents an <see cref="IEntityContext" /> factory.</summary>
-    public interface IEntityContextFactory
+    public interface IEntityContextFactory : IDisposable
     {
         /// <summary>Gets the mappings repository.</summary>
         IMappingsRepository Mappings { get; }

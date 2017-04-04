@@ -3,6 +3,7 @@ using NUnit.Framework;
 using RDeF;
 using RDeF.Entities;
 using RDeF.Mapping;
+using RDeF.Mapping.Converters;
 using RDeF.Mapping.Providers;
 using PropertyAttribute = RDeF.Mapping.Attributes.PropertyAttribute;
 

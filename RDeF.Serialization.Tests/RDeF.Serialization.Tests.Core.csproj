@@ -20,7 +20,6 @@
 
   <ItemGroup>
     <Compile Include="..\RDef.Core.Tests\Data\IComplexEntity.cs" Link="Data\IComplexEntity.cs" />
-    <Compile Include="..\RDef.Core.Tests\Mapping\TestConverter.cs" Link="Mapping\TestConverter.cs" />
     <Compile Include="..\.build\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
     <Compile Include="..\.build\VersionAssemblyInfo.cs" Link="Properties\VersionAssemblyInfo.cs" />
   </ItemGroup>

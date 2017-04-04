@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6D22E75C-55DB-46A1-919D-B0CADA218A8A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RDeF.Mapping</RootNamespace>
+    <AssemblyName>RDeF.Mapping.Fluent</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\RDeF.Mapping.Fluent.xml</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>..\RDeF.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\RDeF.Mapping.Fluent.xml</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeAnalysisRuleSet>..\RDeF.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="RollerCaster, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RollerCaster.1.0.0\lib\net461\RollerCaster.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\.build\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\.build\VersionAssemblyInfo.cs">
+      <Link>Properties\VersionAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Entities\EntityContextExtensions.cs" />
+    <Compile Include="Entities\ExplicitMappingsAwareChangeDetector.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Mapping\Explicit\DefaultExplicitPropertyValueConverterBuilder.cs" />
+    <Compile Include="Mapping\Explicit\DefaultExplicitCollectionValueConverterBuilder.cs" />
+    <Compile Include="Mapping\FluentMappingModule.cs" />
+    <Compile Include="Mapping\Explicit\DefaultExplicitCollectionStorageModelBuilder.cs" />
+    <Compile Include="Mapping\Explicit\DefaultExplicitCollectionMappingBuilder.cs" />
+    <Compile Include="Mapping\Explicit\DefaultExplicitPropertyMappingBuilder.cs" />
+    <Compile Include="Mapping\Explicit\DefaultExplicitMappingsBuilder.cs" />
+    <Compile Include="Mapping\Explicit\IExplicitCollectionMappingBuilder.cs" />
+    <Compile Include="Mapping\Explicit\IExplicitValueConverterBuilder.cs" />
+    <Compile Include="Mapping\Explicit\IExplicitCollectionStorageModelBuilder.cs" />
+    <Compile Include="Mapping\Explicit\DefaultExplicitMappings.cs" />
+    <Compile Include="Mapping\Explicit\IExplicitMappings.cs" />
+    <Compile Include="Mapping\Explicit\IExplicitMappingsBuilder.cs" />
+    <Compile Include="Mapping\Explicit\IExplicitPropertyMappingBuilder.cs" />
+    <Compile Include="Mapping\Providers\FluentCollectionMappingProvider.cs" />
+    <Compile Include="Mapping\Providers\FluentEntityMappingProvider.cs" />
+    <Compile Include="Mapping\Providers\FluentPropertyMappingProvider.cs" />
+    <Compile Include="Mapping\Providers\FluentTermMappingProvider.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RDeF.Contracts\RDeF.Contracts.csproj">
+      <Project>{b0f60589-f1ed-4cb5-9c42-4004f02536eb}</Project>
+      <Name>RDeF.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RDeF.Core\RDeF.Core.csproj">
+      <Project>{f07900af-8275-48ad-a7ce-7a7de267de2a}</Project>
+      <Name>RDeF.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\Newtonsoft.Json.dll" />
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
+      <Link>CustomDictionary.xml</Link>
+    </CodeAnalysisDictionary>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

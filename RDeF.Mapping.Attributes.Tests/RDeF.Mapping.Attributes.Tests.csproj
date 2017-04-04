@@ -68,8 +68,8 @@
     <Compile Include="..\RDeF.Core.Tests\Data\IProduct.cs">
       <Link>Data\IProduct.cs</Link>
     </Compile>
-    <Compile Include="..\RDeF.Core.Tests\Mapping\TestConverter.cs">
-      <Link>Mapping\TestConverter.cs</Link>
+    <Compile Include="..\RDeF.Core.Tests\Mapping\Converters\TestConverter.cs">
+      <Link>Mapping\Converters\TestConverter.cs</Link>
     </Compile>
     <Compile Include="AssertionsExtensions.cs" />
     <Compile Include="Given_instance_of\AttributeMappingSource_class\AttributeMappingSourceTest.cs" />

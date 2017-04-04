@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using RDeF.Entities;
 
-namespace RDeF.Mapping
+namespace RDeF.Mapping.Converters
 {
     /// <summary>Test converter.</summary>
     public class TestConverter : ILiteralConverter

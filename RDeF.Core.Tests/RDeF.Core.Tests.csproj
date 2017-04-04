@@ -107,7 +107,6 @@
     <Compile Include="Given_instance_of\DefaultEntityContextFactory_class\DefaultEntityContextFactoryTest.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContextFactory_class\when_creating_an_entity_context.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContext_class\DefaultEntityContextTest.cs" />
-    <Compile Include="Given_instance_of\DefaultEntityContext_class\when_resolving_a_component.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContext_class\when_deleting_an_entity.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContext_class\which_is_using_an_in_memory_entity_source\ScenarioTest.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContext_class\which_is_using_an_in_memory_entity_source\when_creating_an_entity.cs" />
@@ -158,7 +157,7 @@
     <Compile Include="Given_large_set_of_data\PerformanceTest.cs" />
     <Compile Include="Given_large_set_of_data\when_processing_entities_from_it.cs" />
     <Compile Include="Mapping\Converters\ConverterExtensions.cs" />
-    <Compile Include="Mapping\TestConverter.cs" />
+    <Compile Include="Mapping\Converters\TestConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

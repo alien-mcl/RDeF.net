@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using Moq;
 using NUnit.Framework;
 using RDeF.Entities;
-using RDeF.Mapping;
 
 namespace Given_instance_of.SimpleInMemoryEntitySource_class
 {
@@ -32,12 +30,8 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
 
         protected override void ScenarioSetup()
         {
-            var entityContext = new DefaultEntityContext(
-                EntitySource,
-                new Mock<IMappingsRepository>(MockBehavior.Strict).Object,
-                new Mock<IChangeDetector>(MockBehavior.Strict).Object,
-                type => null);
-            EntitySource.Entities[Entity = new Entity(new Iri("test"), entityContext)] = new HashSet<Statement>();
+            base.ScenarioSetup();
+            EntitySource.Entities[Entity = new Entity(new Iri("test"), Context)] = new HashSet<Statement>();
         }
     }
 }

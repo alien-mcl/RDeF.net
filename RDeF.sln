@@ -40,6 +40,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E59AD1
 		.nuget\RDeF.Serialization.nuspec = .nuget\RDeF.Serialization.nuspec
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDeF.Mapping.Fluent", "RDeF.Mapping.Fluent\RDeF.Mapping.Fluent.csproj", "{6D22E75C-55DB-46A1-919D-B0CADA218A8A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDeF.Mapping.Fluent.Tests", "RDeF.Mapping.Fluent.Tests\RDeF.Mapping.Fluent.Tests.csproj", "{BD535722-AD65-4A87-BAB4-99A6E67CAF92}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +78,14 @@ Global
 		{57F8549E-302F-4F92-BC68-921A542BB6DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57F8549E-302F-4F92-BC68-921A542BB6DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57F8549E-302F-4F92-BC68-921A542BB6DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D22E75C-55DB-46A1-919D-B0CADA218A8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D22E75C-55DB-46A1-919D-B0CADA218A8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D22E75C-55DB-46A1-919D-B0CADA218A8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D22E75C-55DB-46A1-919D-B0CADA218A8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD535722-AD65-4A87-BAB4-99A6E67CAF92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD535722-AD65-4A87-BAB4-99A6E67CAF92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD535722-AD65-4A87-BAB4-99A6E67CAF92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD535722-AD65-4A87-BAB4-99A6E67CAF92}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

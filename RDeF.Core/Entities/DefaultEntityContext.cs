@@ -17,15 +17,13 @@ namespace RDeF.Entities
         private readonly IChangeDetector _changeDetector;
         private readonly IDictionary<Iri, Entity> _entityCache;
         private readonly ICollection<Iri> _deletedEntities;
-        private readonly Func<Type, object> _componentResolver;
         private bool _disposed;
 
-        internal DefaultEntityContext(IEntitySource entitySource, IMappingsRepository mappingsRepository, IChangeDetector changeDetector, Func<Type, object> componentResolver)
+        internal DefaultEntityContext(IEntitySource entitySource, IMappingsRepository mappingsRepository, IChangeDetector changeDetector)
         {
             _entitySource = entitySource;
             Mappings = mappingsRepository;
             _changeDetector = changeDetector;
-            _componentResolver = componentResolver;
             _deletedEntities = new List<Iri>();
             _entityCache = new ConcurrentDictionary<Iri, Entity>();
         }
@@ -38,12 +36,6 @@ namespace RDeF.Entities
 
         /// <inheritdoc />
         public IReadableEntitySource EntitySource { get { return _entitySource; } }
-
-        /// <inheritdoc />
-        TService IComponentScope.Resolve<TService>()
-        {
-            return (TService)_componentResolver(typeof(TService));
-        }
 
         /// <inheritdoc />
         public TEntity Load<TEntity>(Iri iri) where TEntity : IEntity

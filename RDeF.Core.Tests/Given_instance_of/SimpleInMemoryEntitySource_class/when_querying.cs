@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using Moq;
 using NUnit.Framework;
 using RDeF.Data;
 using RDeF.Entities;
-using RDeF.Mapping;
 using RollerCaster;
 
 namespace Given_instance_of.SimpleInMemoryEntitySource_class
@@ -34,12 +32,8 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
 
         protected override void ScenarioSetup()
         {
-            var entityContext = new DefaultEntityContext(
-                EntitySource,
-                new Mock<IMappingsRepository>(MockBehavior.Strict).Object,
-                new Mock<IChangeDetector>(MockBehavior.Strict).Object,
-                type => null);
-            var entity = new Entity(new Iri("test"), entityContext);
+            base.ScenarioSetup();
+            var entity = new Entity(new Iri("test"), Context);
             EntitySource.Entities[entity] = new HashSet<Statement>();
             entity.ActLike<IProduct>();
         }

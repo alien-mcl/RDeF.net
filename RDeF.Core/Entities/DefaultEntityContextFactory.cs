@@ -120,6 +120,13 @@ namespace RDeF.Entities
         }
 
         /// <inheritdoc />
+        public void Dispose()
+        {
+            _container.Dispose();
+            GC.SuppressFinalize(this);
+        }
+
+        /// <inheritdoc />
         IComponentConfigurator IComponentConfigurator.WithConverter<TConverter>()
         {
             _container.Register<ILiteralConverter, TConverter>();
@@ -140,9 +147,14 @@ namespace RDeF.Entities
             return this;
         }
 
-        IComponentConfigurator IComponentConfigurator.WithComponent<TService, TComponent>(Lifestyle lifestyle)
+        IComponentConfigurator IComponentConfigurator.WithComponent<TService, TComponent>(Lifestyle lifestyle, Action<IComponentScope, TComponent> onActivate)
         {
-            _container.Register<TService, TComponent>(lifestyle);
+            var registration = _container.Register<TService, TComponent>(lifestyle);
+            if (onActivate != null)
+            {
+                registration.OnActivate = (container, instance) => onActivate(container, (TComponent)instance);
+            }
+
             return this;
         }
     }

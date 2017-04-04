@@ -11,3 +11,4 @@ using System.Runtime.InteropServices;
 [assembly: InternalsVisibleTo("RDeF.Core.Tests")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 [assembly: InternalsVisibleTo("RDeF.Mapping.Fluent")]
+[assembly: InternalsVisibleTo("RDeF.Mapping.Fluent.Tests")]

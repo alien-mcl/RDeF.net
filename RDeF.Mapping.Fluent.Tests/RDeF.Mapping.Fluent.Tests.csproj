@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BD535722-AD65-4A87-BAB4-99A6E67CAF92}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RDeF.Mapping</RootNamespace>
+    <AssemblyName>RDeF.Mapping.Fluent.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>..\RDeF.Tests.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\RDeF.Tests.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Core.4.0.0\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentAssertions, Version=4.19.2.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentAssertions.4.19.2\lib\net45\FluentAssertions.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentAssertions.Core, Version=4.19.2.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentAssertions.4.19.2\lib\net45\FluentAssertions.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Moq, Version=4.7.8.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\packages\Moq.4.7.8\lib\net45\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=3.6.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.6.1\lib\net45\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\.build\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\.build\VersionAssemblyInfo.cs">
+      <Link>Properties\VersionAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="Data\IUnmappedProduct.cs" />
+    <Compile Include="Given_a_context\with_explicitly_mapped_entity\ExplicitMappingsTest.cs" />
+    <Compile Include="Given_a_context\with_explicitly_mapped_entity\when_creating_an_entity.cs" />
+    <Compile Include="Given_a_context\with_explicitly_mapped_entity\when_disposing.cs" />
+    <Compile Include="Given_a_context\with_explicitly_mapped_entity\when_serializing.cs" />
+    <Compile Include="Given_instance_of\DefaultExplicitMappingsBuilder_class\DefaultExplicitMappingsBuilderTest.cs" />
+    <Compile Include="Given_instance_of\DefaultExplicitMappingsBuilder_class\when_building_a_collection_mapping.cs" />
+    <Compile Include="Given_instance_of\DefaultExplicitMappingsBuilder_class\when_build_an_entity.cs" />
+    <Compile Include="Given_instance_of\DefaultExplicitMappingsBuilder_class\when_building_a_property_mapping.cs" />
+    <Compile Include="Given_instance_of\DefaultExplicitMappings_class\when_obtaining_mappings.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
+      <Link>CustomDictionary.xml</Link>
+    </CodeAnalysisDictionary>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RDeF.Contracts\RDeF.Contracts.csproj">
+      <Project>{b0f60589-f1ed-4cb5-9c42-4004f02536eb}</Project>
+      <Name>RDeF.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RDeF.Core.Tests\RDeF.Core.Tests.csproj">
+      <Project>{9456a9f8-a059-42fa-bda1-c984cbba42ff}</Project>
+      <Name>RDeF.Core.Tests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RDeF.Core\RDeF.Core.csproj">
+      <Project>{f07900af-8275-48ad-a7ce-7a7de267de2a}</Project>
+      <Name>RDeF.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RDeF.Mapping.Fluent\RDeF.Mapping.Fluent.csproj">
+      <Project>{6d22e75c-55db-46a1-919d-b0cada218a8a}</Project>
+      <Name>RDeF.Mapping.Fluent</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RDeF.Serialization.Tests\RDeF.Serialization.Tests.csproj">
+      <Project>{57f8549e-302f-4f92-bc68-921a542bb6da}</Project>
+      <Name>RDeF.Serialization.Tests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RDeF.Serialization\RDeF.Serialization.csproj">
+      <Project>{d20315ca-9f4f-4073-a205-ed66bdc5a177}</Project>
+      <Name>RDeF.Serialization</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Given_a_context\with_explicitly_mapped_entity\when_serializing.json">
+      <DependentUpon>when_serializing.cs</DependentUpon>
+      <LogicalName>Given_a_context\with_explicitly_mapped_entity\when_serializing.json</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Given_a_context\with_explicitly_mapped_entity\when_serializing - Copy.json">
+      <DependentUpon>when_disposing.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

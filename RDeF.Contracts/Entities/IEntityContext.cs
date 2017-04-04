@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Linq;
-using RDeF.ComponentModel;
 using RDeF.Mapping;
 
 namespace RDeF.Entities
 {
     /// <summary>Describes an abstract entity context.</summary>
-    public interface IEntityContext : IComponentScope, IDisposable
+    public interface IEntityContext : IDisposable
     {
         /// <summary>Notifies on disposal.</summary>
         event EventHandler Disposed;

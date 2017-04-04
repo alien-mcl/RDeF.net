@@ -4,7 +4,6 @@ using Moq;
 using NUnit.Framework;
 using RDeF.Data;
 using RDeF.Entities;
-using RDeF.Mapping;
 using RollerCaster;
 
 namespace Given_instance_of.SimpleInMemoryEntitySource_class
@@ -12,8 +11,6 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
     [TestFixture]
     public class when_creating_an_entity : SimpleInMemoryEntitySourceTest
     {
-        private DefaultEntityContext Context { get; set; }
-
         private IProduct Result { get; set; }
 
         public override void TheTest()
@@ -50,15 +47,6 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
         public void Should_create_new_entity_only_once()
         {
             EntitySource.Create<IProduct>(new Iri("test"), Context).Should().Be(Result);
-        }
-
-        protected override void ScenarioSetup()
-        {
-            Context = new DefaultEntityContext(
-                EntitySource,
-                new Mock<IMappingsRepository>(MockBehavior.Strict).Object,
-                new Mock<IChangeDetector>(MockBehavior.Strict).Object,
-                type => null);
         }
     }
 }

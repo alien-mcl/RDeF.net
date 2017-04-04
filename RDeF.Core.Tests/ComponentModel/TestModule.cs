@@ -1,4 +1,4 @@
-﻿using RDeF.Mapping;
+﻿using RDeF.Mapping.Converters;
 
 namespace RDeF.ComponentModel
 {

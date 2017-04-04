@@ -18,9 +18,15 @@ namespace RDeF.ComponentModel
     internal sealed class SimpleContainer : IContainer
     {
         private const string AttributeMappingsAssembly = "RDeF.Mapping.Attributes";
-        private readonly IDictionary<Type, IDictionary<Type, Type>> _entityContextBoundServiceRegistrations = new ConcurrentDictionary<Type, IDictionary<Type, Type>>();
-        private readonly IDictionary<Type, IDictionary<Type, Type>> _serviceRegistrations = new ConcurrentDictionary<Type, IDictionary<Type, Type>>();
-        private readonly IDictionary<Type, IDictionary<Type, object>> _instanceRegistrations = new ConcurrentDictionary<Type, IDictionary<Type, object>>();
+        private readonly IDictionary<Type, IDictionary<Type, IComponentRegistration>> _entityContextBoundServiceRegistrations =
+            new ConcurrentDictionary<Type, IDictionary<Type, IComponentRegistration>>();
+
+        private readonly IDictionary<Type, IDictionary<Type, IComponentRegistration>> _serviceRegistrations =
+            new ConcurrentDictionary<Type, IDictionary<Type, IComponentRegistration>>();
+
+        private readonly IDictionary<Type, IDictionary<Type, IComponentRegistration>> _instanceRegistrations =
+            new ConcurrentDictionary<Type, IDictionary<Type, IComponentRegistration>>();
+
         private readonly SimpleContainer _owner;
         private bool _areStandardLibrariesLoaded;
 
@@ -73,48 +79,48 @@ namespace RDeF.ComponentModel
         }
 
         /// <inheritdoc />
-        public void Register<TService, TImplementation>(Lifestyle lifestyle = Lifestyle.Singleton) where TImplementation : TService
+        public IComponentRegistration Register<TService, TImplementation>(Lifestyle lifestyle = Lifestyle.Singleton) where TImplementation : TService
         {
-            Register<TService>(typeof(TImplementation), lifestyle);
+            return Register<TService>(typeof(TImplementation), lifestyle);
         }
 
         /// <inheritdoc />
-        public void Register<TService>(Type implementationType, Lifestyle lifestyle = Lifestyle.Singleton)
+        public IComponentRegistration Register<TService>(Type implementationType, Lifestyle lifestyle = Lifestyle.Singleton)
         {
             if (!typeof(TService).IsAssignableFrom(implementationType))
             {
                 throw new ArgumentOutOfRangeException($"Unable to register type '{implementationType}' as a service '{typeof(TService)}'.");
             }
 
-            (lifestyle == Lifestyle.BoundToEntityContext ? _entityContextBoundServiceRegistrations : _serviceRegistrations)
-                .EnsureKey(typeof(TService), true)[implementationType] = implementationType;
+            return (lifestyle == Lifestyle.BoundToEntityContext ? _entityContextBoundServiceRegistrations : _serviceRegistrations)
+                .EnsureKey(typeof(TService), true)[implementationType] = new ComponentRegistration<TService>(implementationType);
         }
 
         /// <inheritdoc />
-        public void Register<TService>(TService instance)
+        public IComponentRegistration Register<TService>(TService instance)
         {
             if (instance == null)
             {
                 throw new ArgumentNullException(nameof(instance));
             }
 
-            _instanceRegistrations.EnsureKey(typeof(TService), true)[instance.GetType()] = instance;
+            return _instanceRegistrations.EnsureKey(typeof(TService), true)[instance.GetType()] = new ComponentRegistration<TService>(instance);
         }
 
         /// <inheritdoc />
         public void Unregister<TService>()
         {
             _serviceRegistrations.Remove(typeof(TService));
-            IDictionary<Type, object> instanceRegistration;
+            IDictionary<Type, IComponentRegistration> instanceRegistration;
             if (!_instanceRegistrations.TryGetValue(typeof(TService), out instanceRegistration))
             {
                 return;
             }
 
             _instanceRegistrations.Remove(typeof(TService));
-            foreach (var instance in instanceRegistration.Values)
+            foreach (var registration in instanceRegistration.Values)
             {
-                (instance as IDisposable)?.Dispose();
+                (registration.Instance as IDisposable)?.Dispose();
             }
         }
 
@@ -126,7 +132,7 @@ namespace RDeF.ComponentModel
                 return;
             }
 
-            IDictionary<Type, object> instanceRegistration;
+            IDictionary<Type, IComponentRegistration> instanceRegistration;
             if (!_instanceRegistrations.TryGetValue(typeof(TService), out instanceRegistration))
             {
                 return;
@@ -139,13 +145,20 @@ namespace RDeF.ComponentModel
         /// <inheritdoc />
         public TService Resolve<TService>()
         {
-            return (TService)Resolve(typeof(TService), new HashSet<Type>());
+            return (TService)Resolve(typeof(TService));
         }
 
         /// <inheritdoc />
         public object Resolve(Type type)
         {
-            return Resolve(type, new HashSet<Type>());
+            var newInstances = new Dictionary<IComponentRegistration, object>();
+            var instance = Resolve(type, new HashSet<Type>(), newInstances);
+            foreach (var newInstance in newInstances)
+            {
+                newInstance.Key.OnActivate?.Invoke(this, newInstance.Value);
+            }
+
+            return instance;
         }
 
         /// <inheritdoc />
@@ -155,64 +168,62 @@ namespace RDeF.ComponentModel
             {
                 foreach (var instanceRegistration in serviceRegistration.Value)
                 {
-                    (instanceRegistration.Value as IDisposable)?.Dispose();
+                    (instanceRegistration.Value.Instance as IDisposable)?.Dispose();
                 }
             }
         }
 
-        private object Resolve(Type serviceType, ISet<Type> visitedDependencies)
+        private object Resolve(Type serviceType, ISet<Type> visitedDependencies, IDictionary<IComponentRegistration, object> newInstances)
         {
             if (serviceType.IsADirectEnumerableType())
             {
-                return ResolveAll(serviceType, visitedDependencies);
+                return ResolveAll(serviceType, visitedDependencies, newInstances);
             }
 
-            IDictionary<Type, object> instanceRegistration;
+            IDictionary<Type, IComponentRegistration> instanceRegistration;
             if (_instanceRegistrations.TryGetValue(serviceType, out instanceRegistration))
             {
-                return instanceRegistration.Values.First();
+                return instanceRegistration.Values.First().Instance;
             }
 
-            IDictionary<Type, Type> serviceRegistration;
+            IDictionary<Type, IComponentRegistration> serviceRegistration;
             if ((!_serviceRegistrations.TryGetValue(serviceType, out serviceRegistration)) || (serviceRegistration.Count == 0))
             {
-                return _owner?.Resolve(serviceType, new HashSet<Type>());
+                return _owner?.Resolve(serviceType, new HashSet<Type>(), newInstances);
             }
 
-            return BuildInstance(serviceRegistration, serviceType, serviceRegistration.Values.First(), visitedDependencies);
+            return BuildInstance(serviceRegistration, serviceType, serviceRegistration.Values.First(), visitedDependencies, newInstances);
         }
 
-        private IEnumerable ResolveAll(Type serviceType, ISet<Type> visitedDependencies)
+        private IEnumerable ResolveAll(Type serviceType, ISet<Type> visitedDependencies, IDictionary<IComponentRegistration, object> newInstances)
         {
             var itemType = serviceType.GetItemType();
             IList result = (IList)typeof(List<>).MakeGenericType(itemType).GetConstructor(Type.EmptyTypes).Invoke(null);
-            IDictionary<Type, object> instanceRegistrations;
+            IDictionary<Type, IComponentRegistration> instanceRegistrations;
             if (_instanceRegistrations.TryGetValue(itemType, out instanceRegistrations))
             {
                 foreach (var instanceRegistration in instanceRegistrations)
                 {
-                    result.Add(instanceRegistration.Value);
+                    result.Add(instanceRegistration.Value.Instance);
                 }
             }
 
-            IDictionary<Type, Type> serviceRegistration;
-            if (!_serviceRegistrations.TryGetValue(itemType, out serviceRegistration))
+            IDictionary<Type, IComponentRegistration> serviceRegistration;
+            if (_serviceRegistrations.TryGetValue(itemType, out serviceRegistration))
             {
-                return result;
-            }
-
-            foreach (var implementationRegistered in serviceRegistration.Keys.ToArray())
-            {
-                var instance = BuildInstance(serviceRegistration, itemType, implementationRegistered, visitedDependencies);
-                if (instance != null)
+                foreach (var implementationRegistered in serviceRegistration)
                 {
-                    result.Add(instance);
+                    var instance = BuildInstance(serviceRegistration, itemType, implementationRegistered.Value, visitedDependencies, newInstances);
+                    if (instance != null)
+                    {
+                        result.Add(instance);
+                    }
                 }
             }
 
             if (_owner != null)
             {
-                foreach (var instance in _owner.ResolveAll(serviceType, new HashSet<Type>()))
+                foreach (var instance in _owner.ResolveAll(serviceType, new HashSet<Type>(), newInstances))
                 {
                     result.Add(instance);
                 }
@@ -222,38 +233,48 @@ namespace RDeF.ComponentModel
         }
 
         private object BuildInstance(
-            IDictionary<Type, Type> serviceRegistration,
+            IDictionary<Type, IComponentRegistration> serviceRegistration,
             Type serviceType,
-            Type implementationRegistered,
-            ISet<Type> visitedDependencies)
+            IComponentRegistration implementationRegistered,
+            ISet<Type> visitedDependencies,
+            IDictionary<IComponentRegistration, object> newInstances)
         {
-            var result = CreateInstance(implementationRegistered, visitedDependencies);
+            var result = CreateInstance(implementationRegistered, visitedDependencies, newInstances);
             if (result == null)
             {
                 return null;
             }
 
             serviceRegistration.Remove(result.GetType());
-            _instanceRegistrations.EnsureKey(serviceType, true)[result.GetType()] = result;
+#if NETSTANDARD1_6
+            _instanceRegistrations.EnsureKey(serviceType, true)[result.GetType()] = (IComponentRegistration)typeof(ComponentRegistration<>).MakeGenericType(serviceType)
+                .GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance)
+                .First(ctor => ctor.GetParameters().Length == 0 && ctor.GetParameters()[0].ParameterType == serviceType)
+#else
+
+            _instanceRegistrations.EnsureKey(serviceType, true)[result.GetType()] = (IComponentRegistration)typeof(ComponentRegistration<>).MakeGenericType(serviceType)
+                .GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { serviceType }, null)
+#endif
+                .Invoke(new[] { result });
             return result;
         }
 
-        private object CreateInstance(Type type, ISet<Type> visitedDependencies)
+        private object CreateInstance(IComponentRegistration type, ISet<Type> visitedDependencies, IDictionary<IComponentRegistration, object> newInstances)
         {
-            if (visitedDependencies.Contains(type))
+            if (visitedDependencies.Contains(type.ImplementationType))
             {
                 throw new InvalidOperationException($"Dependency loop detected for type '{type}'");
             }
 
-            visitedDependencies.Add(type);
-            foreach (var ctor in type.GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).OrderByDescending(ctor => ctor.GetParameters().Length))
+            visitedDependencies.Add(type.ImplementationType);
+            foreach (var ctor in type.ImplementationType.GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic).OrderByDescending(ctor => ctor.GetParameters().Length))
             {
                 bool canCreateInstance = true;
                 List<object> arguments = null;
                 foreach (var parameter in ctor.GetParameters())
                 {
                     object value = (parameter.HasDefaultValue ? parameter.DefaultValue : null);
-                    object resolvedInstance = Resolve(parameter.ParameterType, visitedDependencies);
+                    object resolvedInstance = Resolve(parameter.ParameterType, visitedDependencies, newInstances);
                     if ((resolvedInstance != null) || (parameter.HasDefaultValue))
                     {
                         (arguments ?? (arguments = new List<object>())).Add(resolvedInstance ?? value);
@@ -270,10 +291,12 @@ namespace RDeF.ComponentModel
                     continue;
                 }
 
-                return ctor.Invoke(arguments?.ToArray());
+                var result = ctor.Invoke(arguments?.ToArray());
+                newInstances[type] = result;
+                return result;
             }
 
-            visitedDependencies.Remove(type);
+            visitedDependencies.Remove(type.ImplementationType);
             return null;
         }
 

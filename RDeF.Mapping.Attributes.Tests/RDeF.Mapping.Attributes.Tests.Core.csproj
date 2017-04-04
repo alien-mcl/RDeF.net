@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <Compile Include="..\RDeF.Core.Tests\Data\IProduct.cs" Link="Data\IProduct.cs" />
-    <Compile Include="..\RDeF.Core.Tests\Mapping\TestConverter.cs" Link="Mapping\TestConverter.cs" />
+    <Compile Include="..\RDeF.Core.Tests\Mapping\Converters\TestConverter.cs" Link="Mapping\Converters\TestConverter.cs" />
     <Compile Include="..\.build\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
     <Compile Include="..\.build\VersionAssemblyInfo.cs" Link="Properties\VersionAssemblyInfo.cs" />
   </ItemGroup>

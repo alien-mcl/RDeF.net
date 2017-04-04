@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using Moq;
 using NUnit.Framework;
 using RDeF.Entities;
-using RDeF.Mapping;
 using RDeF.Vocabularies;
 
 namespace Given_instance_of.SimpleInMemoryEntitySource_class
@@ -81,16 +79,12 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
 
         protected override void ScenarioSetup()
         {
-            var entityContext = new DefaultEntityContext(
-                EntitySource,
-                new Mock<IMappingsRepository>(MockBehavior.Strict).Object,
-                new Mock<IChangeDetector>(MockBehavior.Strict).Object,
-                type => null);
-            Entity1 = new Entity(Iri1, entityContext);
+            base.ScenarioSetup();
+            Entity1 = new Entity(Iri1, Context);
             EntitySource.Entities[Entity1] = new HashSet<Statement>() { new Statement(Iri1, rdfs.type, new Iri("class")) };
-            Entity2 = new Entity(Iri2, entityContext);
+            Entity2 = new Entity(Iri2, Context);
             EntitySource.Entities[Entity2] = new HashSet<Statement>() { new Statement(Iri2, rdfs.type, new Iri("class")) };
-            Entity3 = new Entity(Iri3, entityContext);
+            Entity3 = new Entity(Iri3, Context);
             EntitySource.Entities[Entity3] = new HashSet<Statement>() { new Statement(Iri3, rdfs.type, new Iri("class")) };
             DeletedEntities = new List<Iri>() { Iri3 };
             RetractedStatements = new Dictionary<IEntity, ISet<Statement>>()

@@ -19,7 +19,7 @@ namespace Given_instance_of.DefaultEntityContext_class.which_is_using_an_in_memo
         [Test]
         public void Should_throw_when_unsupported_entity_source_is_used()
         {
-            new DefaultEntityContext(new Mock<IEntitySource>(MockBehavior.Strict).Object, MappingsRepository.Object, ChangeDetector.Object, type => null)
+            new DefaultEntityContext(new Mock<IEntitySource>(MockBehavior.Strict).Object, MappingsRepository.Object, ChangeDetector.Object)
                 .Invoking(instance => instance.AsQueryable<IProduct>()).ShouldThrow<NotSupportedException>();
         }
 

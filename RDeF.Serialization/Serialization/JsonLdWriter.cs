@@ -192,7 +192,7 @@ namespace RDeF.Serialization
                 return;
             }
 
-            if ((value.DataType != null) && (value.DataType != xsd.boolean) && (value.DataType != xsd.@int) && (value.DataType != xsd.@double))
+            if ((value.DataType != null) && (value.DataType != xsd.boolean) && (value.DataType != xsd.@int) && (value.DataType != xsd.@double) && (value.DataType != xsd.@string))
             {
                 await jsonWriter.WriteStartObjectAsync();
                 await jsonWriter.WritePropertyNameAsync("@type");

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using RDeF.Entities;
-using RDeF.Mapping;
 using RDeF.Mapping.Attributes;
+using RDeF.Mapping.Converters;
 
 namespace RDeF.Data
 {

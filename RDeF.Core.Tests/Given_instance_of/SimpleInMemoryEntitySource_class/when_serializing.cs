@@ -7,7 +7,6 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using RDeF.Entities;
-using RDeF.Mapping;
 using RDeF.Serialization;
 
 namespace Given_instance_of.SimpleInMemoryEntitySource_class
@@ -53,16 +52,12 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
 
         protected override void ScenarioSetup()
         {
+            base.ScenarioSetup();
             Buffer = new StreamWriter(new MemoryStream());
             RdfWriter = new Mock<IRdfWriter>(MockBehavior.Strict);
             RdfWriter.Setup(instance => instance.Write(It.IsAny<StreamWriter>(), It.IsAny<IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>>>()))
                 .Returns(Task.FromResult(0));
-            var entityContext = new DefaultEntityContext(
-                EntitySource,
-                new Mock<IMappingsRepository>(MockBehavior.Strict).Object,
-                new Mock<IChangeDetector>(MockBehavior.Strict).Object,
-                type => null);
-            var entity = new Entity(new Iri("test"), entityContext);
+            var entity = new Entity(new Iri("test"), Context);
             EntitySource.Entities[entity] = new HashSet<Statement>()
             {
                 new Statement(entity.Iri, new Iri("predicate"), entity.Iri, PrimaryGraph),

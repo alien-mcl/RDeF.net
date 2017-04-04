@@ -6,6 +6,7 @@ using Moq;
 using NUnit.Framework;
 using RDeF.Entities;
 using RDeF.Mapping;
+using RDeF.Mapping.Converters;
 using RDeF.Mapping.Providers;
 using RDeF.Mapping.Visitors;
 using RollerCaster.Reflection;

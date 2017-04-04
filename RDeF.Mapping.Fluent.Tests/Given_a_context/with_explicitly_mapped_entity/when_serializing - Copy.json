@@ -1,0 +1,15 @@
+﻿{
+    "@graph": [
+        {
+            "@graph": [
+                {
+                    "@id": "test",
+                    "categories": [ "category1" ],
+                    "description": [ "Product description" ],
+                    "@type": [ "class1", "class2" ],
+                    "name": [ "Product name" ]
+                }
+            ] 
+        }
+    ] 
+}

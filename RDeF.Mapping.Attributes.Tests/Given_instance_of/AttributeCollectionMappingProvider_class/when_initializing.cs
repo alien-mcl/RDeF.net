@@ -4,6 +4,7 @@ using RDeF;
 using RDeF.Entities;
 using RDeF.Mapping;
 using RDeF.Mapping.Attributes;
+using RDeF.Mapping.Converters;
 using RDeF.Mapping.Providers;
 
 namespace Given_instance_of.AttributeCollectionMappingProvider_class
