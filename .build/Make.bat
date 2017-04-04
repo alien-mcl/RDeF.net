@@ -10,6 +10,10 @@ IF EXIST RDeF.Mapping.Attributes\bin RD /s /q RDeF.Mapping.Attributes\bin
 IF EXIST RDeF.Mapping.Attributes\obj RD /s /q RDeF.Mapping.Attributes\obj
 IF EXIST RDeF.Mapping.Attributes.Tests\bin RD /s /q RDeF.Mapping.Attributes.Tests\bin
 IF EXIST RDeF.Mapping.Attributes.Tests\obj RD /s /q RDeF.Mapping.Attributes.Tests\obj
+IF EXIST RDeF.Mapping.Fluent\bin RD /s /q RDeF.Mapping.Fluent\bin
+IF EXIST RDeF.Mapping.Fluent\obj RD /s /q RDeF.Mapping.Fluent\obj
+IF EXIST RDeF.Mapping.Fluent.Tests\bin RD /s /q RDeF.Mapping.Fluent.Tests\bin
+IF EXIST RDeF.Mapping.Fluent.Tests\obj RD /s /q RDeF.Mapping.Fluent.Tests\obj
 IF EXIST RDeF.Serialization\bin RD /s /q RDeF.Serialization\bin
 IF EXIST RDeF.Serialization\obj RD /s /q RDeF.Serialization\obj
 IF EXIST RDeF.Serialization.Tests\bin RD /s /q RDeF.Serialization.Tests\bin
@@ -63,6 +67,17 @@ COPY RDeF.Mapping.Attributes\bin\Release\RDeF.Mapping.Attributes.xml NugetBuild\
 COPY RDeF.Mapping.Attributes\bin\Release\netstandard1.6\RDeF.Mapping.Attributes.dll NugetBuild\RDeF.Mapping.Attributes\lib\netstandard16
 COPY ".nuget\RDeF.Mapping.Attributes.nuspec" NugetBuild\RDeF.Mapping.Attributes
 ".build\nuget" pack NugetBuild\RDeF.Mapping.Attributes\RDeF.Mapping.Attributes.nuspec -version %tag:~1%.%version%.%release% -outputdirectory NugetBuild
+
+ECHO "Building up Nuget package for RDeF.Mapping.Fluent"
+MD NugetBuild\RDeF.Mapping.Fluent
+MD NugetBuild\RDeF.Mapping.Fluent\lib
+MD NugetBuild\RDeF.Mapping.Fluent\lib\net461
+MD NugetBuild\RDeF.Mapping.Fluent\lib\netstandard16
+COPY RDeF.Mapping.Fluent\bin\Release\RDeF.Mapping.Fluent.dll NugetBuild\RDeF.Mapping.Fluent\lib\net461
+COPY RDeF.Mapping.Fluent\bin\Release\RDeF.Mapping.Fluent.xml NugetBuild\RDeF.Mapping.Fluent\lib\net461
+COPY RDeF.Mapping.Fluent\bin\Release\netstandard1.6\RDeF.Mapping.Fluent.dll NugetBuild\RDeF.Mapping.Fluent\lib\netstandard16
+COPY ".nuget\RDeF.Mapping.Fluent.nuspec" NugetBuild\RDeF.Mapping.Fluent
+".build\nuget" pack NugetBuild\RDeF.Mapping.Fluent\RDeF.Mapping.Fluent.nuspec -version %tag:~1%.%version%.%release% -outputdirectory NugetBuild
 
 ECHO "Building up Nuget package for RDeF.Serialization"
 MD NugetBuild\RDeF.Serialization
