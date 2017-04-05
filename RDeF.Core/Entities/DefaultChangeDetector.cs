@@ -128,7 +128,7 @@ namespace RDeF.Entities
             {
                 foreach (var @class in GetEntityMapping(type).Classes)
                 {
-                    statements.EnsureKey(entity).Add(new Statement(entity.Iri, rdfs.type, @class.Term, @class.Graph));
+                    statements.EnsureKey(entity).Add(new Statement(entity.Iri, rdf.type, @class.Term, @class.Graph));
                 }
 
                 return;

@@ -9,6 +9,7 @@
             <Word>ns</Word>
             <Word>untyped</Word>
             <Word>ld</Word>
+            <Word>Irreflexive</Word>
         </Recognized>
         <DiscreteExceptions>
             <Term>rdf</Term>
@@ -16,6 +17,7 @@
             <Term>QIri</Term>
             <Term>nonNegative</Term>
             <Term>DayTime</Term>
+            <Term>subClass</Term>
         </DiscreteExceptions>
     </Words>
     <Acronyms>

@@ -16,7 +16,7 @@ namespace RDeF.Entities
 
         internal static bool IsTypeAssertion(this Statement statement)
         {
-            return statement.Predicate == rdfs.type;
+            return statement.Predicate == rdf.type;
         }
     }
 }

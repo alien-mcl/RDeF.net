@@ -17,9 +17,29 @@ namespace RDeF.Vocabularies
         /// <summary>Defines RDF base url.</summary>
         public static readonly Iri Namespace = new Iri(ns);
 
-        /// <summary>Defines rdf:first predicate.</summary>
+        /// <summary>Defines rdf:Property class.</summary>
+        [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "This is due to compliance with RDF namespace convention.")]
+        public static readonly Iri Property = Namespace + "Property";
+
+        /// <summary>Defines rdf:Statement class.</summary>
+        [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "This is due to compliance with RDF namespace convention.")]
+        public static readonly Iri Statement = Namespace + "Statement";
+
+        /// <summary>Defines rdf:List class.</summary>
         [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "This is due to compliance with RDF namespace convention.")]
         public static readonly Iri List = Namespace + "List";
+
+        /// <summary>Defines rdf:Bag class.</summary>
+        [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "This is due to compliance with RDF namespace convention.")]
+        public static readonly Iri Bag = Namespace + "Bag";
+
+        /// <summary>Defines rdf:Seq class.</summary>
+        [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "This is due to compliance with RDF namespace convention.")]
+        public static readonly Iri Seq = Namespace + "Seq";
+
+        /// <summary>Defines rdf:Alt class.</summary>
+        [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "This is due to compliance with RDF namespace convention.")]
+        public static readonly Iri Alt = Namespace + "Alt";
 
         /// <summary>Defines rdf:first predicate.</summary>
         [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "This is due to compliance with RDF namespace convention.")]
@@ -32,6 +52,26 @@ namespace RDeF.Vocabularies
         /// <summary>Defines rdf:first predicate.</summary>
         [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "This is due to compliance with RDF namespace convention.")]
         public static readonly Iri nil = Namespace + "nil";
+
+        /// <summary>Defines rdf:type predicate.</summary>
+        [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "This is due to compliance with RDF namespace convention.")]
+        public static readonly Iri type = Namespace + "type";
+
+        /// <summary>Defines rdf:subject predicate.</summary>
+        [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "This is due to compliance with RDF namespace convention.")]
+        public static readonly Iri subject = Namespace + "subject";
+
+        /// <summary>Defines rdf:predicate predicate.</summary>
+        [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "This is due to compliance with RDF namespace convention.")]
+        public static readonly Iri predicate = Namespace + "predicate";
+
+        /// <summary>Defines rdf:object predicate.</summary>
+        [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "This is due to compliance with RDF namespace convention.")]
+        public static readonly Iri @object = Namespace + "object";
+
+        /// <summary>Defines rdf:value predicate.</summary>
+        [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "This is due to compliance with RDF namespace convention.")]
+        public static readonly Iri value = Namespace + "value";
     }
 }
 #pragma warning restore SA1303 // Const field names must begin with upper-case letter

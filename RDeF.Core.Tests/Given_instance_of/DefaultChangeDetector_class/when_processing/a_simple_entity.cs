@@ -67,13 +67,13 @@ namespace Given_instance_of.DefaultChangeDetector_class.when_processing
         [Test]
         public void Should_detect_retracted_type_statement()
         {
-            RetractedStatements.Should().ContainKey(Entity).WhichValue.First(statement => statement.Predicate == rdfs.type).Object.ToString().Should().Be("Service");
+            RetractedStatements.Should().ContainKey(Entity).WhichValue.First(statement => statement.Predicate == rdf.type).Object.ToString().Should().Be("Service");
         }
 
         [Test]
         public void Should_detect_added_type_statement()
         {
-            AddedStatements.Should().ContainKey(Entity).WhichValue.First(statement => statement.Predicate == rdfs.type).Object.ToString().Should().Be("Thing");
+            AddedStatements.Should().ContainKey(Entity).WhichValue.First(statement => statement.Predicate == rdf.type).Object.ToString().Should().Be("Thing");
         }
 
         protected override void ScenarioSetup()

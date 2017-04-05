@@ -13,7 +13,7 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
         private static readonly Iri Iri1 = new Iri("test1");
         private static readonly Iri Iri2 = new Iri("test2");
         private static readonly Iri Iri3 = new Iri("test3");
-        private static readonly Statement TypeAssertion = new Statement(Iri1, rdfs.type, new Iri("class"));
+        private static readonly Statement TypeAssertion = new Statement(Iri1, rdf.type, new Iri("class"));
         private static readonly Statement Property1Assertion = new Statement(Iri1, rdf.first, "1");
         private static readonly Statement Property2Assertion = new Statement(Iri1, rdf.rest, "1");
 
@@ -81,16 +81,16 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
         {
             base.ScenarioSetup();
             Entity1 = new Entity(Iri1, Context);
-            EntitySource.Entities[Entity1] = new HashSet<Statement>() { new Statement(Iri1, rdfs.type, new Iri("class")) };
+            EntitySource.Entities[Entity1] = new HashSet<Statement>() { new Statement(Iri1, rdf.type, new Iri("class")) };
             Entity2 = new Entity(Iri2, Context);
-            EntitySource.Entities[Entity2] = new HashSet<Statement>() { new Statement(Iri2, rdfs.type, new Iri("class")) };
+            EntitySource.Entities[Entity2] = new HashSet<Statement>() { new Statement(Iri2, rdf.type, new Iri("class")) };
             Entity3 = new Entity(Iri3, Context);
-            EntitySource.Entities[Entity3] = new HashSet<Statement>() { new Statement(Iri3, rdfs.type, new Iri("class")) };
+            EntitySource.Entities[Entity3] = new HashSet<Statement>() { new Statement(Iri3, rdf.type, new Iri("class")) };
             DeletedEntities = new List<Iri>() { Iri3 };
             RetractedStatements = new Dictionary<IEntity, ISet<Statement>>()
             {
                 { Entity1, new HashSet<Statement>() { TypeAssertion } },
-                { Entity2, new HashSet<Statement>() { new Statement(Iri2, rdfs.type, new Iri("class")) } }
+                { Entity2, new HashSet<Statement>() { new Statement(Iri2, rdf.type, new Iri("class")) } }
             };
             AddedStatements = new Dictionary<IEntity, ISet<Statement>>()
             {

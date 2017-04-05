@@ -7,8 +7,8 @@
         <predicate2 rdf:resource="object2" />
         <predicate2 rdf:parseType="Literal" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">value</predicate2>
         <predicate2 rdf:parseType="Literal" xml:lang="en">text</predicate2>
-        <rdfs:type rdf:resource="type1" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" />
-        <rdfs:type rdf:resource="type2" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" />
+        <rdf:type rdf:resource="type1" />
+        <rdf:type rdf:resource="type2" />
     </rdf:Description>
     <rdf:Description rdf:about="subject2">
         <predicate1 rdf:resource="object1" />
@@ -17,8 +17,8 @@
         <predicate2 rdf:resource="object2" />
         <predicate2 rdf:parseType="Literal" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">value</predicate2>
         <predicate2 rdf:parseType="Literal" xml:lang="en">text</predicate2>
-        <rdfs:type rdf:resource="type1" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" />
-        <rdfs:type rdf:resource="type2" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" />
+        <rdf:type rdf:resource="type1" />
+        <rdf:type rdf:resource="type2" />
     </rdf:Description>
     <rdf:Description rdf:about="subject3">
         <predicate1 rdf:resource="object1" />
@@ -27,7 +27,7 @@
         <predicate2 rdf:resource="object2" />
         <predicate2 rdf:parseType="Literal" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">value</predicate2>
         <predicate2 rdf:parseType="Literal" xml:lang="en">text</predicate2>
-        <rdfs:type rdf:resource="type1" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" />
-        <rdfs:type rdf:resource="type2" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" />
+        <rdf:type rdf:resource="type1" />
+        <rdf:type rdf:resource="type2" />
     </rdf:Description>
 </rdf:RDF>

@@ -67,6 +67,7 @@
     <Compile Include="Mapping\Providers\IPropertyMappingProvider.cs" />
     <Compile Include="Serialization\IRdfWriter.cs" />
     <Compile Include="Vocabularies\OGuid.cs" />
+    <Compile Include="Vocabularies\Owl.cs" />
     <Compile Include="Vocabularies\Rdf.cs" />
     <Compile Include="Vocabularies\Xsd.cs" />
     <Compile Include="Vocabularies\Rdfs.cs" />

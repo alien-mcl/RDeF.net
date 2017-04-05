@@ -150,8 +150,8 @@ namespace Given_instance_of.DefaultEntityContext_class
                 CallCounter[subject] = calls = (CallCounter.Count > 0 ? CallCounter.Values.Max() + 1 : 1);
             }
 
-            yield return new Statement(subject, rdfs.type, new Iri("class1"));
-            yield return new Statement(subject, rdfs.type, new Iri("class2"));
+            yield return new Statement(subject, rdf.type, new Iri("class1"));
+            yield return new Statement(subject, rdf.type, new Iri("class2"));
             yield return new Statement(subject, new Iri("ordinals"), (1 * calls).ToString(), xsd.@int);
             yield return new Statement(subject, new Iri("ordinals"), (2 * calls).ToString(), xsd.@int);
             yield return new Statement(subject, new Iri("floats"), new Iri("_:blank001"));

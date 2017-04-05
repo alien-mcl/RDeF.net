@@ -132,7 +132,7 @@ namespace RDeF.Serialization
 
         private static async Task WritePredicate(JsonWriter jsonWriter, Iri predicate, IEnumerable<Statement> statements, ICollection<IGrouping<Iri, Statement>> subjects)
         {
-            await jsonWriter.WritePropertyNameAsync(predicate == rdfs.type ? "@type" : predicate);
+            await jsonWriter.WritePropertyNameAsync(predicate == rdf.type ? "@type" : predicate);
             await jsonWriter.WriteStartArrayAsync();
             foreach (var value in statements)
             {
@@ -179,7 +179,7 @@ namespace RDeF.Serialization
         {
             if (value.Object != null)
             {
-                if (value.Predicate == rdfs.type)
+                if (value.Predicate == rdf.type)
                 {
                     await jsonWriter.WriteValueAsync((string)value.Object);
                     return;

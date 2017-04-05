@@ -48,24 +48,24 @@ namespace RDeF.Testing
                 new Statement(new Iri("subject1"), new Iri("predicate2"), "value", xsd.@string),
                 new Statement(new Iri("subject1"), new Iri("predicate1"), "123", xsd.@int),
                 new Statement(new Iri("subject1"), new Iri("predicate2"), "text", "en"),
-                new Statement(new Iri("subject1"), rdfs.type, new Iri("type1")),
-                new Statement(new Iri("subject1"), rdfs.type, new Iri("type2")),
+                new Statement(new Iri("subject1"), rdf.type, new Iri("type1")),
+                new Statement(new Iri("subject1"), rdf.type, new Iri("type2")),
                 new Statement(new Iri("subject2"), new Iri("predicate1"), new Iri("object1")),
                 new Statement(new Iri("subject2"), new Iri("predicate2"), new Iri("object2")),
                 new Statement(new Iri("subject2"), new Iri("predicate1"), "value"),
                 new Statement(new Iri("subject2"), new Iri("predicate2"), "value", xsd.@string),
                 new Statement(new Iri("subject2"), new Iri("predicate1"), "123", xsd.@int),
                 new Statement(new Iri("subject2"), new Iri("predicate2"), "text", "en"),
-                new Statement(new Iri("subject2"), rdfs.type, new Iri("type1")),
-                new Statement(new Iri("subject2"), rdfs.type, new Iri("type2")),
+                new Statement(new Iri("subject2"), rdf.type, new Iri("type1")),
+                new Statement(new Iri("subject2"), rdf.type, new Iri("type2")),
                 new Statement(new Iri("subject3"), new Iri("predicate1"), new Iri("object1"), new Iri("graph")),
                 new Statement(new Iri("subject3"), new Iri("predicate2"), new Iri("object2"), new Iri("graph")),
                 new Statement(new Iri("subject3"), new Iri("predicate1"), "value", (Iri)null, new Iri("graph")),
                 new Statement(new Iri("subject3"), new Iri("predicate2"), "value", xsd.@string, new Iri("graph")),
                 new Statement(new Iri("subject3"), new Iri("predicate1"), "123", xsd.@int, new Iri("graph")),
                 new Statement(new Iri("subject3"), new Iri("predicate2"), "text", "en", new Iri("graph")),
-                new Statement(new Iri("subject3"), rdfs.type, new Iri("type1"), new Iri("graph")),
-                new Statement(new Iri("subject3"), rdfs.type, new Iri("type2"), new Iri("graph"))
+                new Statement(new Iri("subject3"), rdf.type, new Iri("type1"), new Iri("graph")),
+                new Statement(new Iri("subject3"), rdf.type, new Iri("type2"), new Iri("graph"))
             }.GroupBy(statement => statement.Graph).Select(group => new KeyValuePair<Iri, IEnumerable<Statement>>(group.Key, group));
         }
 
