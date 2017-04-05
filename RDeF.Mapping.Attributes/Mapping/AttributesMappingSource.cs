@@ -6,7 +6,6 @@ using System.Reflection;
 using RDeF.Entities;
 using RDeF.Mapping.Attributes;
 using RDeF.Mapping.Providers;
-using RDeF.Mapping.Visitors;
 
 namespace RDeF.Mapping
 {

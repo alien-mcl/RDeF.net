@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿#if NETSTANDARD1_6
+using System.Reflection;
+#endif
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;

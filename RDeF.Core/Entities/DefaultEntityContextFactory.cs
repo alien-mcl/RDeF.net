@@ -69,7 +69,6 @@ namespace RDeF.Entities
                 scope.Register<IEntitySource, SimpleInMemoryEntitySource>();
             }
 
-            scope.Register<Func<Type, object>>(type => scope.Resolve(type));
             var result = scope.Resolve<IEntityContext>();
             result.Disposed += (sender, e) => scope.Dispose();
             return result;
@@ -78,11 +77,6 @@ namespace RDeF.Entities
         /// <inheritdoc />
         public IEntityContextFactory WithEntitySource<T>() where T : IEntitySource
         {
-            if (!typeof(IEntitySource).IsAssignableFrom(typeof(T)))
-            {
-                throw new InvalidOperationException($"Unable to use type '{typeof(T)}' as entity source as it doesn't implement type '{typeof(IEntitySource)}'.");
-            }
-
             _container.Unregister<IEntitySource>();
             _container.Register<IEntitySource, T>();
             return this;
@@ -123,7 +117,6 @@ namespace RDeF.Entities
         public void Dispose()
         {
             _container.Dispose();
-            GC.SuppressFinalize(this);
         }
 
         /// <inheritdoc />
@@ -147,6 +140,7 @@ namespace RDeF.Entities
             return this;
         }
 
+        /// <inheritdoc />
         IComponentConfigurator IComponentConfigurator.WithComponent<TService, TComponent>(Lifestyle lifestyle, Action<IComponentScope, TComponent> onActivate)
         {
             var registration = _container.Register<TService, TComponent>(lifestyle);

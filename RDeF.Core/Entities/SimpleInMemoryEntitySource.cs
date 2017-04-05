@@ -20,6 +20,17 @@ namespace RDeF.Entities
             Entities = new ConcurrentDictionary<IEntity, ISet<Statement>>();
         }
 
+        /// <inheritdoc />
+        public IEnumerable<Statement> Statements
+        {
+            get
+            {
+                return from entity in Entities
+                       from statement in entity.Value
+                       select statement;
+            }
+        }
+
         internal IDictionary<IEntity, ISet<Statement>> Entities { get; }
 
         /// <inheritdoc />

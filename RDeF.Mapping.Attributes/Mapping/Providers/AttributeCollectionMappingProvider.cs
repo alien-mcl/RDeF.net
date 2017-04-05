@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
 using RDeF.Entities;
 using RDeF.Mapping.Attributes;
 using RDeF.Mapping.Visitors;
+#if NETSTANDARD1_6
+using System.Linq;
+#endif
 
 namespace RDeF.Mapping.Providers
 {

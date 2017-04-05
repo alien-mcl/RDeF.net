@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using RDeF.Entities;
@@ -10,6 +11,7 @@ namespace Given_instance_of.mapping_of_type
     public class PropertyMapping_class
     {
         private const string ExpectedName = "Name";
+        private static readonly Type ExpectedReturnType = typeof(string);
         private static readonly Iri ExpectedGraph = new Iri("iri");
         private static readonly Iri ExpectedPredicate = new Iri("predicate");
 
@@ -29,6 +31,12 @@ namespace Given_instance_of.mapping_of_type
         public void Should_get_the_property_name()
         {
             Mapping.Name.Should().Be(ExpectedName);
+        }
+
+        [Test]
+        public void Should_get_the_property_return_type()
+        {
+            Mapping.ReturnType.Should().Be(ExpectedReturnType);
         }
 
         [Test]
@@ -54,7 +62,7 @@ namespace Given_instance_of.mapping_of_type
         {
             EntityMapping = new Mock<IEntityMapping>(MockBehavior.Strict);
             Converter = new Mock<IConverter>(MockBehavior.Strict);
-            Mapping = new PropertyMapping(EntityMapping.Object, ExpectedName, ExpectedGraph, ExpectedPredicate, Converter.Object);
+            Mapping = new PropertyMapping(EntityMapping.Object, ExpectedName, ExpectedReturnType, ExpectedGraph, ExpectedPredicate, Converter.Object);
         }
     }
 }

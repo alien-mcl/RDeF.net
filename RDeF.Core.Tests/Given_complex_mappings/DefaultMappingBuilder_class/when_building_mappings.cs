@@ -49,7 +49,8 @@ namespace Given_complex_mappings.DefaultMappingBuilder_class
             };
             var mappingProviderVisitors = new IMappingProviderVisitor[]
             {
-                new CollectionStorageModelConventionVisitor()
+                new CollectionStorageModelConventionVisitor(),
+                new ConverterConventionVisitor(converters)
             };
             Builder = new DefaultMappingBuilder(converters, new QIriMapping[0], mappingProviderVisitors);
             OpenGenericMappingProviders = new Dictionary<Type, ICollection<ITermMappingProvider>>();

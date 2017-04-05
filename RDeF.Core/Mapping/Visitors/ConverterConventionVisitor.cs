@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+#if NETSTANDARD1_6
 using System.Reflection;
+#endif
 using RDeF.Entities;
 using RDeF.Mapping.Providers;
 using RollerCaster.Reflection;

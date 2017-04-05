@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+
 #if NETSTANDARD1_6
 using Microsoft.Extensions.DependencyModel;
 #endif

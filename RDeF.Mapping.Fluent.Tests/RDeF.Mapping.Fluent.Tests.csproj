@@ -67,7 +67,9 @@
     </Compile>
     <Compile Include="Data\IUnmappedProduct.cs" />
     <Compile Include="Given_a_context\with_explicitly_mapped_entity\ExplicitMappingsTest.cs" />
-    <Compile Include="Given_a_context\with_explicitly_mapped_entity\when_creating_an_entity.cs" />
+    <Compile Include="Given_a_context\with_explicitly_mapped_entity\when_an_entity\is_being_loaded.cs" />
+    <Compile Include="Given_a_context\with_explicitly_mapped_entity\when_an_entity\is_being_created.cs" />
+    <Compile Include="Given_a_context\with_explicitly_mapped_entity\when_an_entity\ScenarioTest.cs" />
     <Compile Include="Given_a_context\with_explicitly_mapped_entity\when_disposing.cs" />
     <Compile Include="Given_a_context\with_explicitly_mapped_entity\when_serializing.cs" />
     <Compile Include="Given_instance_of\DefaultExplicitMappingsBuilder_class\DefaultExplicitMappingsBuilderTest.cs" />
@@ -112,9 +114,6 @@
     <EmbeddedResource Include="Given_a_context\with_explicitly_mapped_entity\when_serializing.json">
       <DependentUpon>when_serializing.cs</DependentUpon>
       <LogicalName>Given_a_context\with_explicitly_mapped_entity\when_serializing.json</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Given_a_context\with_explicitly_mapped_entity\when_serializing - Copy.json">
-      <DependentUpon>when_disposing.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
   </ItemGroup>

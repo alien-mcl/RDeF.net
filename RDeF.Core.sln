@@ -36,6 +36,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDeF.Mapping.Fluent.Core", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDeF.Mapping.Fluent.Tests.Core", "RDeF.Mapping.Fluent.Tests\RDeF.Mapping.Fluent.Tests.Core.csproj", "{8D9317C1-AEDC-4079-8692-6AF4BEAEE8BA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{A739B5AD-D562-4A77-85E0-732E9C638B66}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\RDeF.Contracts.nuspec = .nuget\RDeF.Contracts.nuspec
+		.nuget\RDeF.Core.nuspec = .nuget\RDeF.Core.nuspec
+		.nuget\RDeF.Mapping.Attributes.nuspec = .nuget\RDeF.Mapping.Attributes.nuspec
+		.nuget\RDeF.Mapping.Fluent.nuspec = .nuget\RDeF.Mapping.Fluent.nuspec
+		.nuget\RDeF.Serialization.nuspec = .nuget\RDeF.Serialization.nuspec
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

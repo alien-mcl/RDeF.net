@@ -1,9 +1,7 @@
 ﻿using System.Globalization;
-using System.Threading;
 using FluentAssertions;
 using NUnit.Framework;
 using RDeF.Entities;
-using RDeF.Mapping;
 using RDeF.Mapping.Converters;
 
 namespace Given_instance_of.converter_of_type

@@ -21,6 +21,8 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
 
         private Mock<IRdfWriter> RdfWriter { get; set; }
 
+        private ISet<Statement> ExpectedStatements { get; set; }
+
         public override void TheTest()
         {
             EntitySource.Write(Buffer, RdfWriter.Object).GetAwaiter().GetResult();
@@ -29,7 +31,7 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
         [Test]
         public void Should_serialize_statements_grouped_by_graph()
         {
-            RdfWriter.Verify(instance => instance.Write(It.IsAny<StreamWriter>(), It.Is<IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>>>(collection => Test(collection))));
+            RdfWriter.Verify(instance => instance.Write(It.IsAny<StreamWriter>(), It.Is<IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>>>(collection => Match(collection))));
         }
 
         [Test]
@@ -50,6 +52,12 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
             EntitySource.Awaiting(instance => instance.Write(new StreamWriter(new MemoryStream()), null)).ShouldThrow<ArgumentNullException>().Which.ParamName.Should().Be("rdfWriter");
         }
 
+        [Test]
+        public void Should_retrieve_all_statements()
+        {
+            EntitySource.Statements.Should().BeEquivalentTo(ExpectedStatements);
+        }
+
         protected override void ScenarioSetup()
         {
             base.ScenarioSetup();
@@ -58,14 +66,14 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
             RdfWriter.Setup(instance => instance.Write(It.IsAny<StreamWriter>(), It.IsAny<IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>>>()))
                 .Returns(Task.FromResult(0));
             var entity = new Entity(new Iri("test"), Context);
-            EntitySource.Entities[entity] = new HashSet<Statement>()
+            EntitySource.Entities[entity] = ExpectedStatements = new HashSet<Statement>()
             {
                 new Statement(entity.Iri, new Iri("predicate"), entity.Iri, PrimaryGraph),
                 new Statement(entity.Iri, new Iri("predicate"), entity.Iri, SecondaryGraph)
             };
         }
 
-        private bool Test(IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>> collection)
+        private bool Match(IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>> collection)
         {
             return (from graph in collection
                     join graphIri in new[] { PrimaryGraph, SecondaryGraph } on graph.Key equals graphIri into matched

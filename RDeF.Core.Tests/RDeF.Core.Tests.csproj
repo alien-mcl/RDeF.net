@@ -101,10 +101,12 @@
     <Compile Include="Given_instance_of\converter_of_type\StringConverter_class.cs" />
     <Compile Include="Given_instance_of\converter_of_type\LiteralConverterTest.cs" />
     <Compile Include="Given_instance_of\DefaultChangeDetector_class\DefaultChangeDetectorTest.cs" />
+    <Compile Include="Given_instance_of\DefaultChangeDetector_class\when_initializing.cs" />
     <Compile Include="Given_instance_of\DefaultChangeDetector_class\when_processing\a_complex_entity.cs" />
     <Compile Include="Given_instance_of\DefaultChangeDetector_class\when_processing\a_simple_entity.cs" />
     <Compile Include="Given_instance_of\DefaultChangeDetector_class\when_processing\ScenarioTest.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContextFactory_class\DefaultEntityContextFactoryTest.cs" />
+    <Compile Include="Given_instance_of\DefaultEntityContextFactory_class\when_configuring.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContextFactory_class\when_creating_an_entity_context.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContext_class\DefaultEntityContextTest.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContext_class\when_deleting_an_entity.cs" />
@@ -127,6 +129,7 @@
     <Compile Include="Given_instance_of\DefaultMappingBuilder_class\DefaultMappingBuilderTest.cs" />
     <Compile Include="Given_instance_of\Entity_class\EntityTest.cs" />
     <Compile Include="Given_instance_of\Entity_class\when_comparing_for_equality.cs" />
+    <Compile Include="Given_instance_of\Entity_class\when_verifying_mapped_classes.cs" />
     <Compile Include="Given_instance_of\Entity_class\when_initializing.cs" />
     <Compile Include="Given_instance_of\Entity_class\when_getting_a_property.cs" />
     <Compile Include="Given_instance_of\Entity_class\when_setting_a_property.cs" />

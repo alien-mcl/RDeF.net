@@ -23,6 +23,7 @@ namespace Given_instance_of.mapping_of_type
             Mapping = new CollectionMapping(
                 new Mock<IEntityMapping>(MockBehavior.Strict).Object,
                 "Name",
+                typeof(string),
                 new Iri("iri"),
                 new Iri("predicate"),
                 new Mock<IConverter>(MockBehavior.Strict).Object,

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+#if NETSTANDARD1_6
 using System.Linq;
+#endif
 using System.Reflection;
 using RDeF.Entities;
 using RDeF.Mapping.Attributes;

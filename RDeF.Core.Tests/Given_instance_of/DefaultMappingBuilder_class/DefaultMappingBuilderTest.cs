@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+#if NETSTANDARD1_6
 using System.Reflection;
+#endif
 using Moq;
 using NUnit.Framework;
 using RDeF.Entities;

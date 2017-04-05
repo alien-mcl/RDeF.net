@@ -24,6 +24,12 @@ namespace Given_instance_of.DefaultEntityContext_class
         }
 
         [Test]
+        public void Should_throw_when_given_Iri_is_a_blank()
+        {
+            Context.Invoking(context => context.Delete(new Iri())).ShouldThrow<ArgumentOutOfRangeException>();
+        }
+
+        [Test]
         public void Should_delete_it_from_cache()
         {
             ((IDictionary<Iri, Entity>)Context.GetType().GetField("_entityCache", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(Context))

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+#if NETSTANDARD1_6
 using System.Reflection;
+#endif
 using FluentAssertions;
 using NUnit.Framework;
 using RDeF.Data;

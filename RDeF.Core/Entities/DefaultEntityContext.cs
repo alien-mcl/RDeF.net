@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using RDeF.Collections;
-using RDeF.ComponentModel;
 using RDeF.Mapping;
 using RollerCaster;
 
@@ -32,13 +31,13 @@ namespace RDeF.Entities
         public event EventHandler Disposed;
 
         /// <inheritdoc />
-        public IMappingsRepository Mappings { get; }
+        public virtual IMappingsRepository Mappings { get; }
 
         /// <inheritdoc />
-        public IReadableEntitySource EntitySource { get { return _entitySource; } }
+        public virtual IReadableEntitySource EntitySource { get { return _entitySource; } }
 
         /// <inheritdoc />
-        public TEntity Load<TEntity>(Iri iri) where TEntity : IEntity
+        public virtual TEntity Load<TEntity>(Iri iri) where TEntity : IEntity
         {
             if (iri == null)
             {
@@ -49,7 +48,7 @@ namespace RDeF.Entities
         }
 
         /// <inheritdoc />
-        public TEntity Create<TEntity>(Iri iri) where TEntity : IEntity
+        public virtual TEntity Create<TEntity>(Iri iri) where TEntity : IEntity
         {
             if (iri == null)
             {
@@ -60,7 +59,7 @@ namespace RDeF.Entities
         }
 
         /// <inheritdoc />
-        public void Delete(Iri iri)
+        public virtual void Delete(Iri iri)
         {
             if (iri == null)
             {
@@ -86,7 +85,7 @@ namespace RDeF.Entities
         }
 
         /// <inheritdoc />
-        public IQueryable<TEntity> AsQueryable<TEntity>() where TEntity : IEntity
+        public virtual IQueryable<TEntity> AsQueryable<TEntity>() where TEntity : IEntity
         {
             var inMemoryEntitySource = _entitySource as IInMemoryEntitySource;
             if (inMemoryEntitySource != null)
@@ -98,7 +97,7 @@ namespace RDeF.Entities
         }
 
         /// <inheritdoc />
-        public void Commit()
+        public virtual void Commit()
         {
             lock (_sync)
             {
@@ -121,7 +120,7 @@ namespace RDeF.Entities
         }
 
         /// <inheritdoc />
-        public void Rollback()
+        public virtual void Rollback()
         {
             lock (_sync)
             {

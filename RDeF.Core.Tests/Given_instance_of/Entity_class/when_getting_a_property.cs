@@ -17,10 +17,12 @@ namespace Given_instance_of.Entity_class
 
         private string ResultingDescription { get; set; }
 
+        private IProduct Product { get; set; }
+
         public override void TheTest()
         {
-            ResultingName = Entity.ActLike<IProduct>().Name;
-            ResultingDescription = Entity.ActLike<IProduct>().Description;
+            ResultingName = Product.Name;
+            ResultingDescription = Product.Description;
         }
 
         [Test]
@@ -49,6 +51,7 @@ namespace Given_instance_of.Entity_class
                     entity.SetPropertyInternal(typeof(IProduct), "Name", ExpectedName);
                     entity.SetPropertyInternal(typeof(IProduct), "Description", ExpectedDescription);
                 });
+            Product = Entity.ActLike<IProduct>();
         }
     }
 }

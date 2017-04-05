@@ -34,11 +34,40 @@ namespace RDeF.Mapping.Entities
             }
 
             var entity = entityContext.Create<TEntity>(iri);
-            if (mappingsBuilder == null)
+            if (mappingsBuilder != null)
             {
-                return entity;
+                entityContext.BuildExplicitMappings(mappingsBuilder);
             }
 
+            return entity;
+        }
+
+        /// <summary>Loads a specified entity.</summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="entityContext">Entity context to work with.</param>
+        /// <param name="iri">The identifier of the entity to be loaded.</param>
+        /// <param name="mappingsBuilder">Explicit mapping builder.</param>
+        /// <returns>Instance of the entity of a given <paramref name="iri" />.</returns>
+        public static TEntity Load<TEntity>(this IEntityContext entityContext, Iri iri, Action<IExplicitMappingsBuilder<TEntity>> mappingsBuilder) where TEntity : IEntity
+        {
+            if (entityContext == null)
+            {
+                throw new ArgumentNullException(nameof(entityContext));
+            }
+
+            var entity = entityContext.Load<TEntity>(iri);
+            if (mappingsBuilder != null)
+            {
+                entityContext.BuildExplicitMappings(mappingsBuilder);
+            }
+
+            return entity;
+        }
+
+        private static void BuildExplicitMappings<TEntity>(
+            this IEntityContext entityContext,
+            Action<IExplicitMappingsBuilder<TEntity>> mappingsBuilder) where TEntity : IEntity
+        {
             var builder = new DefaultExplicitMappingsBuilder<TEntity>();
             mappingsBuilder(builder);
             var mappingProviders = new List<ITermMappingProvider>();
@@ -46,7 +75,6 @@ namespace RDeF.Mapping.Entities
             mappingProviders.AddCollections(builder);
             mappingProviders.AddProperties(builder);
             ExplicitMappings[entityContext].Set(mappingProviders.BuildMapping<TEntity>());
-            return entity;
         }
 
         private static void AddClasses<TEntity>(this ICollection<ITermMappingProvider> mappingProviders, DefaultExplicitMappingsBuilder<TEntity> builder) where TEntity : IEntity
@@ -105,6 +133,7 @@ namespace RDeF.Mapping.Entities
                     entityMapping.Properties.Add(new CollectionMapping(
                         entityMapping,
                         collectionMappingProvider.Property.Name,
+                        collectionMappingProvider.Property.PropertyType,
                         collectionMappingProvider.GetGraph(QIriMappings),
                         collectionMappingProvider.GetTerm(QIriMappings),
                         LiteralConverters.First(converter => converter.GetType() == collectionMappingProvider.ValueConverterType),
@@ -118,6 +147,7 @@ namespace RDeF.Mapping.Entities
                     entityMapping.Properties.Add(new PropertyMapping(
                         entityMapping,
                         propertyMappingProvider.Property.Name,
+                        propertyMappingProvider.Property.PropertyType,
                         propertyMappingProvider.GetGraph(QIriMappings),
                         propertyMappingProvider.GetTerm(QIriMappings),
                         LiteralConverters.First(converter => converter.GetType() == propertyMappingProvider.ValueConverterType)));

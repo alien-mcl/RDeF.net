@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
+#if NETSTANDARD1_6
 using System.Reflection;
+#endif
 using RollerCaster;
 using RollerCaster.Collections;
 

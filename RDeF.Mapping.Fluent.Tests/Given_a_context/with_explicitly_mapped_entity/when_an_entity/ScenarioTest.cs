@@ -11,25 +11,15 @@ using RDeF.Mapping.Entities;
 using RDeF.Mapping.Explicit;
 using RDeF.Mapping.Visitors;
 
-namespace Given_a_context.with_explicitly_mapped_entity
+namespace Given_a_context.with_explicitly_mapped_entity.when_an_entity
 {
-    [TestFixture]
-    public class when_creating_an_entity_with_explicit_mappings : ExplicitMappingsTest
+    public abstract class ScenarioTest : ExplicitMappingsTest
     {
         internal Mock<IExplicitMappings> Mappings { get; set; }
 
-        protected IEntityMapping Mapping { get; set; }
+        protected IEntityMapping Mapping { get; private set; }
 
-        public override void TheTest()
-        {
-            Context.Create<IUnmappedProduct>(new Iri("test"), MapEntity);
-        }
-
-        [Test]
-        public void Should_throw_when_no_entity_context_is_given()
-        {
-            ((IEntityContext)null).Invoking(_ => _.Create<IUnmappedProduct>(new Iri("test"), null)).ShouldThrow<ArgumentNullException>();
-        }
+        protected Mock<IEntityContext> EntityContext { get; private set; }
 
         [Test]
         public void Should_create_entity_mappings_accordingly()
@@ -41,9 +31,8 @@ namespace Given_a_context.with_explicitly_mapped_entity
         {
             Mappings = new Mock<IExplicitMappings>(MockBehavior.Strict);
             Mappings.Setup(instance => instance.Set(It.IsAny<IEntityMapping>())).Callback<IEntityMapping>(mapping => Mapping = mapping);
-            var context = new Mock<IEntityContext>(MockBehavior.Strict);
-            context.Setup(instance => instance.Create<IUnmappedProduct>(It.IsAny<Iri>())).Returns(new Mock<IUnmappedProduct>(MockBehavior.Strict).Object);
-            EntityContextExtensions.ExplicitMappings[Context = context.Object] = Mappings.Object;
+            EntityContext = new Mock<IEntityContext>(MockBehavior.Strict);
+            EntityContextExtensions.ExplicitMappings[Context = EntityContext.Object] = Mappings.Object;
             EntityContextExtensions.LiteralConverters = new[] { new StringConverter() };
             EntityContextExtensions.MappingVisitors = Array.Empty<IMappingProviderVisitor>();
             EntityContextExtensions.QIriMappings = Array.Empty<QIriMapping>();

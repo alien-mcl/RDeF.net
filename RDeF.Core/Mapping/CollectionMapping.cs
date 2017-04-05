@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using RDeF.Entities;
 using RDeF.Mapping.Providers;
 
@@ -7,8 +8,8 @@ namespace RDeF.Mapping
     /// <summary>Describes a collection mapping.</summary>
     public class CollectionMapping : PropertyMapping, ICollectionMapping
     {
-        internal CollectionMapping(IEntityMapping entityMapping, string name, Iri graph, Iri predicate, IConverter valueConverter, CollectionStorageModel storeAs)
-            : base(entityMapping, name, graph, predicate, valueConverter)
+        internal CollectionMapping(IEntityMapping entityMapping, string name, Type returnType, Iri graph, Iri predicate, IConverter valueConverter, CollectionStorageModel storeAs)
+            : base(entityMapping, name, returnType, graph, predicate, valueConverter)
         {
             StoreAs = storeAs;
         }
@@ -25,6 +26,7 @@ namespace RDeF.Mapping
             return new CollectionMapping(
                 entityMapping,
                 collectionMappingProvider.Property.Name,
+                collectionMappingProvider.Property.PropertyType,
                 collectionMappingProvider.GetGraph(qiriMappings),
                 collectionMappingProvider.GetTerm(qiriMappings),
                 valueConverter,
