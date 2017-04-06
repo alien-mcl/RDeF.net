@@ -3,13 +3,13 @@ using System.Reflection;
 
 namespace RDeF.Mapping
 {
-    /// <summary>Provides attribute based <see cref="IMappingSource" />s.</summary>
-    public class AttributesMappingSourceProvider : IMappingSourceProvider
+    /// <summary>Provides fluent-like API <see cref="IMappingSource" />s.</summary>
+    public class FluentMappingSourceProvider : IMappingSourceProvider
     {
         /// <inheritdoc/>
         public IEnumerable<IMappingSource> GetMappingSourcesFor(Assembly assembly)
         {
-            return new[] { new AttributesMappingSource(assembly) };
+            return new[] { new FluentMappingSource(assembly) };
         }
     }
 }

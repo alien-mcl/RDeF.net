@@ -64,9 +64,106 @@ namespace RDeF.Mapping.Entities
             return entity;
         }
 
-        private static void BuildExplicitMappings<TEntity>(
-            this IEntityContext entityContext,
-            Action<IExplicitMappingsBuilder<TEntity>> mappingsBuilder) where TEntity : IEntity
+        internal static void AddClasses(this ICollection<ITermMappingProvider> mappingProviders, Type entityType, DefaultExplicitMappingsBuilder builder)
+        {
+            foreach (var @class in builder.Classes)
+            {
+                mappingProviders.Add(new FluentEntityMappingProvider(entityType, @class.Item1, @class.Item2));
+            }
+
+            foreach (var @class in builder.ClassTerms)
+            {
+                mappingProviders.Add(new FluentEntityMappingProvider(entityType, @class.Item1, @class.Item2, @class.Item3, @class.Item4));
+            }
+
+            foreach (var @class in builder.ClassGraphs)
+            {
+                mappingProviders.Add(new FluentEntityMappingProvider(entityType, @class.Item1, @class.Item2, @class.Item3));
+            }
+        }
+
+        internal static void AddCollections(this ICollection<ITermMappingProvider> mappingProviders, Type entityType, DefaultExplicitMappingsBuilder builder)
+        {
+            foreach (var collection in builder.Collections)
+            {
+                var collectionMappingProvider = new FluentCollectionMappingProvider(
+                    entityType,
+                    collection.Key,
+                    collection.Value.Item1,
+                    collection.Value.Item3,
+                    collection.Value.Item4,
+                    collection.Value.Item2);
+                mappingProviders.Add(collectionMappingProvider);
+            }
+
+            foreach (var collection in builder.CollectionTerms)
+            {
+                var collectionMappingProvider = new FluentCollectionMappingProvider(
+                    entityType,
+                    collection.Key,
+                    collection.Value.Item1,
+                    collection.Value.Item2,
+                    collection.Value.Item5,
+                    collection.Value.Item6,
+                    collection.Value.Item3,
+                    collection.Value.Item4);
+                mappingProviders.Add(collectionMappingProvider);
+            }
+
+            foreach (var collection in builder.CollectionGraphs)
+            {
+                var collectionMappingProvider = new FluentCollectionMappingProvider(
+                    entityType,
+                    collection.Key,
+                    collection.Value.Item1,
+                    collection.Value.Item2,
+                    collection.Value.Item4,
+                    collection.Value.Item5,
+                    collection.Value.Item3);
+                mappingProviders.Add(collectionMappingProvider);
+            }
+        }
+
+        internal static void AddProperties(this ICollection<ITermMappingProvider> mappingProviders, Type entityType, DefaultExplicitMappingsBuilder builder)
+        {
+            foreach (var property in builder.Properties)
+            {
+                var propertyMappingProvider = new FluentPropertyMappingProvider(
+                    entityType,
+                    property.Key,
+                    property.Value.Item1,
+                    property.Value.Item3,
+                    property.Value.Item2);
+                mappingProviders.Add(propertyMappingProvider);
+            }
+
+            foreach (var property in builder.PropertyTerms)
+            {
+                var propertyMappingProvider = new FluentPropertyMappingProvider(
+                    entityType,
+                    property.Key,
+                    property.Value.Item1,
+                    property.Value.Item2,
+                    property.Value.Item5,
+                    property.Value.Item3,
+                    property.Value.Item4);
+                mappingProviders.Add(propertyMappingProvider);
+            }
+
+            foreach (var property in builder.PropertyGraphs)
+            {
+                var propertyMappingProvider = new FluentPropertyMappingProvider(
+                    entityType,
+                    property.Key,
+                    property.Value.Item1,
+                    property.Value.Item2,
+                    property.Value.Item4,
+                    property.Value.Item3);
+                mappingProviders.Add(propertyMappingProvider);
+            }
+        }
+
+        private static void BuildExplicitMappings<TEntity>(this IEntityContext entityContext, Action<IExplicitMappingsBuilder<TEntity>> mappingsBuilder) where TEntity : IEntity
         {
             var builder = new DefaultExplicitMappingsBuilder<TEntity>();
             mappingsBuilder(builder);
@@ -79,39 +176,17 @@ namespace RDeF.Mapping.Entities
 
         private static void AddClasses<TEntity>(this ICollection<ITermMappingProvider> mappingProviders, DefaultExplicitMappingsBuilder<TEntity> builder) where TEntity : IEntity
         {
-            foreach (var @class in builder.Classes)
-            {
-                mappingProviders.Add(new FluentEntityMappingProvider(typeof(TEntity), @class.Item1, @class.Item2));
-            }
+            mappingProviders.AddClasses(typeof(TEntity), builder);
         }
 
         private static void AddCollections<TEntity>(this ICollection<ITermMappingProvider> mappingProviders, DefaultExplicitMappingsBuilder<TEntity> builder) where TEntity : IEntity
         {
-            foreach (var collection in builder.Collections)
-            {
-                var collectionMappingProvider = new FluentCollectionMappingProvider(
-                    typeof(TEntity),
-                    collection.Key,
-                    collection.Value.Item1,
-                    collection.Value.Item3,
-                    collection.Value.Item4,
-                    collection.Value.Item2);
-                mappingProviders.Add(collectionMappingProvider);
-            }
+            mappingProviders.AddCollections(typeof(TEntity), builder);
         }
 
         private static void AddProperties<TEntity>(this ICollection<ITermMappingProvider> mappingProviders, DefaultExplicitMappingsBuilder<TEntity> builder) where TEntity : IEntity
         {
-            foreach (var collection in builder.Properties)
-            {
-                var collectionMappingProvider = new FluentPropertyMappingProvider(
-                    typeof(TEntity),
-                    collection.Key,
-                    collection.Value.Item1,
-                    collection.Value.Item3,
-                    collection.Value.Item2);
-                mappingProviders.Add(collectionMappingProvider);
-            }
+            mappingProviders.AddProperties(typeof(TEntity), builder);
         }
 
         private static IEntityMapping BuildMapping<TEntity>(this ICollection<ITermMappingProvider> mappingProviders)
@@ -130,27 +205,22 @@ namespace RDeF.Mapping.Entities
                 var collectionMappingProvider = mappingProvider as ICollectionMappingProvider;
                 if (collectionMappingProvider != null)
                 {
-                    entityMapping.Properties.Add(new CollectionMapping(
+                    entityMapping.Properties.Add(CollectionMapping.CreateFrom(
                         entityMapping,
-                        collectionMappingProvider.Property.Name,
-                        collectionMappingProvider.Property.PropertyType,
-                        collectionMappingProvider.GetGraph(QIriMappings),
-                        collectionMappingProvider.GetTerm(QIriMappings),
+                        collectionMappingProvider,
                         LiteralConverters.First(converter => converter.GetType() == collectionMappingProvider.ValueConverterType),
-                        collectionMappingProvider.StoreAs));
+                        QIriMappings));
                     continue;
                 }
 
                 var propertyMappingProvider = mappingProvider as IPropertyMappingProvider;
                 if (propertyMappingProvider != null)
                 {
-                    entityMapping.Properties.Add(new PropertyMapping(
+                    entityMapping.Properties.Add(PropertyMapping.CreateFrom(
                         entityMapping,
-                        propertyMappingProvider.Property.Name,
-                        propertyMappingProvider.Property.PropertyType,
-                        propertyMappingProvider.GetGraph(QIriMappings),
-                        propertyMappingProvider.GetTerm(QIriMappings),
-                        LiteralConverters.First(converter => converter.GetType() == propertyMappingProvider.ValueConverterType)));
+                        propertyMappingProvider,
+                        LiteralConverters.First(converter => converter.GetType() == propertyMappingProvider.ValueConverterType),
+                        QIriMappings));
                 }
             }
 

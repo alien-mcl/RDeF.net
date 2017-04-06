@@ -9,6 +9,12 @@ namespace RDeF.Data
 
         string Description { get; set; }
 
+        string Image { get; set; }
+
+        ICollection<int> Ordinals { get; }
+
         ICollection<string> Categories { get; }
+
+        ICollection<string> Comments { get; }
     }
 }

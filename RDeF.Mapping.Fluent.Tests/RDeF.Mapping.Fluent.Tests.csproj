@@ -66,15 +66,22 @@
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Data\IUnmappedProduct.cs" />
+    <Compile Include="Data\UnmappedProductEntityMap.cs" />
     <Compile Include="Given_a_context\with_explicitly_mapped_entity\ExplicitMappingsTest.cs" />
     <Compile Include="Given_a_context\with_explicitly_mapped_entity\when_an_entity\is_being_loaded.cs" />
     <Compile Include="Given_a_context\with_explicitly_mapped_entity\when_an_entity\is_being_created.cs" />
     <Compile Include="Given_a_context\with_explicitly_mapped_entity\when_an_entity\ScenarioTest.cs" />
     <Compile Include="Given_a_context\with_explicitly_mapped_entity\when_disposing.cs" />
     <Compile Include="Given_a_context\with_explicitly_mapped_entity\when_serializing.cs" />
+    <Compile Include="Given_instance_of\DefaultExplicitCollectionMappingBuilder_class\when_building_a_collection.cs" />
+    <Compile Include="Given_instance_of\DefaultExplicitPropertyMappingBuilder_class\when_building_a_property.cs" />
+    <Compile Include="Given_instance_of\FluentMappingSource_class\FluentMappingSourceTest.cs" />
+    <Compile Include="Given_instance_of\FluentMappingSource_class\when_gathering_entity_mappings.cs" />
+    <Compile Include="Given_instance_of\FluentMappingSource_class\when_initializing.cs" />
+    <Compile Include="Given_instance_of\FluentMappingSourceProvider_class\when_getting_mapping_sources_for_assembly.cs" />
     <Compile Include="Given_instance_of\DefaultExplicitMappingsBuilder_class\DefaultExplicitMappingsBuilderTest.cs" />
     <Compile Include="Given_instance_of\DefaultExplicitMappingsBuilder_class\when_building_a_collection_mapping.cs" />
-    <Compile Include="Given_instance_of\DefaultExplicitMappingsBuilder_class\when_build_an_entity.cs" />
+    <Compile Include="Given_instance_of\DefaultExplicitMappingsBuilder_class\when_building_an_entity.cs" />
     <Compile Include="Given_instance_of\DefaultExplicitMappingsBuilder_class\when_building_a_property_mapping.cs" />
     <Compile Include="Given_instance_of\DefaultExplicitMappings_class\when_obtaining_mappings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

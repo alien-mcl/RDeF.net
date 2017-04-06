@@ -74,6 +74,9 @@
     <Compile Include="Mapping\Explicit\IExplicitMappings.cs" />
     <Compile Include="Mapping\Explicit\IExplicitMappingsBuilder.cs" />
     <Compile Include="Mapping\Explicit\IExplicitPropertyMappingBuilder.cs" />
+    <Compile Include="Mapping\FluentMappingSource.cs" />
+    <Compile Include="Mapping\FluentMappingSourceProvider.cs" />
+    <Compile Include="Mapping\Fluent\EntityMap.cs" />
     <Compile Include="Mapping\Providers\FluentCollectionMappingProvider.cs" />
     <Compile Include="Mapping\Providers\FluentEntityMappingProvider.cs" />
     <Compile Include="Mapping\Providers\FluentPropertyMappingProvider.cs" />

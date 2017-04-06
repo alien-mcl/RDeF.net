@@ -72,28 +72,6 @@ namespace RDeF.Mapping.Providers
         /// <inheritdoc />
         public abstract void Accept(IMappingProviderVisitor visitor);
 
-        /// <summary>Adds a given term mapping to the <paramref name="types" /> and <paramref name="parameters" />.</summary>
-        /// <param name="types">Types for constructor.</param>
-        /// <param name="parameters">Parameters for constructor.</param>
-        /// <param name="iri">Iri being used.</param>
-        /// <param name="prefix">Prefix being used.</param>
-        /// <param name="term">Term being used.</param>
-        internal static void AddTerm(IList<Type> types, IList<object> parameters, Iri iri, string prefix, string term)
-        {
-            if ((iri != null) || ((prefix == null) && (term == null)))
-            {
-                types.Add(typeof(Iri));
-                parameters.Add(iri);
-            }
-            else
-            {
-                types.Add(typeof(string));
-                types.Add(typeof(string));
-                parameters.Add(prefix);
-                parameters.Add(term);
-            }
-        }
-
         private static Iri Resolve(Iri iri, string prefix, string term, IEnumerable<QIriMapping> qiriMappings)
         {
             if (iri != null)
