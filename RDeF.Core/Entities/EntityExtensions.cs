@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using RDeF.Mapping;
 using RDeF.Vocabularies;
@@ -12,13 +13,14 @@ namespace RDeF.Entities
         /// <summary>Obtains a collection of RDF classes a given <paramref name="entity" /> is mapped to.</summary>
         /// <param name="entity">Entity for which to obtain classes.</param>
         /// <returns>Collection of Iri of RDF classes a given <paramref name="entity" /> is mapped to.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", Justification = "Invalid argument will be rejected in the first line of this method.")]
         public static IEnumerable<Iri> GetTypes(this IEntity entity)
         {
-            Entity actualEntity = entity.UnwrapEntity();
+            var proxy = entity.Unwrap();
             var result = new List<Iri>();
-            foreach (var type in actualEntity.CastedTypes)
+            foreach (var type in proxy.CastedTypes)
             {
-                var entityMapping = actualEntity.Context.Mappings.FindEntityMappingFor(type);
+                var entityMapping = entity.Context.Mappings.FindEntityMappingFor(type);
                 if (entityMapping != null)
                 {
                     result.AddRange(entityMapping.Classes.Select(@class => @class.Term));
@@ -62,7 +64,7 @@ namespace RDeF.Entities
             var otherEntity = value as IEntity;
             if (otherEntity != null)
             {
-                context.EntitiesCreated.Add((Entity)otherEntity.UnwrapEntity());
+                context.EntitiesCreated.Add(otherEntity.UnwrapEntity());
             }
         }
 
