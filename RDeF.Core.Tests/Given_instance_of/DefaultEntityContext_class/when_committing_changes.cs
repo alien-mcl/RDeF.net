@@ -3,6 +3,7 @@ using Moq;
 using NUnit.Framework;
 using RDeF.Data;
 using RDeF.Entities;
+using RDeF.Vocabularies;
 using RollerCaster;
 
 namespace Given_instance_of.DefaultEntityContext_class
@@ -37,7 +38,7 @@ namespace Given_instance_of.DefaultEntityContext_class
 
         protected override void ScenarioSetup()
         {
-            Entity = (Entity)Context.Create<IProduct>(new Iri("Test")).Unwrap();
+            Entity = (Entity)Context.Create<IProduct>(rdfs.Class).Unwrap();
             ChangeDetector.Setup(instance => instance.Process(It.IsAny<Entity>(), It.IsAny<IDictionary<IEntity, ISet<Statement>>>(), It.IsAny<IDictionary<IEntity, ISet<Statement>>>()))
                 .Callback<Entity, IDictionary<IEntity, ISet<Statement>>, IDictionary<IEntity, ISet<Statement>>>((entity, retracted, added) =>
                 {

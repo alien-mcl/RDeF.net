@@ -8,8 +8,6 @@ using RDeF.Entities;
 namespace RDeF.Vocabularies
 {
     /// <summary>Exposes XSD terms.</summary>
-    [ExcludeFromCodeCoverage]
-    [SuppressMessage("UnitTests", "TS0000:NoUnitTests", Justification = "No testable logic.")]
     [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "This is due to compliance with XSD namespace convention.")]
     public static class xsd
     {

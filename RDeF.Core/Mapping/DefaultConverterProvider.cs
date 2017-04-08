@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace RDeF.Mapping
 {
@@ -31,7 +32,7 @@ namespace RDeF.Mapping
         public ILiteralConverter FindConverter(Type converterType)
         {
             return (from converter in _converters
-                    let match = converterType == converter.GetType() ? 2 : (converterType.IsInstanceOfType(converter) ? 1 : 0)
+                    let match = converterType == converter.GetType() ? 2 : (converterType.GetTypeInfo().IsInstanceOfType(converter) ? 1 : 0)
                     where match > 0
                     orderby match descending
                     select converter).First();

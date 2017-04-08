@@ -22,7 +22,7 @@ namespace Given_instance_of.ConverterConventionVisitor_class
             get
             {
                 var result = Property.PropertyType;
-                if (result.IsGenericType)
+                if (result.GetTypeInfo().IsGenericType)
                 {
                     return result.GetGenericArguments()[0];
                 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using RDeF.Entities;
+using RDeF.Vocabularies;
 
 namespace RDeF.Mapping.Converters
 {
@@ -10,7 +11,7 @@ namespace RDeF.Mapping.Converters
         /// <inheritdoc />
         public IEnumerable<Iri> SupportedDataTypes
         {
-            get { return new[] { new Iri("test") }; }
+            get { return new[] { owl.Class }; }
         }
 
         /// <inheritdoc />
