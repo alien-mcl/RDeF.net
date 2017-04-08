@@ -18,6 +18,8 @@ namespace RDeF.ComponentModel
     internal sealed class SimpleContainer : IContainer
     {
         private const string AttributeMappingsAssembly = "RDeF.Mapping.Attributes";
+        private const string FluentMappingsAssembly = "RDeF.Mapping.Fluent";
+
         private readonly IDictionary<Type, IDictionary<Type, IComponentRegistration>> _entityContextBoundServiceRegistrations =
             new ConcurrentDictionary<Type, IDictionary<Type, IComponentRegistration>>();
 
@@ -173,6 +175,19 @@ namespace RDeF.ComponentModel
             }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "It is expected that some assemblies will be missing, thus attempts to load them will fail, which needs suppresion.")]
+        private static void TryLoadAssembly(AssemblyName assemblyName)
+        {
+            try
+            {
+                Assembly.Load(assemblyName);
+            }
+            catch
+            {
+                // Suppress any failed assembly load attempts.
+            }
+        }
+
         private object Resolve(Type serviceType, ISet<Type> visitedDependencies, IDictionary<IComponentRegistration, object> newInstances)
         {
             if (serviceType.IsADirectEnumerableType())
@@ -313,12 +328,16 @@ namespace RDeF.ComponentModel
 #else
             var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
 #endif
-            if (loadedAssemblies.Any(assembly => assembly.GetName().Name == AttributeMappingsAssembly))
+            if (loadedAssemblies.All(assembly => assembly.GetName().Name != AttributeMappingsAssembly))
             {
-                return;
+                TryLoadAssembly(new AssemblyName(AttributeMappingsAssembly));
             }
 
-            Assembly.Load(new AssemblyName(AttributeMappingsAssembly));
+            if (loadedAssemblies.All(assembly => assembly.GetName().Name != FluentMappingsAssembly))
+            {
+                TryLoadAssembly(new AssemblyName(FluentMappingsAssembly));
+            }
+
             _areStandardLibrariesLoaded = true;
         }
     }

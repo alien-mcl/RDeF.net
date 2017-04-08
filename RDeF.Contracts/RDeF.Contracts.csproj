@@ -56,6 +56,7 @@
     <Compile Include="Entities\IReadableEntitySource.cs" />
     <Compile Include="Entities\ISerializableEntitySource.cs" />
     <Compile Include="Mapping\AmbiguousMappingException.cs" />
+    <Compile Include="Mapping\IConverterProvider.cs" />
     <Compile Include="Mapping\ILiteralConverter.cs" />
     <Compile Include="Mapping\IMappingSourceProvider.cs" />
     <Compile Include="Mapping\IStatementMapping.cs" />

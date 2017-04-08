@@ -43,7 +43,6 @@ namespace RDeF.Entities
                 _container.Register<IMappingsRepository, DefaultMappingRepository>();
             });
             _container = new SimpleContainer();
-            _container.Register<IChangeDetector, DefaultChangeDetector>();
             _container.Register<IMappingBuilder, DefaultMappingBuilder>();
             _container.Register<IMappingsRepository, DefaultMappingRepository>();
             _container.Register<IModule>(new Regex("^RDeF\\.*"));

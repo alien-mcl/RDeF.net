@@ -34,13 +34,14 @@ namespace Given_complex_mappings.DefaultMappingRepository_class
                 new FloatingPointLiteralConverter(),
                 new UntypedLiteralConverter()
             };
+            var converterProvider = new DefaultConverterProvider(converters);
             var mappingProviderVisitors = new IMappingProviderVisitor[]
             {
                 new CollectionStorageModelConventionVisitor()
             };
             Repository = new DefaultMappingRepository(
                 new[] { new AttributesMappingSource(typeof(IProduct).GetTypeInfo().Assembly) },
-                new DefaultMappingBuilder(converters, Array.Empty<QIriMapping>(), mappingProviderVisitors));
+                new DefaultMappingBuilder(converterProvider, Array.Empty<QIriMapping>(), mappingProviderVisitors));
         }
     }
 }

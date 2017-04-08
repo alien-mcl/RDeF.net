@@ -47,12 +47,13 @@ namespace Given_complex_mappings.DefaultMappingBuilder_class
                 new FloatingPointLiteralConverter(),
                 new UntypedLiteralConverter()
             };
+            var converterProvider = new DefaultConverterProvider(converters);
             var mappingProviderVisitors = new IMappingProviderVisitor[]
             {
                 new CollectionStorageModelConventionVisitor(),
-                new ConverterConventionVisitor(converters)
+                new ConverterConventionVisitor(converterProvider)
             };
-            Builder = new DefaultMappingBuilder(converters, new QIriMapping[0], mappingProviderVisitors);
+            Builder = new DefaultMappingBuilder(converterProvider, new QIriMapping[0], mappingProviderVisitors);
             OpenGenericMappingProviders = new Dictionary<Type, ICollection<ITermMappingProvider>>();
             TheTest();
         }

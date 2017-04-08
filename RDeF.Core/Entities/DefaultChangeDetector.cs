@@ -143,8 +143,10 @@ namespace RDeF.Entities
                 return;
             }
 
-            statements.EnsureKey(entity).Add(propertyMapping.ValueConverter
-                .ConvertTo(entity.Iri, propertyMapping.Term, propertyValue.Value, propertyMapping.Graph));
+            var entityValue = propertyValue.Value as IEntity;
+            statements.EnsureKey(entity).Add(entityValue != null
+                ? new Statement(entity.Iri, propertyMapping.Term, entityValue.Iri, propertyMapping.Graph)
+                : propertyMapping.ValueConverter.ConvertTo(entity.Iri, propertyMapping.Term, propertyValue.Value, propertyMapping.Graph));
         }
     }
 }

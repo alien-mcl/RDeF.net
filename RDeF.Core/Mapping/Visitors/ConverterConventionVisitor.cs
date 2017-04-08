@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 #if NETSTANDARD1_6
 using System.Reflection;
 #endif
@@ -14,18 +12,18 @@ namespace RDeF.Mapping.Visitors
     /// <summary>Applies a literal type converter based on how the mapped property is defined.</summary>
     public class ConverterConventionVisitor : IMappingProviderVisitor
     {
-        private readonly IEnumerable<ILiteralConverter> _converters;
+        private readonly IConverterProvider _converterProvider;
 
         /// <summary>Initializes a new instance of the <see cref="ConverterConventionVisitor" /> class.</summary>
-        /// <param name="converters">Registered value converters.</param>
-        public ConverterConventionVisitor(IEnumerable<ILiteralConverter> converters)
+        /// <param name="converterProvider">Converters provider.</param>
+        public ConverterConventionVisitor(IConverterProvider converterProvider)
         {
-            if (converters == null)
+            if (converterProvider == null)
             {
-                throw new ArgumentNullException(nameof(converters));
+                throw new ArgumentNullException(nameof(converterProvider));
             }
 
-            _converters = converters;
+            _converterProvider = converterProvider;
         }
 
         /// <inheritdoc />
@@ -53,10 +51,7 @@ namespace RDeF.Mapping.Visitors
                 return;
             }
 
-            propertyMappingProvider.ValueConverterType = (from converter in _converters
-                                                          from supportedType in converter.SupportedTypes
-                                                          where supportedType == valueType
-                                                          select converter).Single().GetType();
+            propertyMappingProvider.ValueConverterType = _converterProvider.FindLiteralConverter(valueType).GetType();
         }
 
         /// <inheritdoc />

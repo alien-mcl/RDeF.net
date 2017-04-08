@@ -22,6 +22,7 @@ namespace RDeF.Mapping
                 throw new ArgumentNullException(nameof(componentConfigurator));
             }
 
+            componentConfigurator.WithMappingsProvidedBy<FluentMappingSourceProvider>();
             componentConfigurator.WithComponent<IChangeDetector, ExplicitMappingsAwareChangeDetector>(Lifestyle.BoundToEntityContext);
             componentConfigurator.WithComponent<IExplicitMappings, DefaultExplicitMappings>(
                 Lifestyle.BoundToEntityContext,

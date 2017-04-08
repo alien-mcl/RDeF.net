@@ -25,14 +25,13 @@ namespace Given_instance_of.ConverterConventionVisitor_class
         [Test]
         public void Should_obtain_converter_capabilities()
         {
-            Converter.VerifyGet(instance => instance.SupportedTypes, Times.Once);
+            ConverterProvider.Verify(instance => instance.FindLiteralConverter(PropertyType), Times.Once);
         }
 
         protected override void ScenarioSetup()
         {
             base.ScenarioSetup();
             Provider.SetupGet(instance => instance.ValueConverterType).Returns((Type)null);
-            Converter.SetupGet(instance => instance.SupportedTypes).Returns(new[] { typeof(string) });
         }
     }
 }

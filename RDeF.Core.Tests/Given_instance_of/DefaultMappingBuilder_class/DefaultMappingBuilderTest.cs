@@ -23,6 +23,8 @@ namespace Given_instance_of.DefaultMappingBuilder_class
 
         protected Mock<IMappingSource> MappingSource { get; private set; }
 
+        protected Mock<IConverterProvider> ConverterProvider { get; private set; }
+
         protected IDictionary<Type, ICollection<ITermMappingProvider>> OpenGenericMappingProviders { get; set; }
 
         public virtual void TheTest()
@@ -32,9 +34,10 @@ namespace Given_instance_of.DefaultMappingBuilder_class
         [SetUp]
         public void Setup()
         {
+            ConverterProvider = new Mock<IConverterProvider>(MockBehavior.Strict);
             MappingProviderVisitor = new Mock<IMappingProviderVisitor>(MockBehavior.Strict);
             MappingSource = new Mock<IMappingSource>(MockBehavior.Strict);
-            Builder = new DefaultMappingBuilder(new[] { new TestConverter() }, Array.Empty<QIriMapping>(), new[] { MappingProviderVisitor.Object });
+            Builder = new DefaultMappingBuilder(ConverterProvider.Object, Array.Empty<QIriMapping>(), new[] { MappingProviderVisitor.Object });
             ScenarioSetup();
             TheTest();
         }

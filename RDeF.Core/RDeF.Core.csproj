@@ -58,6 +58,7 @@
     <Compile Include="Collections\DictionaryExtensions.cs" />
     <Compile Include="ComponentModel\ComponentRegistration.cs" />
     <Compile Include="ComponentModel\IComponentRegistration.cs" />
+    <Compile Include="ComponentModel\BaseComponentsModule.cs" />
     <Compile Include="ComponentModel\VisitorsModule.cs" />
     <Compile Include="ComponentModel\IContainer.cs" />
     <Compile Include="ComponentModel\SimpleContainer.cs" />
@@ -69,7 +70,6 @@
     <Compile Include="Entities\IriComparer.cs" />
     <Compile Include="Entities\MulticastPropertyValueExtensions.cs" />
     <Compile Include="Entities\StatementExtensions.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Mapping\Converters\BooleanConverter.cs" />
     <Compile Include="Mapping\Converters\Base64BinaryConverter.cs" />
     <Compile Include="Mapping\Converters\GuidConverter.cs" />
@@ -88,6 +88,7 @@
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\IChangeDetector.cs" />
     <Compile Include="Entities\SimpleInMemoryEntitySource.cs" />
+    <Compile Include="Mapping\DefaultConverterProvider.cs" />
     <Compile Include="Mapping\DefaultMappingRepository.cs" />
     <Compile Include="Mapping\DefaultMappingsBuilder.cs" />
     <Compile Include="Mapping\EntityMappingProvider.cs" />

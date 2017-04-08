@@ -12,17 +12,17 @@ namespace RDeF.Mapping
 {
     internal class DefaultMappingBuilder : IMappingBuilder
     {
-        private readonly IEnumerable<ILiteralConverter> _converters;
+        private readonly IConverterProvider _converterProvider;
         private readonly IEnumerable<QIriMapping> _qiriMappings;
         private readonly IEnumerable<IMappingProviderVisitor> _mappingProviderVisitors;
 
         /// <summary>Initializes a new instance of the <see cref="DefaultMappingBuilder" /> class.</summary>
-        /// <param name="converters">Value converters.</param>
+        /// <param name="converterProvider">Converters provider.</param>
         /// <param name="qiriMappings">QIri mappings.</param>
         /// <param name="mappingProviderVisitors">Mapping provider visitors.</param>
-        public DefaultMappingBuilder(IEnumerable<ILiteralConverter> converters, IEnumerable<QIriMapping> qiriMappings, IEnumerable<IMappingProviderVisitor> mappingProviderVisitors)
+        public DefaultMappingBuilder(IConverterProvider converterProvider, IEnumerable<QIriMapping> qiriMappings, IEnumerable<IMappingProviderVisitor> mappingProviderVisitors)
         {
-            _converters = converters;
+            _converterProvider = converterProvider;
             _qiriMappings = qiriMappings;
             _mappingProviderVisitors = mappingProviderVisitors;
         }
@@ -106,12 +106,7 @@ namespace RDeF.Mapping
             IConverter valueConverter = null;
             if (propertyMappingProvider.ValueConverterType != null)
             {
-                valueConverter = (from converter in _converters
-                                  let match = propertyMappingProvider.ValueConverterType == converter.GetType() ? 2 :
-                                      (propertyMappingProvider.ValueConverterType.IsInstanceOfType(converter) ? 1 : 0)
-                                  where match > 0
-                                  orderby match descending
-                                  select converter).First();
+                valueConverter = _converterProvider.FindConverter(propertyMappingProvider.ValueConverterType);
             }
 
             var collectionMappingProvider = propertyMappingProvider as ICollectionMappingProvider;

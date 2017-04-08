@@ -34,7 +34,7 @@ namespace RDeF.Mapping.Entities
             }
 
             var entity = entityContext.Create<TEntity>(iri);
-            if (mappingsBuilder != null)
+            if ((mappingsBuilder != null) && (ExplicitMappings.ContainsKey(entityContext)))
             {
                 entityContext.BuildExplicitMappings(mappingsBuilder);
             }
@@ -56,7 +56,7 @@ namespace RDeF.Mapping.Entities
             }
 
             var entity = entityContext.Load<TEntity>(iri);
-            if (mappingsBuilder != null)
+            if ((mappingsBuilder != null) && (ExplicitMappings.ContainsKey(entityContext)))
             {
                 entityContext.BuildExplicitMappings(mappingsBuilder);
             }

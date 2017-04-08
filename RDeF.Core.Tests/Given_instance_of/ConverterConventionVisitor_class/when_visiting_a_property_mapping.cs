@@ -24,15 +24,15 @@ namespace Given_instance_of.ConverterConventionVisitor_class
         }
 
         [Test]
-        public void Should_check_whether_the_provider_needs_a_converter_type_assigned()
+        public void Should_not_query_converter_provider_for_converter_instance()
         {
-            Provider.VerifyGet(instance => instance.ValueConverterType, Times.Once);
+            ConverterProvider.Verify(instance => instance.FindLiteralConverter(It.IsAny<Type>()), Times.Never);
         }
 
         [Test]
-        public void Should_probe_mapped_property()
+        public void Should_not_assign_a_converter_type()
         {
-            Provider.VerifyGet(instance => instance.Property, Times.Once);
+            Provider.VerifySet(instance => instance.ValueConverterType = It.IsAny<Type>(), Times.Never);
         }
 
         protected override void ScenarioSetup()

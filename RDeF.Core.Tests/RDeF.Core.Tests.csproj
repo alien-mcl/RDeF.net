@@ -105,6 +105,9 @@
     <Compile Include="Given_instance_of\DefaultChangeDetector_class\when_processing\a_complex_entity.cs" />
     <Compile Include="Given_instance_of\DefaultChangeDetector_class\when_processing\a_simple_entity.cs" />
     <Compile Include="Given_instance_of\DefaultChangeDetector_class\when_processing\ScenarioTest.cs" />
+    <Compile Include="Given_instance_of\DefaultConverterProvider_class\DefaultConverterProviderTest.cs" />
+    <Compile Include="Given_instance_of\DefaultConverterProvider_class\when_initializing.cs" />
+    <Compile Include="Given_instance_of\DefaultConverterProvider_class\when_searching_for_converters.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContextFactory_class\DefaultEntityContextFactoryTest.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContextFactory_class\when_configuring.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContextFactory_class\when_creating_an_entity_context.cs" />

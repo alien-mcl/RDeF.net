@@ -8,10 +8,16 @@ namespace RDeF.Mapping.Converters
     public class TestConverter : ILiteralConverter
     {
         /// <inheritdoc />
-        public IEnumerable<Iri> SupportedDataTypes { get; }
+        public IEnumerable<Iri> SupportedDataTypes
+        {
+            get { return new[] { new Iri("test") }; }
+        }
 
         /// <inheritdoc />
-        public IEnumerable<Type> SupportedTypes { get { return Array.Empty<Type>(); } }
+        public IEnumerable<Type> SupportedTypes
+        {
+            get { return new[] { typeof(object) }; }
+        }
 
         /// <inheritdoc />
         public bool Equals(IConverter other)

@@ -6,6 +6,7 @@ using Moq;
 using NUnit.Framework;
 using RDeF.Data;
 using RDeF.Mapping;
+using RDeF.Mapping.Converters;
 using RDeF.Mapping.Providers;
 
 namespace Given_instance_of.DefaultMappingBuilder_class
@@ -48,6 +49,7 @@ namespace Given_instance_of.DefaultMappingBuilder_class
 
         protected override void ScenarioSetup()
         {
+            ConverterProvider.Setup(instance => instance.FindConverter(It.IsAny<Type>())).Returns(new TestConverter());
             EntityMappingProvider = SetupMappingProviders(typeof(IProductOffering<>), "Offerring", "Image", "OfferedProduct", "Texts").ToList();
             MappingProviderVisitor.Setup(instance => instance.Visit(It.IsAny<ICollectionMappingProvider>()));
             MappingProviderVisitor.Setup(instance => instance.Visit(It.IsAny<IPropertyMappingProvider>()));

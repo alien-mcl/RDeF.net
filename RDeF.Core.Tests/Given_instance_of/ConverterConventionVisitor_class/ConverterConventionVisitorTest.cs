@@ -12,7 +12,28 @@ namespace Given_instance_of.ConverterConventionVisitor_class
     {
         protected abstract string PropertyName { get; }
 
+        protected PropertyInfo Property
+        {
+            get { return typeof(TEntity).GetTypeInfo().GetProperty(PropertyName); }
+        }
+
+        protected Type PropertyType
+        {
+            get
+            {
+                var result = Property.PropertyType;
+                if (result.IsGenericType)
+                {
+                    return result.GetGenericArguments()[0];
+                }
+
+                return result;
+            }
+        }
+
         protected Mock<ILiteralConverter> Converter { get; private set; }
+
+        protected Mock<IConverterProvider> ConverterProvider { get; private set; }
 
         protected Mock<TMappingProvider> Provider { get; set; }
 
@@ -26,7 +47,9 @@ namespace Given_instance_of.ConverterConventionVisitor_class
         public void Setup()
         {
             Converter = new Mock<ILiteralConverter>(MockBehavior.Strict);
-            Visitor = new ConverterConventionVisitor(new[] { Converter.Object });
+            ConverterProvider = new Mock<IConverterProvider>(MockBehavior.Strict);
+            ConverterProvider.Setup(instance => instance.FindLiteralConverter(PropertyType)).Returns(Converter.Object);
+            Visitor = new ConverterConventionVisitor(ConverterProvider.Object);
             ScenarioSetup();
             TheTest();
         }
@@ -35,7 +58,7 @@ namespace Given_instance_of.ConverterConventionVisitor_class
         {
             Provider = new Mock<TMappingProvider>(MockBehavior.Strict);
             Provider.SetupSet(instance => instance.ValueConverterType = It.IsAny<Type>());
-            Provider.SetupGet(instance => instance.Property).Returns(typeof(TEntity).GetTypeInfo().GetProperty(PropertyName));
+            Provider.SetupGet(instance => instance.Property).Returns(Property);
         }
     }
 }

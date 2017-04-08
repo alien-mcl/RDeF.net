@@ -8,6 +8,9 @@ namespace RDeF.Data
     [Class(Iri = "class2")]
     public interface IComplexEntity : IEntity
     {
+        [Property(Iri = "name")]
+        string Name { get; set; }
+
         [Collection(Iri = "ordinals")]
         ICollection<int> Ordinals { get; }
 
