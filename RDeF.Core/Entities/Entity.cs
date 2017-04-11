@@ -77,6 +77,10 @@ namespace RDeF.Entities
             }
         }
 
+        internal DefaultEntityContext EntityContextOverride { get; set; }
+
+        internal Iri IriOverride { get; set; }
+
         /// <inheritdoc />
         public override object GetProperty(Type objectType, string propertyName)
         {
@@ -136,6 +140,12 @@ namespace RDeF.Entities
         internal void SetPropertyInternal(Type objectType, string propertyName, object value)
         {
             base.SetProperty(objectType, propertyName, value);
+        }
+
+        /// <inheritdoc />
+        protected override MulticastObject CreateChildInstance()
+        {
+            return new Entity(IriOverride ?? Iri, EntityContextOverride ?? _context);
         }
 
         private void EnsureInitialized()

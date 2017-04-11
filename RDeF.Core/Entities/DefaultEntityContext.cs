@@ -85,6 +85,37 @@ namespace RDeF.Entities
         }
 
         /// <inheritdoc />
+        public virtual TEntity Copy<TEntity>(TEntity entity, Iri newIri = null) where TEntity : IEntity
+        {
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
+            if (entity.Context == this)
+            {
+                return entity;
+            }
+
+            var proxy = entity.Unwrap() as Entity;
+            if (proxy == null)
+            {
+                throw new ArgumentOutOfRangeException(nameof(entity));
+            }
+
+            lock (proxy)
+            {
+                proxy.EntityContextOverride = this;
+                proxy.IriOverride = newIri;
+                var result = (Entity)proxy.Clone(true);
+                proxy.EntityContextOverride = null;
+                proxy.IriOverride = null;
+                result.IsInitialized = true;
+                return result.ActLike<TEntity>();
+            }
+        }
+
+        /// <inheritdoc />
         public virtual IQueryable<TEntity> AsQueryable<TEntity>() where TEntity : IEntity
         {
             var inMemoryEntitySource = _entitySource as IInMemoryEntitySource;

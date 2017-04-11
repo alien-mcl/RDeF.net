@@ -32,6 +32,14 @@ namespace RDeF.Entities
         /// <param name="iri">The identifier of the entity to be deleted.</param>
         void Delete(Iri iri);
 
+        /// <summary>Copies a given <paramref name="entity" /> from one <see cref="IEntityContext" /> to this one.</summary>
+        /// <remarks>In case a given <paramref name="entity" /> is from the same context, same instance will be returned.</remarks>
+        /// <typeparam name="TEntity">Type of the entity to copy.</typeparam>
+        /// <param name="entity">Entity to be copied.</param>
+        /// <param name="newIri">Optional new Iri to be assigned to the copied <paramref name="entity" />.</param>
+        /// <returns>Copied entity referencing this context.</returns>
+        TEntity Copy<TEntity>(TEntity entity, Iri newIri = null) where TEntity : IEntity;
+
         /// <summary>Converts a context to be LINQ queryable.</summary>
         /// <typeparam name="TEntity">Type of entities to query for.</typeparam>
         /// <returns>Queryable collection of entities.</returns>
