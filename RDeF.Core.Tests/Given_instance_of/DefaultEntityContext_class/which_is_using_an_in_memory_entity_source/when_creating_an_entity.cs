@@ -18,14 +18,14 @@ namespace Given_instance_of.DefaultEntityContext_class.which_is_using_an_in_memo
         [Test]
         public void Should_let_the_entity_source_to_create_an_entity()
         {
-            InMemoryEntitySource.Verify(instance => instance.Create(Iri, Context), Times.Once);
+            InMemoryEntitySource.Verify(instance => instance.Create(Iri), Times.Once);
         }
 
         protected override void ScenarioSetup()
         {
             base.ScenarioSetup();
-            InMemoryEntitySource.Setup(instance => instance.Create(It.IsAny<Iri>(), It.IsAny<DefaultEntityContext>()))
-                .Returns<Iri, DefaultEntityContext>((iri, context) => new Entity(iri, context));
+            InMemoryEntitySource.Setup(instance => instance.Create(It.IsAny<Iri>()))
+                .Returns<Iri>(iri => new Entity(iri, Context));
         }
     }
 }

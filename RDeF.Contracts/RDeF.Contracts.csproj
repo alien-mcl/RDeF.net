@@ -66,6 +66,7 @@
     <Compile Include="Mapping\Visitors\IMappingProviderVisitor.cs" />
     <Compile Include="Mapping\Providers\ITermMappingProvider.cs" />
     <Compile Include="Mapping\Providers\IPropertyMappingProvider.cs" />
+    <Compile Include="Serialization\IRdfReader.cs" />
     <Compile Include="Serialization\IRdfWriter.cs" />
     <Compile Include="Vocabularies\OGuid.cs" />
     <Compile Include="Vocabularies\Owl.cs" />
@@ -105,9 +106,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\Newtonsoft.Json.dll" />
-    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
-    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

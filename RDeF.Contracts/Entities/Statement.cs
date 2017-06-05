@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using RDeF.Vocabularies;
 
 namespace RDeF.Entities
 {
     /// <summary>Represents an RDF statement.</summary>
-    [DebuggerDisplay("<{Subject,nq}> <{Predicate,nq}> {Object!=null?\"<\"+Object.ToString()+\">\":\"\\\"\"+Value+\"\\\"\",nq}")]
+    [DebuggerDisplay("{AsString,nq}")]
     public class Statement
     {
+        private string _asString;
+
         /// <summary>Initializes a new instance of the <see cref="Statement"/> class.</summary>
         /// <param name="subject">Subject of the statement.</param>
         /// <param name="predicate">Predicate of the statement..</param>
@@ -125,6 +129,60 @@ namespace RDeF.Entities
         /// <remarks>In case the language is not set, this property will return <b>null</b>.</remarks>
         public string Language { get; }
 
+        [ExcludeFromCodeCoverage]
+        [SuppressMessage("UnitTests", "TS0000:NoUnitTests", Justification = "Debugging facility.")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Debugging facility.")]
+        internal string AsString
+        {
+            get
+            {
+                return _asString ??
+                    (_asString = String.Format(
+                        "{0} {1} {2}",
+                        Subject.AsString,
+                        Predicate.AsString,
+                        Object?.AsString ?? Value + (DataType != null ? $"^^{DataType.AsString}" : !String.IsNullOrEmpty(Language) ? $@"{Language}" : String.Empty)));
+            }
+        }
+
+        /// <summary>Comparse two <see cref="Statement" />s for equality.</summary>
+        /// <param name="left">Left operand.</param>
+        /// <param name="right">Right operand.</param>
+        /// <returns><b>true</b> if both operands has equal components; otherwise <b>false</b>.</returns>
+        public static bool operator ==(Statement left, Statement right)
+        {
+            if (ReferenceEquals(left, right))
+            {
+                return true;
+            }
+
+            if ((ReferenceEquals(left, null)) || (ReferenceEquals(right, null)))
+            {
+                return false;
+            }
+
+            return Equals(left, right);
+        }
+
+        /// <summary>Comparse two <see cref="Statement" />s for inequality.</summary>
+        /// <param name="left">Left operand.</param>
+        /// <param name="right">Right operand.</param>
+        /// <returns><b>true</b> if both operands has a single component different; otherwise <b>false</b>.</returns>
+        public static bool operator !=(Statement left, Statement right)
+        {
+            if (ReferenceEquals(left, right))
+            {
+                return false;
+            }
+
+            if ((ReferenceEquals(left, null)) || (ReferenceEquals(right, null)))
+            {
+                return true;
+            }
+
+            return !Equals(left, right);
+        }
+
         /// <inheritdoc />
         public override bool Equals(object obj)
         {
@@ -133,19 +191,8 @@ namespace RDeF.Entities
                 return true;
             }
 
-            Statement anotherStatement = obj as Statement;
-            if (anotherStatement == null)
-            {
-                return false;
-            }
-
-            return Equals(Graph, anotherStatement.Graph) &&
-                   Equals(Subject, anotherStatement.Subject) &&
-                   Equals(Predicate, anotherStatement.Predicate) &&
-                   Equals(Object, anotherStatement.Object) &&
-                   Equals(DataType, anotherStatement.DataType) &&
-                   Equals(Value, anotherStatement.Value) &&
-                   Equals(Language, anotherStatement.Language);
+            var anotherStatement = obj as Statement;
+            return anotherStatement != null && Equals(this, anotherStatement);
         }
 
         /// <inheritdoc />
@@ -158,6 +205,30 @@ namespace RDeF.Entities
                    DataType?.GetHashCode() ?? 0 ^
                    Value?.GetHashCode() ?? 0 ^
                    Language?.GetHashCode() ?? 0;
+        }
+
+        private static bool Equals(Statement left, Statement right)
+        {
+            if (!Equals(left.Graph, right.Graph) ||
+                !Equals(left.Subject, right.Subject) ||
+                !Equals(left.Predicate, right.Predicate))
+            {
+                return false;
+            }
+
+            if ((!ReferenceEquals(left.Object, null)) && (!ReferenceEquals(right.Object, null)))
+            {
+                return Equals(left.Object, right.Object);
+            }
+
+            if (!ReferenceEquals(left.Value, null) && (!ReferenceEquals(right.Value, null)))
+            {
+                return Equals(left.Value, right.Value) &&
+                       Equals(left.Language, right.Language) &&
+                       Equals(left.DataType ?? xsd.@string, right.DataType ?? xsd.@string);
+            }
+
+            return false;
         }
     }
 }

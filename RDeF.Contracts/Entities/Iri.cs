@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using RDeF.ComponentModel;
 
@@ -7,11 +8,13 @@ namespace RDeF.Entities
 {
     /// <summary>Represents an International Resource Identifier.</summary>
     [TypeConverter(typeof(IriTypeConverter))]
+    [DebuggerDisplay("{AsString,nq}")]
     public class Iri
     {
         private const string BlankSuffix = "_:blank";
-        private static long _id = 0;
+        private static long _id;
         private readonly string _iri;
+        private string _asString;
 
         /// <summary>Initializes a new instance of the <see cref="Iri" /> class.</summary>
         public Iri()
@@ -54,6 +57,14 @@ namespace RDeF.Entities
         public bool IsBlank { get { return _iri.StartsWith(BlankSuffix); } }
 
         internal Uri Uri { get; }
+
+        [ExcludeFromCodeCoverage]
+        [SuppressMessage("UnitTests", "TS0000:NoUnitTests", Justification = "Debugging facility.")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Debugging facility.")]
+        internal string AsString
+        {
+            get { return _asString ?? (_asString = (IsBlank ? _iri : $"<{_iri}>")); }
+        }
 
         /// <summary>Performs an implicit conversion from <see cref="Iri" /> to <see cref="Uri" />.</summary>
         /// <param name="iri">The International Resource Identifier to be converted.</param>

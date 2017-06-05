@@ -90,12 +90,8 @@ namespace RDeF.Serialization
         private static async Task WriteGraph(JsonWriter jsonWriter, Iri graph, IEnumerable<Statement> statements)
         {
             await jsonWriter.WriteStartObjectAsync();
-            if (graph != null)
-            {
-                await jsonWriter.WritePropertyNameAsync("@id");
-                await jsonWriter.WriteValueAsync((string)graph);
-            }
-
+            await jsonWriter.WritePropertyNameAsync("@id");
+            await jsonWriter.WriteValueAsync(graph != null ? (string)graph : "@default");
             await jsonWriter.WritePropertyNameAsync("@graph");
             await jsonWriter.WriteStartArrayAsync();
             var subjects = statements.GroupBy(statement => statement.Subject).ToList();
@@ -192,7 +188,7 @@ namespace RDeF.Serialization
                 return;
             }
 
-            if ((value.DataType != null) && (value.DataType != xsd.boolean) && (value.DataType != xsd.@int) && (value.DataType != xsd.@double) && (value.DataType != xsd.@string))
+            if ((value.DataType != null) && (value.DataType != xsd.boolean) && (value.DataType != xsd.@integer) && (value.DataType != xsd.@double) && (value.DataType != xsd.@string))
             {
                 await jsonWriter.WriteStartObjectAsync();
                 await jsonWriter.WritePropertyNameAsync("@type");
@@ -206,7 +202,7 @@ namespace RDeF.Serialization
             if (value.Language != null)
             {
                 await jsonWriter.WriteStartObjectAsync();
-                await jsonWriter.WritePropertyNameAsync("@lang");
+                await jsonWriter.WritePropertyNameAsync("@language");
                 await jsonWriter.WriteValueAsync(value.Language);
                 await jsonWriter.WritePropertyNameAsync("@value");
                 await WriteLiteral(jsonWriter, value);
@@ -217,7 +213,7 @@ namespace RDeF.Serialization
             await WriteLiteral(jsonWriter, value);
         }
 
-        [SuppressMessage("Microsoft.Globalization", "CA1307:SpecifyStringComparison", MessageId = "System.String.IndexOf(System.String)", Justification = "String used is culture invariant.")]
+        [SuppressMessage("Microsoft.Globalization", "CA1307:SpecifyStringComparison", Justification = "String used is culture invariant.")]
         private static async Task WriteLiteral(JsonWriter jsonWriter, Statement value)
         {
             if (UnquotedLiterals.Contains(value.DataType))

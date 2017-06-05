@@ -14,9 +14,11 @@ namespace RDeF.Entities
     public sealed class SimpleInMemoryEntitySource : IInMemoryEntitySource
     {
         private readonly object _sync = new Object();
+        private readonly Func<DefaultEntityContext> _entityContext;
 
-        internal SimpleInMemoryEntitySource()
+        internal SimpleInMemoryEntitySource(Func<DefaultEntityContext> entityContext)
         {
+            _entityContext = entityContext;
             Entities = new ConcurrentDictionary<IEntity, ISet<Statement>>();
         }
 
@@ -73,22 +75,11 @@ namespace RDeF.Entities
         }
 
         /// <inheritdoc />
-        public IEntity Create(Iri iri, IEntityContext entityContext)
+        public IEntity Create(Iri iri)
         {
             if (iri == null)
             {
                 throw new ArgumentNullException(nameof(iri));
-            }
-
-            if (entityContext == null)
-            {
-                throw new ArgumentNullException(nameof(entityContext));
-            }
-
-            var defaultEntityContext = entityContext as DefaultEntityContext;
-            if (defaultEntityContext == null)
-            {
-                throw new ArgumentOutOfRangeException(nameof(entityContext));
             }
 
             lock (_sync)
@@ -96,7 +87,7 @@ namespace RDeF.Entities
                 var result = Entities.Where(entity => entity.Key.Iri == iri).Select(entity => entity.Key).FirstOrDefault();
                 if (result == null)
                 {
-                    Entities[result = new Entity(iri, defaultEntityContext) { IsInitialized = true }] = new HashSet<Statement>();
+                    Entities[result = new Entity(iri, _entityContext()) { IsInitialized = true }] = new HashSet<Statement>();
                 }
 
                 return result;
@@ -104,9 +95,9 @@ namespace RDeF.Entities
         }
 
         /// <inheritdoc />
-        public TEntity Create<TEntity>(Iri iri, IEntityContext entityContext) where TEntity : IEntity
+        public TEntity Create<TEntity>(Iri iri) where TEntity : IEntity
         {
-            return Create(iri, entityContext).ActLike<TEntity>();
+            return Create(iri).ActLike<TEntity>();
         }
 
         /// <inheritdoc />
@@ -153,6 +144,26 @@ namespace RDeF.Entities
                          group statement by statement.Graph into graph
                          select new KeyValuePair<Iri, IEnumerable<Statement>>(graph.Key, graph);
             await rdfWriter.Write(streamWriter, graphs);
+        }
+
+        /// <inheritdoc />
+        public async Task Read(StreamReader streamReader, IRdfReader rdfReader)
+        {
+            if (streamReader == null)
+            {
+                throw new ArgumentNullException(nameof(streamReader));
+            }
+
+            if (rdfReader == null)
+            {
+                throw new ArgumentNullException(nameof(rdfReader));
+            }
+
+            _entityContext().Clear();
+            foreach (var subject in (await rdfReader.Read(streamReader)).SelectMany(graph => graph.Value).GroupBy(statement => statement.Subject))
+            {
+                _entityContext().InitializeInternal(_entityContext().CreateInternal(subject.Key), subject, new EntityInitializationContext());
+            }
         }
 
         private void ProcessStatements(IEnumerable<KeyValuePair<IEntity, ISet<Statement>>> entityStatements, Action<ISet<Statement>, Statement> action)

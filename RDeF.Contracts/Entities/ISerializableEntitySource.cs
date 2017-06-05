@@ -16,5 +16,11 @@ namespace RDeF.Entities
         /// <param name="rdfWriter">Target RDF writer.</param>
         /// <returns>Task of this operation.</returns>
         Task Write(StreamWriter streamWriter, IRdfWriter rdfWriter);
+
+        /// <summary>Reads new statements from a given <paramref name="streamReader" /> using a given <paramref name="rdfReader" />.</summary>
+        /// <param name="streamReader">Source stream of RDF data.</param>
+        /// <param name="rdfReader">Target RDF reading facility.</param>
+        /// <returns>Task of this operation.</returns>
+        Task Read(StreamReader streamReader, IRdfReader rdfReader);
     }
 }

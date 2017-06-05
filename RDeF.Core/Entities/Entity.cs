@@ -145,7 +145,8 @@ namespace RDeF.Entities
         /// <inheritdoc />
         protected override MulticastObject CreateChildInstance()
         {
-            return new Entity(IriOverride ?? Iri, EntityContextOverride ?? _context);
+            var targetContext = EntityContextOverride ?? _context;
+            return targetContext.CreateInternal(new Entity(IriOverride ?? Iri, targetContext));
         }
 
         private void EnsureInitialized()

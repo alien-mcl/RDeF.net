@@ -1,52 +1,53 @@
 ﻿{
     "@graph": [
         {
+            "@id": "@default",
             "@graph": [
                 {
-                    "@id": "subject1",
-                    "@type": [ "type1", "type2" ],
-                    "predicate1": [
-                        { "@id": "object1" },
+                    "@id": "some:subject1",
+                    "@type": [ "some:type1", "some:type2" ],
+                    "some:predicate1": [
+                        { "@id": "some:object1" },
                         "value",
                         123
                     ],
-                    "predicate2": [
-                        { "@id": "object2" },
+                    "some:predicate2": [
+                        { "@id": "some:object2" },
                         "value",
-                        { "@lang": "en", "@value": "text" }
+                        { "@language": "en", "@value": "text" }
                     ]
                 },
                 {
-                    "@id": "subject2",
-                    "@type": [ "type1", "type2" ],
-                    "predicate1": [
-                        { "@id": "object1" },
+                    "@id": "some:subject2",
+                    "@type": [ "some:type1", "some:type2" ],
+                    "some:predicate1": [
+                        { "@id": "some:object1" },
                         "value",
                         123
                     ],
-                    "predicate2": [
-                        { "@id": "object2" },
+                    "some:predicate2": [
+                        { "@id": "some:object2" },
                         "value",
-                        { "@lang": "en", "@value": "text" }
+                        { "@language": "en", "@value": "text" }
                     ]
                 }
             ]
         },
         {
-            "@id": "graph",
+            "@id": "some:graph",
             "@graph": [
                 {
-                    "@id": "subject3",
-                    "@type": [ "type1", "type2" ],
-                    "predicate1": [
-                        { "@id": "object1" },
+                    "@id": "some:subject3",
+                    "@type": [ "some:type1", "some:type2" ],
+                    "some:predicate1": [
+                        { "@id": "some:object1" },
                         "value",
                         123
                     ],
-                    "predicate2": [
-                        { "@id": "object2" },
+                    "some:predicate2": [
+                        { "@id": "some:object2" },
                         "value",
-                        { "@lang": "en", "@value": "text" }
+                        { "@language": "en", "@value": "text" }
                     ]
                 }
             ]

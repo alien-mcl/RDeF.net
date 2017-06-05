@@ -9,7 +9,7 @@ using RDeF.Testing;
 namespace Given_instance_of.JsonLdWriter_class
 {
     [TestFixture]
-    public class when_initializing : RdfWriterTest<JsonLdWriter>
+    public class when_writing : RdfWriterTest<JsonLdWriter>
     {
         [Test]
         public void Should_throw_when_null_is_given_instead_of_stream_writer()

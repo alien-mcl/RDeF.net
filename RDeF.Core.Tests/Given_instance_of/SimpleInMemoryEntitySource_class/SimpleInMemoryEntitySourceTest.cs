@@ -18,7 +18,7 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
         [SetUp]
         public void Setup()
         {
-            EntitySource = new SimpleInMemoryEntitySource();
+            EntitySource = new SimpleInMemoryEntitySource(() => Context);
             ScenarioSetup();
             TheTest();
         }

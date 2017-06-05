@@ -66,9 +66,11 @@ namespace RDeF.Mapping
                 throw new ArgumentOutOfRangeException(nameof(type));
             }
 
-            if ((type.GetTypeInfo().IsGenericType) && (!type.GetTypeInfo().IsGenericTypeDefinition))
+            ICollection<ITermMappingProvider> openGenericProviders;
+            if ((type.GetTypeInfo().IsGenericType) && (!type.GetTypeInfo().IsGenericTypeDefinition) &&
+                (_openGenericProviders.TryGetValue(type.GetGenericTypeDefinition(), out openGenericProviders)))
             {
-                _mappingBuilder.BuildMapping(_mappings, type, _openGenericProviders[type.GetGenericTypeDefinition()]);
+                _mappingBuilder.BuildMapping(_mappings, type, openGenericProviders);
             }
 
             return (from entityMapping in _mappings.Values
@@ -104,16 +106,36 @@ namespace RDeF.Mapping
                 throw new ArgumentNullException(nameof(property));
             }
 
-            if ((property.DeclaringType.GetTypeInfo().IsGenericType) && (!property.DeclaringType.GetTypeInfo().IsGenericTypeDefinition))
+            ICollection<ITermMappingProvider> openGenericProviders;
+            if ((property.DeclaringType.GetTypeInfo().IsGenericType) && (!property.DeclaringType.GetTypeInfo().IsGenericTypeDefinition) &&
+                (_openGenericProviders.TryGetValue(property.DeclaringType.GetGenericTypeDefinition(), out openGenericProviders)))
             {
-                _mappingBuilder.BuildMapping(_mappings, property.DeclaringType, _openGenericProviders[property.DeclaringType.GetGenericTypeDefinition()]);
+                _mappingBuilder.BuildMapping(_mappings, property.DeclaringType, openGenericProviders);
             }
 
-            return (from entityMapping in _mappings.Values
-                    where entityMapping.Type == property.DeclaringType
-                    from propertyMapping in entityMapping.Properties
-                    where propertyMapping.Name == property.Name
-                    select propertyMapping).FirstOrDefault();
+            IPropertyMapping resultCandidate = null;
+            foreach (var entityMapping in _mappings.Values)
+            {
+                foreach (var propertyMapping in entityMapping.Properties)
+                {
+                    if (propertyMapping.Name != property.Name)
+                    {
+                        continue;
+                    }
+
+                    if ((entityMapping.Type == property.DeclaringType) || (property.DeclaringType.IsAssignableFrom(entityMapping.Type)))
+                    {
+                        return propertyMapping;
+                    }
+
+                    if (resultCandidate == null)
+                    {
+                        resultCandidate = propertyMapping;
+                    }
+                }
+            }
+
+            return resultCandidate;
         }
 
         /// <inheritdoc />

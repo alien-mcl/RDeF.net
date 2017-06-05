@@ -212,6 +212,14 @@ namespace RDeF.Entities
             InitializeInternal(entity, _entitySource.Load(entity.Iri), context);
         }
 
+        internal void Clear()
+        {
+            lock (_sync)
+            {
+                _entityCache.Clear();
+            }
+        }
+
         internal Entity CreateInternal(Iri iri, bool isInitialized = true)
         {
             Entity result;
@@ -223,31 +231,18 @@ namespace RDeF.Entities
             var inMemoryEntitySource = _entitySource as IInMemoryEntitySource;
             if (inMemoryEntitySource != null)
             {
-                return _entityCache[iri] = inMemoryEntitySource.Create(iri, this) as Entity;
+                return _entityCache[iri] = inMemoryEntitySource.Create(iri) as Entity;
             }
 
-            return _entityCache[iri] = new Entity(iri, this) { IsInitialized = isInitialized };
+            return CreateInternal(new Entity(iri, this) { IsInitialized = isInitialized });
         }
 
-        /// <summary>Performs an actual disposal.</summary>
-        /// <param name="disposing">Value indicating whether the disposal actually happens.</param>
-        protected virtual void Dispose(bool disposing)
+        internal Entity CreateInternal(Entity entity)
         {
-            if ((_disposed) || (!disposing))
-            {
-                return;
-            }
-
-            _disposed = true;
-            Disposed?.Invoke(this, EventArgs.Empty);
+            return _entityCache[entity.Iri] = entity;
         }
 
-        private TEntity CreateInternal<TEntity>(Iri iri, bool isInitialized = true) where TEntity : IEntity
-        {
-            return CreateInternal(iri, isInitialized).ActLike<TEntity>();
-        }
-
-        private void InitializeInternal(Entity entity, IEnumerable<Statement> statements, EntityInitializationContext context)
+        internal void InitializeInternal(Entity entity, IEnumerable<Statement> statements, EntityInitializationContext context)
         {
             foreach (var statement in statements)
             {
@@ -283,6 +278,24 @@ namespace RDeF.Entities
             entity.InitializeLists(context);
             entity.IsInitialized = true;
             InitializeChildEntities(context);
+        }
+
+        /// <summary>Performs an actual disposal.</summary>
+        /// <param name="disposing">Value indicating whether the disposal actually happens.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if ((_disposed) || (!disposing))
+            {
+                return;
+            }
+
+            _disposed = true;
+            Disposed?.Invoke(this, EventArgs.Empty);
+        }
+
+        private TEntity CreateInternal<TEntity>(Iri iri, bool isInitialized = true) where TEntity : IEntity
+        {
+            return CreateInternal(iri, isInitialized).ActLike<TEntity>();
         }
 
         private void InitializeChildEntities(EntityInitializationContext context)

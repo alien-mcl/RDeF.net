@@ -7,16 +7,14 @@ namespace RDeF.Entities
     {
         /// <summary>Loads an entity of a given <paramref name="iri" />.</summary>
         /// <param name="iri">Iri of the entity to be loaded.</param>
-        /// <param name="entityContext">Entity context requesting the entity source to load a given entity.</param>
         /// <returns>Entity loaded.</returns>
-        IEntity Create(Iri iri, IEntityContext entityContext);
+        IEntity Create(Iri iri);
 
         /// <summary>Loads an entity of a given <paramref name="iri" />.</summary>
         /// <typeparam name="TEntity">Type of the entity to load.</typeparam>
         /// <param name="iri">Iri of the entity to be loaded.</param>
-        /// <param name="entityContext">Entity context requesting the entity source to load a given entity.</param>
         /// <returns>Entity loaded.</returns>
-        TEntity Create<TEntity>(Iri iri, IEntityContext entityContext) where TEntity : IEntity;
+        TEntity Create<TEntity>(Iri iri) where TEntity : IEntity;
 
         /// <summary>Deletes an entity of a given <paramref name="iri" />.</summary>
         /// <param name="iri">Iri of the entity to be deleted.</param>

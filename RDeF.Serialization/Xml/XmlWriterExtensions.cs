@@ -39,6 +39,11 @@ namespace RDeF.Xml
             {
                 uri = address.Substring(0, position + 1);
             }
+
+            if ((uri == null) && ((position = address.IndexOf(':')) != -1))
+            {
+                uri = address.Substring(0, position + 1);
+            }
             
             if (uri == null)
             {

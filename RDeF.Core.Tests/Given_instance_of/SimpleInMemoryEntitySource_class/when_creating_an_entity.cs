@@ -1,6 +1,5 @@
 ﻿using System;
 using FluentAssertions;
-using Moq;
 using NUnit.Framework;
 using RDeF.Data;
 using RDeF.Entities;
@@ -15,26 +14,13 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
 
         public override void TheTest()
         {
-            Result = EntitySource.Create<IProduct>(new Iri("test"), Context);
+            Result = EntitySource.Create<IProduct>(new Iri("test"));
         }
 
         [Test]
         public void Should_throw_when_no_iri_is_given()
         {
-            EntitySource.Invoking(instance => instance.Create<IProduct>(null, null)).ShouldThrow<ArgumentNullException>().Which.ParamName.Should().Be("iri");
-        }
-
-        [Test]
-        public void Should_throw_when_no_entity_context_is_given()
-        {
-            EntitySource.Invoking(instance => instance.Create<IProduct>(new Iri("test"), null)).ShouldThrow<ArgumentNullException>().Which.ParamName.Should().Be("entityContext");
-        }
-
-        [Test]
-        public void Should_throw_when_invalid_entity_context_is_given()
-        {
-            EntitySource.Invoking(instance => instance.Create<IProduct>(new Iri("test"), new Mock<IEntityContext>(MockBehavior.Strict).Object))
-                .ShouldThrow<ArgumentOutOfRangeException>().Which.ParamName.Should().Be("entityContext");
+            EntitySource.Invoking(instance => instance.Create<IProduct>(null)).ShouldThrow<ArgumentNullException>().Which.ParamName.Should().Be("iri");
         }
 
         [Test]
@@ -46,7 +32,7 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
         [Test]
         public void Should_create_new_entity_only_once()
         {
-            EntitySource.Create<IProduct>(new Iri("test"), Context).Should().Be(Result);
+            EntitySource.Create<IProduct>(new Iri("test")).Should().Be(Result);
         }
     }
 }
