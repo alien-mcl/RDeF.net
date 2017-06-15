@@ -79,6 +79,9 @@
     <Compile Include="Given_instance_of\JsonLdReader_class\when_deserializing\named_graphs.cs" />
     <Compile Include="Given_instance_of\JsonLdReader_class\when_deserializing\named_graphs_with_lists_and_collections.cs" />
     <Compile Include="Given_instance_of\JsonLdReader_class\when_reading.cs" />
+    <Compile Include="Given_instance_of\RdfXmlReader_class\when_deserializing\named_graphs.cs" />
+    <Compile Include="Given_instance_of\RdfXmlReader_class\when_deserializing\named_graphs_with_lists_and_collections.cs" />
+    <Compile Include="Given_instance_of\RdfXmlReader_class\when_reading.cs" />
     <Compile Include="Given_instance_of\RdfXmlWriter_class\when_initializing.cs" />
     <Compile Include="Given_instance_of\RdfXmlWriter_class\when_serializing\named_graphs.cs" />
     <Compile Include="Given_instance_of\RdfXmlWriter_class\when_serializing\named_graphs_with_lists_and_collections.cs" />

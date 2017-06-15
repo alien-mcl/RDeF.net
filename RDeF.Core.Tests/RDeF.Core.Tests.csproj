@@ -114,6 +114,7 @@
     <Compile Include="Given_instance_of\DefaultEntityContextFactory_class\when_configuring.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContextFactory_class\when_creating_an_entity_context.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContext_class\DefaultEntityContextTest.cs" />
+    <Compile Include="Given_instance_of\DefaultEntityContext_class\when_clearing.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContext_class\when_copying_entity.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContext_class\when_deleting_an_entity.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContext_class\which_is_using_an_in_memory_entity_source\ScenarioTest.cs" />
@@ -153,6 +154,7 @@
     <Compile Include="Given_instance_of\mapping_of_type\PropertyMapping_class.cs" />
     <Compile Include="Given_instance_of\QIriMapping_class\when_initializing.cs" />
     <Compile Include="Given_instance_of\SimpleInMemoryEntitySource_class\SimpleInMemoryEntitySourceTest.cs" />
+    <Compile Include="Given_instance_of\SimpleInMemoryEntitySource_class\when_deserializing.cs" />
     <Compile Include="Given_instance_of\SimpleInMemoryEntitySource_class\when_loading_an_entity.cs" />
     <Compile Include="Given_instance_of\SimpleInMemoryEntitySource_class\when_deleting.cs" />
     <Compile Include="Given_instance_of\SimpleInMemoryEntitySource_class\when_serializing.cs" />

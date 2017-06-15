@@ -31,7 +31,7 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
         protected override void ScenarioSetup()
         {
             base.ScenarioSetup();
-            EntitySource.Entities[Entity = new Entity(new Iri("test"), Context)] = new HashSet<Statement>();
+            EntitySource.Entities[Entity = new Entity(new Iri("test"), Context.Object)] = new HashSet<Statement>();
         }
     }
 }

@@ -65,7 +65,7 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
             RdfWriter = new Mock<IRdfWriter>(MockBehavior.Strict);
             RdfWriter.Setup(instance => instance.Write(It.IsAny<StreamWriter>(), It.IsAny<IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>>>()))
                 .Returns(Task.FromResult(0));
-            var entity = new Entity(new Iri("test"), Context);
+            var entity = new Entity(new Iri("test"), Context.Object);
             EntitySource.Entities[entity] = ExpectedStatements = new HashSet<Statement>()
             {
                 new Statement(entity.Iri, new Iri("predicate"), entity.Iri, PrimaryGraph),

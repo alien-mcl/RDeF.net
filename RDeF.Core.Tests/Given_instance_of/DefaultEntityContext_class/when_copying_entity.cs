@@ -1,7 +1,9 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using NUnit.Framework;
 using RDeF.Data;
 using RDeF.Entities;
+using RollerCaster;
 
 namespace Given_instance_of.DefaultEntityContext_class
 {
@@ -19,6 +21,26 @@ namespace Given_instance_of.DefaultEntityContext_class
         public override void TheTest()
         {
             Result = Context.Copy(Source, ExpectedIri);
+        }
+
+        [Test]
+        public void Should_throw_when_no_entity_is_given()
+        {
+            Context.Invoking(instance => instance.Copy((IProduct)null))
+                .ShouldThrow<ArgumentNullException>().Which.ParamName.Should().Be("entity");
+        }
+
+        [Test]
+        public void Should_return_same_entity_if_the_source_context_is_also_the_same_as_the_target_one()
+        {
+            Context.Copy(Context.Create<IProduct>(new Iri("some_iri"))).Iri.Should().Be(new Iri("some_iri"));
+        }
+
+        [Test]
+        public void Should_throw_when_instance_given_is_not_entity()
+        {
+            Context.Invoking(instance => instance.Copy(new MulticastObject().ActLike<IProduct>()))
+                .ShouldThrow<ArgumentOutOfRangeException>().Which.ParamName.Should().Be("entity");
         }
 
         [Test]

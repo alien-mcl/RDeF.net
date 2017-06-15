@@ -33,7 +33,7 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
         protected override void ScenarioSetup()
         {
             base.ScenarioSetup();
-            var entity = new Entity(new Iri("test"), Context);
+            var entity = new Entity(new Iri("test"), Context.Object);
             EntitySource.Entities[entity] = new HashSet<Statement>();
             entity.ActLike<IProduct>();
         }

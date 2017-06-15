@@ -7,7 +7,7 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
 {
     public abstract class SimpleInMemoryEntitySourceTest
     {
-        protected DefaultEntityContext Context { get; private set; }
+        protected Mock<DefaultEntityContext> Context { get; private set; }
 
         protected SimpleInMemoryEntitySource EntitySource { get; private set; }
 
@@ -18,14 +18,15 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
         [SetUp]
         public void Setup()
         {
-            EntitySource = new SimpleInMemoryEntitySource(() => Context);
+            EntitySource = new SimpleInMemoryEntitySource(() => Context.Object);
             ScenarioSetup();
             TheTest();
         }
 
         protected virtual void ScenarioSetup()
         {
-            Context = new DefaultEntityContext(
+            Context = new Mock<DefaultEntityContext>(
+                MockBehavior.Strict,
                 EntitySource,
                 new Mock<IMappingsRepository>(MockBehavior.Strict).Object,
                 new Mock<IChangeDetector>(MockBehavior.Strict).Object);

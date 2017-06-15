@@ -212,7 +212,7 @@ namespace RDeF.Entities
             InitializeInternal(entity, _entitySource.Load(entity.Iri), context);
         }
 
-        internal void Clear()
+        internal virtual void Clear()
         {
             lock (_sync)
             {
@@ -220,7 +220,7 @@ namespace RDeF.Entities
             }
         }
 
-        internal Entity CreateInternal(Iri iri, bool isInitialized = true)
+        internal virtual Entity CreateInternal(Iri iri, bool isInitialized = true)
         {
             Entity result;
             if (_entityCache.TryGetValue(iri, out result))
@@ -237,12 +237,12 @@ namespace RDeF.Entities
             return CreateInternal(new Entity(iri, this) { IsInitialized = isInitialized });
         }
 
-        internal Entity CreateInternal(Entity entity)
+        internal virtual Entity CreateInternal(Entity entity)
         {
             return _entityCache[entity.Iri] = entity;
         }
 
-        internal void InitializeInternal(Entity entity, IEnumerable<Statement> statements, EntityInitializationContext context)
+        internal virtual void InitializeInternal(Entity entity, IEnumerable<Statement> statements, EntityInitializationContext context)
         {
             foreach (var statement in statements)
             {

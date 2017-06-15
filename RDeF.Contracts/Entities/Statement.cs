@@ -138,10 +138,11 @@ namespace RDeF.Entities
             {
                 return _asString ??
                     (_asString = String.Format(
-                        "{0} {1} {2}",
+                        "{0} {1} {2}{3}",
                         Subject.AsString,
                         Predicate.AsString,
-                        Object?.AsString ?? Value + (DataType != null ? $"^^{DataType.AsString}" : !String.IsNullOrEmpty(Language) ? $@"{Language}" : String.Empty)));
+                        Object?.AsString ?? Value + (DataType != null ? $"^^{DataType.AsString}" : !String.IsNullOrEmpty(Language) ? $@"{Language}" : String.Empty),
+                        Graph != null ? $" {Graph.AsString}" : String.Empty));
             }
         }
 

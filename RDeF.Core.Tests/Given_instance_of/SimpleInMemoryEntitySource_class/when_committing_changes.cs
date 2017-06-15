@@ -80,11 +80,11 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
         protected override void ScenarioSetup()
         {
             base.ScenarioSetup();
-            Entity1 = new Entity(Iri1, Context);
+            Entity1 = new Entity(Iri1, Context.Object);
             EntitySource.Entities[Entity1] = new HashSet<Statement>() { new Statement(Iri1, rdf.type, new Iri("class")) };
-            Entity2 = new Entity(Iri2, Context);
+            Entity2 = new Entity(Iri2, Context.Object);
             EntitySource.Entities[Entity2] = new HashSet<Statement>() { new Statement(Iri2, rdf.type, new Iri("class")) };
-            Entity3 = new Entity(Iri3, Context);
+            Entity3 = new Entity(Iri3, Context.Object);
             EntitySource.Entities[Entity3] = new HashSet<Statement>() { new Statement(Iri3, rdf.type, new Iri("class")) };
             DeletedEntities = new List<Iri>() { Iri3 };
             RetractedStatements = new Dictionary<IEntity, ISet<Statement>>()
