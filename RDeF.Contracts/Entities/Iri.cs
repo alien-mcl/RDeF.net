@@ -58,8 +58,10 @@ namespace RDeF.Entities
 
         internal Uri Uri { get; }
 
+#if !NETSTANDARD1_6
         [ExcludeFromCodeCoverage]
         [SuppressMessage("UnitTests", "TS0000:NoUnitTests", Justification = "Debugging facility.")]
+#endif
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Debugging facility.")]
         internal string AsString
         {
