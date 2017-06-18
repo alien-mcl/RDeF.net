@@ -20,5 +20,16 @@ namespace RDeF.Mapping
             _assemblyRegistrationDelegate(typeof(T).GetTypeInfo().Assembly);
             return this;
         }
+
+        /// <inheritdoc />
+        public IMappingsBuilder FromAssembly(Assembly assembly)
+        {
+            if (assembly != null)
+            {
+                _assemblyRegistrationDelegate(assembly);
+            }
+
+            return this;
+        }
     }
 }

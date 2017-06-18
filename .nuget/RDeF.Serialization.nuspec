@@ -11,5 +11,15 @@
         <description>RDF serialization support for the strongly typed handling of RDF in-memory data sets.</description>
         <copyright>Copyright ©2017 Karol Szczepanski</copyright>
         <tags>rdf</tags>
+		<dependencies>
+            <group targetFramework="net461">
+                <dependency id="json-ld.net" version="1.0.5" />
+				<dependency id="Newtonsoft.Json" version="10.0.2" />
+            </group>
+            <group targetFramework="netstandard1.6">
+                <dependency id="json-ld.net" version="1.0.5" />
+				<dependency id="Newtonsoft.Json" version="10.0.2" />
+            </group>
+        </dependencies>
     </metadata>
 </package>

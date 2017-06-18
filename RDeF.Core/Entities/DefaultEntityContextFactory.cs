@@ -52,6 +52,12 @@ namespace RDeF.Entities
             }
         }
 
+        /// <summary>Finalizes an instance of the <see cref="DefaultEntityContextFactory"/> class.</summary>
+        ~DefaultEntityContextFactory()
+        {
+            _container.Dispose();
+        }
+
         /// <inheritdoc />
         public IMappingsRepository Mappings
         {
@@ -117,6 +123,7 @@ namespace RDeF.Entities
         public void Dispose()
         {
             _container.Dispose();
+            GC.SuppressFinalize(this);
         }
 
         /// <inheritdoc />

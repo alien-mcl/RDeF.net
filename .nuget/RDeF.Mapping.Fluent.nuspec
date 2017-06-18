@@ -11,5 +11,13 @@
         <description>RDF mapping through fluent-like API for the strongly typed handling of RDF in-memory data sets.</description>
         <copyright>Copyright ©2017 Karol Szczepanski</copyright>
         <tags>rdf</tags>
+		<dependencies>
+            <group targetFramework="net461">
+                <dependency id="RollerCaster" version="*" />
+            </group>
+            <group targetFramework="netstandard1.6">
+                <dependency id="RollerCaster" version="*" />
+            </group>
+        </dependencies>
     </metadata>
 </package>

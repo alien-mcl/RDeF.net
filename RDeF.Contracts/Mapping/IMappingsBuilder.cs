@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 
 namespace RDeF.Mapping
 {
@@ -10,5 +11,10 @@ namespace RDeF.Mapping
         /// <returns>Current instance of the <see cref="IMappingsBuilder" />.</returns>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "This is a part of a fluent-like API.")]
         IMappingsBuilder FromAssemblyOf<T>();
+
+        /// <summary>Registers mappings from the given <paramref name="assembly" />.</summary>
+        /// <param name="assembly">Assembly to register mappings from.</param>
+        /// <returns>Current instance of the <see cref="IMappingsBuilder" />.</returns>
+        IMappingsBuilder FromAssembly(Assembly assembly);
     }
 }

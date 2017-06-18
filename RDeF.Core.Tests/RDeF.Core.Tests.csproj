@@ -22,6 +22,7 @@
     <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <CodeAnalysisRuleSet>..\RDeF.Tests.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,6 +33,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\RDeF.Tests.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
@@ -112,6 +114,7 @@
     <Compile Include="Given_instance_of\DefaultConverterProvider_class\when_searching_for_converters.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContextFactory_class\DefaultEntityContextFactoryTest.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContextFactory_class\when_configuring.cs" />
+    <Compile Include="Given_instance_of\DefaultEntityContextFactory_class\when_created_from_configuration.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContextFactory_class\when_creating_an_entity_context.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContext_class\DefaultEntityContextTest.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContext_class\when_clearing.cs" />
@@ -194,6 +197,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

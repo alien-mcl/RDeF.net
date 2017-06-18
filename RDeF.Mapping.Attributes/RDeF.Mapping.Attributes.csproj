@@ -23,6 +23,7 @@
     <DocumentationFile>bin\Debug\RDeF.Mapping.Attributes.xml</DocumentationFile>
     <CodeAnalysisRuleSet>..\RDeF.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -34,6 +35,7 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\RDeF.ruleset</CodeAnalysisRuleSet>
     <DocumentationFile>bin\Release\RDeF.Mapping.Attributes.xml</DocumentationFile>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

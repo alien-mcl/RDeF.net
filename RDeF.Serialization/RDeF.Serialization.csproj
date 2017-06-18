@@ -22,6 +22,7 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\RDeF.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,6 +34,7 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\RDeF.ruleset</CodeAnalysisRuleSet>
     <DocumentationFile>bin\Release\RDeF.Serialization.xml</DocumentationFile>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="json-ld.net, Version=1.0.5.0, Culture=neutral, PublicKeyToken=f17fb428089df9bc, processorArchitecture=MSIL">

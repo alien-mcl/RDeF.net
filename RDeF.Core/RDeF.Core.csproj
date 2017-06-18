@@ -23,6 +23,7 @@
     <CodeAnalysisRuleSet>..\RDeF.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <DocumentationFile>bin\Debug\RDeF.Core.xml</DocumentationFile>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -34,12 +35,14 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\RDeF.ruleset</CodeAnalysisRuleSet>
     <DocumentationFile>bin\Release\RDeF.Core.xml</DocumentationFile>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="RollerCaster, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RollerCaster.1.0.0\lib\net461\RollerCaster.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -63,7 +66,13 @@
     <Compile Include="ComponentModel\IContainer.cs" />
     <Compile Include="ComponentModel\SimpleContainer.cs" />
     <Compile Include="ComponentModel\ConvertersModule.cs" />
+    <Compile Include="Configuration\FactoryConfigurationElementCollection.cs" />
+    <Compile Include="Configuration\FactoryConfigurationElement.cs" />
+    <Compile Include="Configuration\MappingAssemblyConfigurationElement.cs" />
+    <Compile Include="Configuration\MappingAssemblyConfigurationElementCollection.cs" />
+    <Compile Include="Configuration\RdefNetConfigurationSection.cs" />
     <Compile Include="Duration.cs" />
+    <Compile Include="Entities\EntityContextFactory.cs" />
     <Compile Include="Entities\EntityExtensions.cs" />
     <Compile Include="Entities\EntityInitializationContext.cs" />
     <Compile Include="Entities\IInMemoryEntitySource.cs" />
