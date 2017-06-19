@@ -1,11 +1,11 @@
 ﻿using System.IO;
-using System.Reflection;
 using System.Text;
 using FluentAssertions;
 using NUnit.Framework;
 using RDeF;
 using RDeF.Data;
 using RDeF.Entities;
+using RDeF.Reflection;
 using RDeF.Serialization;
 
 namespace Given_a_data_model
@@ -13,8 +13,7 @@ namespace Given_a_data_model
     [TestFixture]
     public class when_serializing_it
     {
-        private static readonly string ExpectedSerializationResourceName = typeof(when_serializing_it).FullName.Replace(".", "\\") + ".json";
-        private static readonly string Expected = new StreamReader(typeof(when_serializing_it).GetTypeInfo().Assembly.GetManifestResourceStream(ExpectedSerializationResourceName)).ReadToEnd().Cleaned();
+        private static readonly string Expected = new StreamReader(typeof(when_serializing_it).GetEmbeddedResource(".json")).ReadToEnd().Cleaned();
 
         private MemoryStream Buffer { get; set; }
 

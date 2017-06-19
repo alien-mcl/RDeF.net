@@ -1,6 +1,7 @@
 ﻿#if NETSTANDARD1_6
 using System.Reflection;
 #endif
+using System.Reflection;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -28,7 +29,7 @@ namespace Given_instance_of.DefaultExplicitMappings_class
         [Test]
         public void Should_retrieve_property_mapping()
         {
-            Mappings.FindPropertyMappingFor(typeof(IProduct).GetProperty("Description")).Should().Be(PropertyMapping.Object);
+            Mappings.FindPropertyMappingFor(typeof(IProduct).GetTypeInfo().GetProperty("Description")).Should().Be(PropertyMapping.Object);
         }
 
         [SetUp]

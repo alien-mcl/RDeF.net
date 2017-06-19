@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
-using System.Text.RegularExpressions;
 using RDeF.Entities;
+using RDeF.Reflection;
 using RDeF.Serialization;
 
 namespace RDeF.Testing
@@ -15,8 +14,6 @@ namespace RDeF.Testing
 
         protected IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>> Graphs { get; set; }
 
-        private string ExpectedSerializationResourceName { get; set; }
-
         public override void TheTest()
         {
             Writer.Write(new StreamWriter(Stream), Graphs).GetAwaiter().GetResult();
@@ -24,16 +21,12 @@ namespace RDeF.Testing
 
         protected override void ScenarioSetup()
         {
-            ExpectedSerializationResourceName = GetType().FullName.Replace(".", "\\");
-            var extension = Regex.Match(ExpectedSerializationResourceName, "\\\\([A-Z][a-z]+)").Groups[1].Value.ToLower();
-            ExpectedSerializationResourceName += "." + extension;
-            Expected = new StreamReader(GetType().GetTypeInfo().Assembly.GetManifestResourceStream(ExpectedSerializationResourceName)).ReadToEnd();
-            if (extension != "rdf")
+            Stream = new MemoryStream();
+            Expected = new StreamReader(GetType().GetEmbeddedResource(EmbeddedResourceExtension)).ReadToEnd();
+            if (EmbeddedResourceExtension != "rdf")
             {
                 Expected = Expected.Cleaned();
             }
-
-            Stream = new MemoryStream();
         }
 
         protected void WithSimpleGraph()

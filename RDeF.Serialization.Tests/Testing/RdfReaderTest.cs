@@ -3,7 +3,7 @@ using RDeF.Serialization;
 
 namespace RDeF.Testing
 {
-    public class RdfReaderTest<T> where T : IRdfReader, new()
+    public class RdfReaderTest<T> : RdfTest where T : IRdfReader, new()
     {
         protected IRdfReader Reader { get; private set; }
 

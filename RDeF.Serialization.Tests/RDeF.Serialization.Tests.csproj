@@ -95,9 +95,11 @@
     <Compile Include="StringExtensions.cs" />
     <Compile Include="Testing\RdfReaderTest.cs" />
     <Compile Include="Testing\RdfReaderDeserializationTest.cs" />
+    <Compile Include="Testing\RdfTest.cs" />
     <Compile Include="Testing\RdfTestSets.cs" />
     <Compile Include="Testing\RdfWriterTest.cs" />
     <Compile Include="Testing\RdfWriterSerializationTest.cs" />
+    <Compile Include="Reflection\TypeExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="..\CustomDictionary.xml">

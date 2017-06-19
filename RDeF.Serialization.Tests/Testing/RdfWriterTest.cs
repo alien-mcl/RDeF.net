@@ -3,7 +3,7 @@ using RDeF.Serialization;
 
 namespace RDeF.Testing
 {
-    public class RdfWriterTest<T> where T : IRdfWriter, new()
+    public class RdfWriterTest<T> : RdfTest where T : IRdfWriter, new()
     {
         protected IRdfWriter Writer { get; private set; }
 

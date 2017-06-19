@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Reflection;
 using System.Text;
 using FluentAssertions;
 using NUnit.Framework;
@@ -7,6 +6,7 @@ using RDeF;
 using RDeF.Data;
 using RDeF.Entities;
 using RDeF.Mapping.Entities;
+using RDeF.Reflection;
 using RDeF.Serialization;
 
 namespace Given_a_context.with_explicitly_mapped_entity
@@ -14,8 +14,7 @@ namespace Given_a_context.with_explicitly_mapped_entity
     [TestFixture]
     public class when_serializing : ExplicitMappingsTest
     {
-        private static readonly string Expected = new StreamReader(typeof(when_serializing).GetTypeInfo().Assembly
-            .GetManifestResourceStream(typeof(when_serializing).FullName.Replace(".", "\\") + ".json")).ReadToEnd().Cleaned();
+        private static readonly string Expected = new StreamReader(typeof(when_serializing).GetEmbeddedResource(".json")).ReadToEnd().Cleaned();
 
         private MemoryStream Buffer { get; set; }
 

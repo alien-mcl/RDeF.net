@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 #if NETSTANDARD1_6
 using System.Reflection;
 #endif
@@ -41,7 +42,9 @@ namespace Given_instance_of.DefaultExplicitPropertyMappingBuilder_class
         [SetUp]
         public void Setup()
         {
-            Builder = new DefaultExplicitPropertyMappingBuilder<IUnmappedProduct>(new DefaultExplicitMappingsBuilder<IUnmappedProduct>(), typeof(IUnmappedProduct).GetProperty("Name"));
+            Builder = new DefaultExplicitPropertyMappingBuilder<IUnmappedProduct>(
+                new DefaultExplicitMappingsBuilder<IUnmappedProduct>(),
+                typeof(IUnmappedProduct).GetTypeInfo().GetProperty("Name"));
         }
     }
 }

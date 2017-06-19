@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
-using System.Text.RegularExpressions;
 using RDeF.Entities;
+using RDeF.Reflection;
 using RDeF.Serialization;
 
 namespace RDeF.Testing
@@ -15,8 +14,6 @@ namespace RDeF.Testing
 
         protected IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>> Expected { get; private set; }
 
-        private string ExpectedDeserializationResourceName { get; set; }
-
         public override void TheTest()
         {
             Result = Reader.Read(new StreamReader(Stream)).Result;
@@ -24,10 +21,7 @@ namespace RDeF.Testing
 
         protected override void ScenarioSetup()
         {
-            ExpectedDeserializationResourceName = GetType().FullName.Replace("Reader_class", "Writer_class").Replace("deserializing", "serializing").Replace(".", "\\");
-            var extension = Regex.Match(ExpectedDeserializationResourceName, "\\\\([A-Z][a-z]+)").Groups[1].Value.ToLower();
-            ExpectedDeserializationResourceName += "." + extension;
-            Stream = GetType().GetTypeInfo().Assembly.GetManifestResourceStream(ExpectedDeserializationResourceName);
+            Stream = GetType().GetEmbeddedResource(EmbeddedResourceExtension, name => name.Replace("Reader_class", "Writer_class").Replace("deserializing", "serializing"));
         }
 
         protected void WithSimpleGraph()

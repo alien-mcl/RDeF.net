@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 #if NETSTANDARD1_6
 using System.Reflection;
 #endif
@@ -41,7 +42,9 @@ namespace Given_instance_of.DefaultExplicitCollectionMappingBuilder_class
         [SetUp]
         public void Setup()
         {
-            Builder = new DefaultExplicitCollectionMappingBuilder<IUnmappedProduct>(new DefaultExplicitMappingsBuilder<IUnmappedProduct>(), typeof(IUnmappedProduct).GetProperty("Comments"));
+            Builder = new DefaultExplicitCollectionMappingBuilder<IUnmappedProduct>(
+                new DefaultExplicitMappingsBuilder<IUnmappedProduct>(),
+                typeof(IUnmappedProduct).GetTypeInfo().GetProperty("Comments"));
         }
     }
 }

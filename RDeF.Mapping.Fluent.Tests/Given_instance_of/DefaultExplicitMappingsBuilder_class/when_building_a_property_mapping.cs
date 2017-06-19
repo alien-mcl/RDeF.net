@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 #if NETSTANDARD1_6
 using System.Reflection;
 #endif
@@ -49,7 +50,7 @@ namespace Given_instance_of.DefaultExplicitMappingsBuilder_class
         public void Should_prepare_property_data_model_correctly_with_pointed_value_converter()
         {
             ((DefaultExplicitMappingsBuilder<IProduct>)ValueConverter.WithValueConverter<TestConverter>())
-                .Properties.Should().ContainKey(typeof(IProduct).GetProperty("Description"))
+                .Properties.Should().ContainKey(typeof(IProduct).GetTypeInfo().GetProperty("Description"))
                 .WhichValue.ShouldBeEquivalentTo(
                     new Tuple<Iri, Iri, Type>(new Iri("term"), new Iri("graph"), typeof(TestConverter)));
         }
@@ -58,7 +59,7 @@ namespace Given_instance_of.DefaultExplicitMappingsBuilder_class
         public void Should_prepare_property_data_model_correctly_with_default_value_converter()
         {
             ((DefaultExplicitMappingsBuilder<IProduct>)ValueConverter.WithDefaultConverter())
-                .Properties.Should().ContainKey(typeof(IProduct).GetProperty("Description"))
+                .Properties.Should().ContainKey(typeof(IProduct).GetTypeInfo().GetProperty("Description"))
                 .WhichValue.ShouldBeEquivalentTo(
                     new Tuple<Iri, Iri, Type>(new Iri("term"), new Iri("graph"), null));
         }

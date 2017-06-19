@@ -264,7 +264,7 @@ namespace RDeF.ComponentModel
 #if NETSTANDARD1_6
             _instanceRegistrations.EnsureKey(serviceType, true)[result.GetType()] = (IComponentRegistration)typeof(ComponentRegistration<>).MakeGenericType(serviceType)
                 .GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance)
-                .First(ctor => ctor.GetParameters().Length == 0 && ctor.GetParameters()[0].ParameterType == serviceType)
+                .First(ctor => ctor.GetParameters().Length == 1 && ctor.GetParameters()[0].ParameterType == serviceType)
 #else
 
             _instanceRegistrations.EnsureKey(serviceType, true)[result.GetType()] = (IComponentRegistration)typeof(ComponentRegistration<>).MakeGenericType(serviceType)
@@ -323,8 +323,7 @@ namespace RDeF.ComponentModel
             }
 #if NETSTANDARD1_6
             var loadedAssemblies = DependencyContext.Default.RuntimeLibraries
-                .SelectMany(library => library.Assemblies)
-                .Select(assembly => Assembly.Load(assembly.Name));
+                .Where(library => library.Name.ToLower().StartsWith("rdef.")).Select(library => Assembly.Load(new AssemblyName(library.Name)));
 #else
             var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
 #endif

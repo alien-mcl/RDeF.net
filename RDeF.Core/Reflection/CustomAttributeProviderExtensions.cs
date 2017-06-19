@@ -45,9 +45,9 @@ namespace RDeF.Reflection
             TypeImplementations[typeof(T)] = result = new HashSet<Type>();
 #if NETSTANDARD1_6
             var assemblies = from library in DependencyContext.Default.RuntimeLibraries
-                             from runtimeAssembly in library.Assemblies
-                             let assembly = Assembly.Load(runtimeAssembly.Name)
-                             where (!assembly.IsDynamic) && ((assemblyNamePattern == null) || (assemblyNamePattern.IsMatch(assembly.FullName)))
+                             where ((assemblyNamePattern == null) || (assemblyNamePattern.IsMatch(library.Name)))
+                             let assembly = Assembly.Load(new AssemblyName(library.Name))
+                             where (!assembly.IsDynamic)
                              select assembly;
 #else
             var assemblies = from assembly in AppDomain.CurrentDomain.GetAssemblies()

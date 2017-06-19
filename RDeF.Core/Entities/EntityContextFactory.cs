@@ -15,9 +15,8 @@ namespace RDeF.Entities
         public static IEntityContextFactory FromConfiguration(string configurationName)
         {
             var result = new DefaultEntityContextFactory();
-            FactoryConfigurationElement factoryConfiguration;
-            if ((RdefNetConfigurationSection.Default.Factories.TryGetValue(configurationName, out factoryConfiguration)) &&
-                (factoryConfiguration.MappingAssemblies.Cast<MappingAssemblyConfigurationElement>().Any()))
+            FactoryConfigurationElement factoryConfiguration = RdefNetConfigurationSection.Default.Factories[configurationName];
+            if ((factoryConfiguration != null) && (factoryConfiguration.MappingAssemblies.Cast<MappingAssemblyConfigurationElement>().Any()))
             {
                 result.WithMappings(
                     builder =>

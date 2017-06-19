@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 #if NETSTANDARD1_6
 using System.Reflection;
 #endif
@@ -69,7 +70,7 @@ namespace Given_instance_of.DefaultMappingBuilder_class
 
         protected static Mock<ITermMappingProvider> SetupPropertyMapping(Type entityType, string name)
         {
-            var allTypes = new[] { entityType }.Concat(entityType.GetInterfaces().Where(@interface => typeof(IEntity).IsAssignableFrom(@interface)));
+            var allTypes = new[] { entityType }.Concat(entityType.GetTypeInfo().GetInterfaces().Where(@interface => typeof(IEntity).IsAssignableFrom(@interface)));
             var property = (from type in allTypes from item in type.GetProperties() where item.Name == name select item).First();
             Mock<IPropertyMappingProvider> propertyMappingProvider;
             if (property.PropertyType.IsAnEnumerable())
