@@ -18,7 +18,7 @@ namespace Given_instance_of.DefaultEntityContextFactory_class
         public override void TheTest()
         {
             ((IContainer)((IComponentConfigurator)Factory.WithEntitySource(EntitySource.Object))
-                .WithComponent<IDisposable, TestComponent>(Lifestyle.Singleton, (scope, instance) => TestComponentIsActivated = true)
+                .WithComponent<IDisposable, TestComponent>(null, Lifestyle.Singleton, (scope, instance) => TestComponentIsActivated = true)
                 .GetType().GetField("_container", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(Factory)).Resolve<IDisposable>();
         }
 

@@ -17,7 +17,7 @@ namespace RDeF.Configuration
         private const string NameAttributeName = "name";
 #endif
 
-        /// <summary>Gets a nem of the assembly to be used for mappings.</summary>
+        /// <summary>Gets a name of the assembly to be used for mappings.</summary>
 #if !NETSTANDARD1_6
         [ConfigurationProperty(NameAttributeName, IsKey = true, IsRequired = true)]
 #endif

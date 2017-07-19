@@ -17,6 +17,7 @@ namespace RDeF.Configuration
 #if !NETSTANDARD1_6
         private const string NameAttributeName = "name";
         private const string MappingAssembliesAttributeName = "mappingAssemblies";
+        private const string QIrisAttributeName = "qiris";
 #endif
 
         /// <summary>Gets a name of the factory configuration.</summary>
@@ -50,6 +51,23 @@ namespace RDeF.Configuration
             get { return (MappingAssemblyConfigurationElementCollection)this[MappingAssembliesAttributeName]; }
 
             internal set { this[MappingAssembliesAttributeName] = value; }
+#endif
+        }
+
+        /// <summary>Gets a QIri mappings.</summary>
+#if !NETSTANDARD1_6
+        [ConfigurationProperty(QIrisAttributeName)]
+#endif
+        public QIriConfigurationElementCollection QIris
+        {
+#if NETSTANDARD1_6
+            get;
+
+            set;
+#else
+            get { return (QIriConfigurationElementCollection)this[QIrisAttributeName]; }
+
+            internal set { this[QIrisAttributeName] = value; }
 #endif
         }
     }

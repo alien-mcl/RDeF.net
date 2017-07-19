@@ -68,7 +68,9 @@
     <Compile Include="ComponentModel\ConvertersModule.cs" />
     <Compile Include="Configuration\FactoryConfigurationElementCollection.cs" />
     <Compile Include="Configuration\FactoryConfigurationElement.cs" />
+    <Compile Include="Configuration\QIriConfigurationElement.cs" />
     <Compile Include="Configuration\MappingAssemblyConfigurationElement.cs" />
+    <Compile Include="Configuration\QIriConfigurationElementCollection.cs" />
     <Compile Include="Configuration\MappingAssemblyConfigurationElementCollection.cs" />
     <Compile Include="Configuration\RdefNetConfigurationSection.cs" />
     <Compile Include="Duration.cs" />

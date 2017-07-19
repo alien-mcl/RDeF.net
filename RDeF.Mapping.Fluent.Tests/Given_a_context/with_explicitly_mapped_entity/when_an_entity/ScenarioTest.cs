@@ -21,6 +21,8 @@ namespace Given_a_context.with_explicitly_mapped_entity.when_an_entity
 
         protected Mock<IEntityContext> EntityContext { get; private set; }
 
+        protected Mock<IConverterProvider> ConverterProvider { get; private set; }
+
         [Test]
         public void Should_create_entity_mappings_accordingly()
         {
@@ -32,10 +34,20 @@ namespace Given_a_context.with_explicitly_mapped_entity.when_an_entity
             Mappings = new Mock<IExplicitMappings>(MockBehavior.Strict);
             Mappings.Setup(instance => instance.Set(It.IsAny<IEntityMapping>())).Callback<IEntityMapping>(mapping => Mapping = mapping);
             EntityContext = new Mock<IEntityContext>(MockBehavior.Strict);
+            ConverterProvider = new Mock<IConverterProvider>(MockBehavior.Strict);
+            ConverterProvider.Setup(instance => instance.FindConverter(It.IsAny<Type>())).Returns(new StringConverter());
             EntityContextExtensions.ExplicitMappings[Context = EntityContext.Object] = Mappings.Object;
-            EntityContextExtensions.LiteralConverters = new[] { new StringConverter() };
+            EntityContextExtensions.ConverterProvider = ConverterProvider.Object;
             EntityContextExtensions.MappingVisitors = Array.Empty<IMappingProviderVisitor>();
             EntityContextExtensions.QIriMappings = Array.Empty<QIriMapping>();
+        }
+
+        protected override void ScenarioTeardown()
+        {
+            EntityContextExtensions.ExplicitMappings.Clear();
+            EntityContextExtensions.ConverterProvider = null;
+            EntityContextExtensions.MappingVisitors = null;
+            EntityContextExtensions.QIriMappings = null;
         }
     }
 }

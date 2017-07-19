@@ -6,6 +6,8 @@ namespace RDeF.ComponentModel
     {
         Type ServiceType { get; }
 
+        string Name { get; }
+
         Type ImplementationType { get; }
 
         object Instance { get; }

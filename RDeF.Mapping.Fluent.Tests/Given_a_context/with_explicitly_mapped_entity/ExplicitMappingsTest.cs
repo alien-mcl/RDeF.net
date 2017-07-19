@@ -22,7 +22,17 @@ namespace Given_a_context.with_explicitly_mapped_entity
             TheTest();
         }
 
+        [TearDown]
+        public void Teardown()
+        {
+            ScenarioTeardown();
+        }
+
         protected virtual void ScenarioSetup()
+        {
+        }
+
+        protected virtual void ScenarioTeardown()
         {
         }
 

@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reflection;
 using RDeF.Configuration;
 
@@ -16,7 +15,7 @@ namespace RDeF.Entities
         {
             var result = new DefaultEntityContextFactory();
             FactoryConfigurationElement factoryConfiguration = RdefNetConfigurationSection.Default.Factories[configurationName];
-            if ((factoryConfiguration != null) && (factoryConfiguration.MappingAssemblies.Cast<MappingAssemblyConfigurationElement>().Any()))
+            if (factoryConfiguration != null)
             {
                 result.WithMappings(
                     builder =>
@@ -27,6 +26,11 @@ namespace RDeF.Entities
                             builder = builder.FromAssembly(mappingAssembly);
                         }
                     });
+
+                foreach (QIriConfigurationElement qIri in factoryConfiguration.QIris)
+                {
+                    result.WithQIri(qIri.Prefix, new Iri(qIri.Iri));
+                }
             }
 
             return result;

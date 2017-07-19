@@ -34,13 +34,8 @@ namespace RDeF.Entities
                                      select mappingSource;
                 foreach (var mappingSource in mappingSources)
                 {
-                    _container.Register(mappingSource);
+                    _container.Register(mappingSource, $"{mappingSource.GetType()}_{mappingSource.GetHashCode()}");
                 }
-
-                _container.Unregister<IMappingBuilder>();
-                _container.Unregister<IMappingsRepository>();
-                _container.Register<IMappingBuilder, DefaultMappingBuilder>();
-                _container.Register<IMappingsRepository, DefaultMappingRepository>();
             });
             _container = new SimpleContainer();
             _container.Register<IMappingBuilder, DefaultMappingBuilder>();
@@ -83,7 +78,6 @@ namespace RDeF.Entities
         /// <inheritdoc />
         public IEntityContextFactory WithEntitySource<T>() where T : IEntitySource
         {
-            _container.Unregister<IEntitySource>();
             _container.Register<IEntitySource, T>();
             return this;
         }
@@ -91,7 +85,6 @@ namespace RDeF.Entities
         /// <inheritdoc />
         public IEntityContextFactory WithEntitySource(IEntitySource entitySource)
         {
-            _container.Unregister<IEntitySource>();
             _container.Register(entitySource);
             return this;
         }
@@ -113,6 +106,13 @@ namespace RDeF.Entities
         }
 
         /// <inheritdoc />
+        public IEntityContextFactory WithQIri(string prefix, Iri iri)
+        {
+            _container.Register(new QIriMapping(prefix, iri), prefix);
+            return this;
+        }
+
+        /// <inheritdoc />
         public IEntityContextFactory WithModule<TModule>() where TModule : IModule
         {
             ((IModule)typeof(TModule).GetConstructor(Type.EmptyTypes).Invoke(null)).Initialize(this);
@@ -129,33 +129,46 @@ namespace RDeF.Entities
         /// <inheritdoc />
         IComponentConfigurator IComponentConfigurator.WithConverter<TConverter>()
         {
-            _container.Register<ILiteralConverter, TConverter>();
+            _container.Register<ILiteralConverter, TConverter>(typeof(TConverter).FullName);
             return this;
         }
 
         /// <inheritdoc />
         IComponentConfigurator IComponentConfigurator.WithMappingsProvidedBy<TMappingSourceProvider>()
         {
-            _container.Register<IMappingSourceProvider, TMappingSourceProvider>();
+            _container.Register<IMappingSourceProvider, TMappingSourceProvider>(typeof(TMappingSourceProvider).FullName);
             return this;
         }
 
         /// <inheritdoc />
         IComponentConfigurator IComponentConfigurator.WithMappingsProviderVisitor<TMappingProviderVisitor>()
         {
-            _container.Register<IMappingProviderVisitor, TMappingProviderVisitor>();
+            _container.Register<IMappingProviderVisitor, TMappingProviderVisitor>(typeof(TMappingProviderVisitor).FullName);
             return this;
         }
 
         /// <inheritdoc />
         IComponentConfigurator IComponentConfigurator.WithComponent<TService, TComponent>(Lifestyle lifestyle, Action<IComponentScope, TComponent> onActivate)
         {
-            var registration = _container.Register<TService, TComponent>(lifestyle);
+            return ((IComponentConfigurator)this).WithComponent<TService, TComponent>(null, lifestyle, onActivate);
+        }
+
+        /// <inheritdoc />
+        IComponentConfigurator IComponentConfigurator.WithComponent<TService, TComponent>(string name, Lifestyle lifestyle, Action<IComponentScope, TComponent> onActivate)
+        {
+            var registration = _container.Register<TService, TComponent>(name, lifestyle);
             if (onActivate != null)
             {
                 registration.OnActivate = (container, instance) => onActivate(container, (TComponent)instance);
             }
 
+            return this;
+        }
+
+        /// <inheritdoc />
+        IComponentConfigurator IComponentConfigurator.WithInstance<TService>(TService instance, string name)
+        {
+            _container.Register(instance, name);
             return this;
         }
     }

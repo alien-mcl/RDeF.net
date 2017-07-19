@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using RDeF.Entities;
 using RDeF.Mapping;
-using RDeF.Mapping.Visitors;
+using RDeF.Vocabularies;
 
 namespace RDeF.ComponentModel
 {
@@ -21,8 +21,11 @@ namespace RDeF.ComponentModel
 
             componentConfigurator.WithComponent<IChangeDetector, DefaultChangeDetector>();
             componentConfigurator.WithComponent<IConverterProvider, DefaultConverterProvider>();
-            componentConfigurator.WithMappingsProviderVisitor<CollectionStorageModelConventionVisitor>();
-            componentConfigurator.WithMappingsProviderVisitor<ConverterConventionVisitor>();
+            componentConfigurator.WithInstance(new QIriMapping("xsd", xsd.Namespace), "xsd");
+            componentConfigurator.WithInstance(new QIriMapping("rdf", rdf.Namespace), "rdf");
+            componentConfigurator.WithInstance(new QIriMapping("rdfs", rdfs.Namespace), "rdfs");
+            componentConfigurator.WithInstance(new QIriMapping("owl", owl.Namespace), "owl");
+            componentConfigurator.WithInstance(new QIriMapping("oguid", oguid.Namespace), "oguid");
         }
     }
 }

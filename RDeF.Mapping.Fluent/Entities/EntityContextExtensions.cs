@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using RDeF.Entities;
 using RDeF.Mapping.Explicit;
 using RDeF.Mapping.Providers;
@@ -14,7 +13,7 @@ namespace RDeF.Mapping.Entities
     {
         internal static readonly IDictionary<IEntityContext, IExplicitMappings> ExplicitMappings = new ConcurrentDictionary<IEntityContext, IExplicitMappings>();
 
-        internal static IEnumerable<ILiteralConverter> LiteralConverters { get; set; }
+        internal static IConverterProvider ConverterProvider { get; set; }
 
         internal static IEnumerable<IMappingProviderVisitor> MappingVisitors { get; set; }
 
@@ -202,26 +201,23 @@ namespace RDeF.Mapping.Entities
                     continue;
                 }
 
-                var collectionMappingProvider = mappingProvider as ICollectionMappingProvider;
-                if (collectionMappingProvider != null)
+                var propertyMappingProvider = mappingProvider as IPropertyMappingProvider;
+                if (propertyMappingProvider == null)
                 {
-                    entityMapping.Properties.Add(CollectionMapping.CreateFrom(
-                        entityMapping,
-                        collectionMappingProvider,
-                        LiteralConverters.First(converter => converter.GetType() == collectionMappingProvider.ValueConverterType),
-                        QIriMappings));
                     continue;
                 }
 
-                var propertyMappingProvider = mappingProvider as IPropertyMappingProvider;
-                if (propertyMappingProvider != null)
+                ILiteralConverter valueConverter = null;
+                if (propertyMappingProvider.ValueConverterType != null)
                 {
-                    entityMapping.Properties.Add(PropertyMapping.CreateFrom(
-                        entityMapping,
-                        propertyMappingProvider,
-                        LiteralConverters.First(converter => converter.GetType() == propertyMappingProvider.ValueConverterType),
-                        QIriMappings));
+                    valueConverter = ConverterProvider.FindConverter(propertyMappingProvider.ValueConverterType);
                 }
+
+                var collectionMappingProvider = mappingProvider as ICollectionMappingProvider;
+                var propertyMapping = (collectionMappingProvider != null
+                    ? CollectionMapping.CreateFrom(entityMapping, collectionMappingProvider, valueConverter, QIriMappings)
+                    : PropertyMapping.CreateFrom(entityMapping, propertyMappingProvider, valueConverter, QIriMappings));
+                entityMapping.Properties.Add(propertyMapping);
             }
 
             return entityMapping;

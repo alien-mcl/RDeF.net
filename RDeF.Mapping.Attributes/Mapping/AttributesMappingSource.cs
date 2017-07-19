@@ -14,7 +14,7 @@ namespace RDeF.Mapping
     public class AttributesMappingSource : IMappingSource
     {
         private readonly Assembly _assembly;
-        private readonly IList<ITermMappingProvider> _entityMappingProviders;
+        private readonly List<ITermMappingProvider> _entityMappingProviders;
         private readonly object _sync = new Object();
         private bool _isInitialized;
 
@@ -53,30 +53,32 @@ namespace RDeF.Mapping
                         select type;
             foreach (var type in types)
             {
-                foreach (var classAttribute in type.GetTypeInfo().GetCustomAttributes<ClassAttribute>())
+                var classAttributes = type.GetTypeInfo().GetCustomAttributes<ClassAttribute>();
+                _entityMappingProviders.AddRange(
+                    classAttributes.Select(classAttribute => AttributeEntityMappingProvider.FromAttribute(type, classAttribute)));
+                BuildPropertyMappings(type);
+            }
+        }
+
+        private void BuildPropertyMappings(Type type)
+        {
+            var propertyAttributes = from property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                                     from attribute in property.GetCustomAttributes()
+                                     select new { Property = property, Attribute = attribute };
+            foreach (var definition in propertyAttributes)
+            {
+                //// TODO: Add support for dictionaries.
+                var collectionAttribute = definition.Attribute as CollectionAttribute;
+                if (collectionAttribute != null)
                 {
-                    _entityMappingProviders.Add(AttributeEntityMappingProvider.FromAttribute(type, classAttribute));
+                    _entityMappingProviders.Add(AttributeCollectionMappingProvider.FromAttribute(type, definition.Property, collectionAttribute));
+                    continue;
                 }
 
-                foreach (var property in type.GetProperties(BindingFlags.Instance | BindingFlags.Public))
+                var propertyAttribute = definition.Attribute as PropertyAttribute;
+                if (propertyAttribute != null)
                 {
-                    foreach (var attribute in property.GetCustomAttributes())
-                    {
-                        //// TODO: Add support for dictionaries.
-                        var collectionAttribute = attribute as CollectionAttribute;
-                        if (collectionAttribute != null)
-                        {
-                            _entityMappingProviders.Add(AttributeCollectionMappingProvider.FromAttribute(type, property, collectionAttribute));
-                            continue;
-                        }
-
-                        var propertyAttribute = attribute as PropertyAttribute;
-                        if (propertyAttribute != null)
-                        {
-                            _entityMappingProviders.Add(AttributePropertyMappingProvider.FromAttribute(type, property, propertyAttribute));
-                            continue;
-                        }
-                    }
+                    _entityMappingProviders.Add(AttributePropertyMappingProvider.FromAttribute(type, definition.Property, propertyAttribute));
                 }
             }
         }

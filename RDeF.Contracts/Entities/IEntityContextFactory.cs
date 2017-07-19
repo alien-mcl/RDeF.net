@@ -37,5 +37,11 @@ namespace RDeF.Entities
         /// <param name="builder">Mappings builder.</param>
         /// <returns>Current instance of the <see cref="IEntityContextFactory" />.</returns>
         IEntityContextFactory WithMappings(Action<IMappingsBuilder> builder);
+
+        /// <summary>Allows caller to register a custom QIri mapping.</summary>
+        /// <param name="prefix">Prefix of the QIri being mapped.</param>
+        /// <param name="iri">Iri of the QIri being mapped.</param>
+        /// <returns>Current instance of the <see cref="IEntityContextFactory" />.</returns>
+        IEntityContextFactory WithQIri(string prefix, Iri iri);
     }
 }

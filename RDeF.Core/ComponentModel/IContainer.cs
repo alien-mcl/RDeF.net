@@ -11,11 +11,11 @@ namespace RDeF.ComponentModel
 
         IComponentRegistration Register<TService>(Type implementationType, Lifestyle lifestyle = Lifestyle.Singleton);
 
-        IComponentRegistration Register<TService>(TService instance);
+        IComponentRegistration Register<TService, TImplementation>(string name, Lifestyle lifestyle = Lifestyle.Singleton) where TImplementation : TService;
 
-        void Unregister<TService>();
+        IComponentRegistration Register<TService>(Type implementationType, string name, Lifestyle lifestyle = Lifestyle.Singleton);
 
-        void Unregister<TService>(TService instance);
+        IComponentRegistration Register<TService>(TService instance, string name = null);
 
         IContainer BeginScope();
     }

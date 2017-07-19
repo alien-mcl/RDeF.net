@@ -30,9 +30,9 @@ namespace RDeF.Mapping
                 {
                     var context = container.Resolve<IEntityContext>();
                     EntityContextExtensions.ExplicitMappings[context] = explicitMappings;
-                    if (EntityContextExtensions.LiteralConverters == null)
+                    if (EntityContextExtensions.ConverterProvider == null)
                     {
-                        EntityContextExtensions.LiteralConverters = container.Resolve<IEnumerable<ILiteralConverter>>();
+                        EntityContextExtensions.ConverterProvider = container.Resolve<IConverterProvider>();
                         EntityContextExtensions.MappingVisitors = container.Resolve<IEnumerable<IMappingProviderVisitor>>();
                         EntityContextExtensions.QIriMappings = container.Resolve<IEnumerable<QIriMapping>>();
                     }
