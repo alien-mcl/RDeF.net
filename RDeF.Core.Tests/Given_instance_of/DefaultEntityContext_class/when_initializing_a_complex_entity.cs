@@ -12,6 +12,7 @@ using RDeF.Mapping;
 using RDeF.Mapping.Attributes;
 using RDeF.Vocabularies;
 using RollerCaster;
+using RollerCaster.Reflection;
 
 namespace Given_instance_of.DefaultEntityContext_class
 {
@@ -134,11 +135,12 @@ namespace Given_instance_of.DefaultEntityContext_class
             result.SetupGet(instance => instance.EntityMapping).Returns(entityMapping.Object);
             result.SetupGet(instance => instance.Name).Returns(propertyName);
             result.SetupGet(instance => instance.Graph).Returns((Iri)null);
-            result.SetupGet(instance => instance.ValueConverter).Returns(converter.Object);
+            result.SetupGet(instance => instance.ValueConverter).Returns(converter?.Object);
             result.SetupGet(instance => instance.StoreAs)
                 .Returns(property.PropertyType.GetGenericTypeDefinition() == typeof(IList<>) ? CollectionStorageModel.LinkedList : CollectionStorageModel.Simple);
             result.SetupGet(instance => instance.Term).Returns(new Iri(collectionMapping.Iri));
             result.SetupGet(instance => instance.Graph).Returns((Iri)null);
+            result.SetupGet(instance => instance.ReturnType).Returns(property.PropertyType);
             return result;
         }
 
@@ -178,6 +180,11 @@ namespace Given_instance_of.DefaultEntityContext_class
 
         private Mock<IConverter> SetupConverter(PropertyInfo propertyInfo)
         {
+            if (typeof(IEntity).IsAssignableFrom(propertyInfo.PropertyType.GetItemType()))
+            {
+                return null;
+            }
+
             var result = new Mock<IConverter>(MockBehavior.Strict);
             result.Setup(instance => instance.ConvertFrom(It.IsAny<Statement>()))
                 .Returns<Statement>(statement =>

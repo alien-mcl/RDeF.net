@@ -4,6 +4,7 @@ using System.Linq;
 using RDeF.Mapping;
 using RDeF.Vocabularies;
 using RollerCaster;
+using RollerCaster.Reflection;
 
 namespace RDeF.Entities
 {
@@ -59,13 +60,21 @@ namespace RDeF.Entities
 
         internal static void SetProperty(this Entity entity, Statement statement, IPropertyMapping propertyMapping, EntityInitializationContext context)
         {
-            var value = propertyMapping.ValueConverter.ConvertFrom(statement);
-            entity.SetPropertyInternal(propertyMapping.EntityMapping.Type, propertyMapping.Name, value);
-            var otherEntity = value as IEntity;
-            if (otherEntity != null)
+            object value;
+            if (statement.Object != null)
             {
+                var otherEntity = (IEntity)((DefaultEntityContext)entity.Context)
+                    .CreateInternal(statement.Object, false)
+                    .ActLike(propertyMapping.ReturnType.GetItemType());
                 context.EntitiesCreated.Add(otherEntity.UnwrapEntity());
+                value = otherEntity;
             }
+            else
+            {
+                value = propertyMapping.ValueConverter.ConvertFrom(statement);
+            }
+
+            entity.SetPropertyInternal(propertyMapping.EntityMapping.Type, propertyMapping.Name, value);
         }
 
         internal static void SetList(this Entity entity, Iri head, ICollectionMapping collectionMapping, EntityInitializationContext context)

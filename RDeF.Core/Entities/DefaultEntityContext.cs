@@ -259,7 +259,7 @@ namespace RDeF.Entities
                 }
 
                 var propertyMapping = Mappings.FindPropertyMappingFor(statement.Predicate);
-                if (!statement.Matches(propertyMapping.Graph))
+                if ((propertyMapping == null) || (!statement.Matches(propertyMapping.Graph)))
                 {
                     continue;
                 }
@@ -302,13 +302,14 @@ namespace RDeF.Entities
         {
             foreach (var otherEntity in context.EntitiesCreated.Where(otherEntity => !otherEntity.IsInitialized))
             {
+                IEnumerable<Statement> statements = null;
                 ISet<Statement> otherStatements;
                 if (!context.EntityStatements.TryGetValue(otherEntity.Iri, out otherStatements))
                 {
-                    continue;
+                    statements = _entitySource.Load(otherEntity.Iri);
                 }
 
-                InitializeInternal(otherEntity, otherStatements, context);
+                InitializeInternal(otherEntity, otherStatements ?? statements, context);
                 context.EntityStatements.Remove(otherEntity.Iri);
             }
         }
