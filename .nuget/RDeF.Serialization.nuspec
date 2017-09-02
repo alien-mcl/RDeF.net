@@ -12,12 +12,12 @@
 		<copyright>Copyright ©2017 Karol Szczepanski</copyright>
 		<tags>rdf</tags>
 		<frameworkAssemblies>
-			<assembly name="NETStandard.Library" targetFramework="netstandard2.0" />
-			<assembly name="System" targetFramework="net461" />
-			<assembly name="System.Core" targetFramework="net461" />
-			<assembly name="System.Data" targetFramework="net461" />
-			<assembly name="System.Xml" targetFramework="net461" />
-			<assembly name="System.Xml.Linq" targetFramework="net461" />
+			<frameworkAssembly assemblyName="NETStandard.Library" targetFramework="netstandard2.0" />
+			<frameworkAssembly assemblyName="System" targetFramework="net461" />
+			<frameworkAssembly assemblyName="System.Core" targetFramework="net461" />
+			<frameworkAssembly assemblyName="System.Data" targetFramework="net461" />
+			<frameworkAssembly assemblyName="System.Xml" targetFramework="net461" />
+			<frameworkAssembly assemblyName="System.Xml.Linq" targetFramework="net461" />
 		</frameworkAssemblies>
 		<dependencies>
 			<group targetFramework="netstandard2.0">

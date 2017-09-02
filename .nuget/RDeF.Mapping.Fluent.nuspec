@@ -12,10 +12,10 @@
 		<copyright>Copyright ©2017 Karol Szczepanski</copyright>
 		<tags>rdf</tags>
 		<frameworkAssemblies>
-			<assembly name="NETStandard.Library" targetFramework="netstandard2.0" />
-			<assembly name="System" targetFramework="net461" />
-			<assembly name="System.Core" targetFramework="net461" />
-			<assembly name="System.Xml" targetFramework="net461" />
+			<frameworkAssembly assemblyName="NETStandard.Library" targetFramework="netstandard2.0" />
+			<frameworkAssembly assemblyName="System" targetFramework="net461" />
+			<frameworkAssembly assemblyName="System.Core" targetFramework="net461" />
+			<frameworkAssembly assemblyName="System.Xml" targetFramework="net461" />
 		</frameworkAssemblies>
 		<dependencies>
 			<group targetFramework="netstandard2.0">
@@ -25,8 +25,8 @@
 				<dependency id="System.Reflection.Emit" version="4.3.0" />
 				<dependency id="System.Reflection.TypeExtensions" version="4.4.0" />
 				<dependency id="RollerCaster" version="1.0.0" />
-			    <dependency id="RDeF.Contracts" version="$version$" />
-			    <dependency id="RDeF.Core" version="$version$" />
+				<dependency id="RDeF.Contracts" version="$version$" />
+				<dependency id="RDeF.Core" version="$version$" />
 			</group>
 			<group targetFramework="net461">
 				<dependency id="StyleCop.Analyzers" version="1.0.2" />
