@@ -9,9 +9,6 @@ using System.Text.RegularExpressions;
 using RDeF.Collections;
 using RDeF.Reflection;
 using RollerCaster.Reflection;
-#if NETSTANDARD1_6
-using Microsoft.Extensions.DependencyModel;
-#endif
 
 namespace RDeF.ComponentModel
 {
@@ -243,14 +240,8 @@ namespace RDeF.ComponentModel
             }
 
             serviceRegistration.Remove(implementationRegistered);
-#if NETSTANDARD1_6
-            var instanceRegistration = (IComponentRegistration)typeof(ComponentRegistration<>).MakeGenericType(serviceType)
-                .GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance)
-                .First(ctor => ctor.GetParameters().Length == 2 && ctor.GetParameters()[0].ParameterType == serviceType)
-#else
             var instanceRegistration = (IComponentRegistration)typeof(ComponentRegistration<>).MakeGenericType(serviceType)
                 .GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { serviceType, typeof(string) }, null)
-#endif
                 .Invoke(new[] { result, implementationRegistered.Name });
             _instanceRegistrations.EnsureKey(serviceType).Add(instanceRegistration);
             return result;
@@ -303,12 +294,8 @@ namespace RDeF.ComponentModel
             {
                 return;
             }
-#if NETSTANDARD1_6
-            var loadedAssemblies = DependencyContext.Default.RuntimeLibraries
-                .Where(library => library.Name.ToLower().StartsWith("rdef.")).Select(library => Assembly.Load(new AssemblyName(library.Name)));
-#else
+
             var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
-#endif
             if (loadedAssemblies.All(assembly => assembly.GetName().Name != AttributeMappingsAssembly))
             {
                 TryLoadAssembly(new AssemblyName(AttributeMappingsAssembly));

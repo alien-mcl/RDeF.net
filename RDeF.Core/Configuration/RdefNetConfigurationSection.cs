@@ -1,11 +1,11 @@
-﻿#if NETSTANDARD1_6
+﻿#if NETSTANDARD2_0
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 #else
 using System.Configuration;
 #endif
 using System.Diagnostics.CodeAnalysis;
-#if NETSTANDARD1_6
+#if NETSTANDARD2_0
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -19,13 +19,13 @@ namespace RDeF.Configuration
     [ExcludeFromCodeCoverage]
     [SuppressMessage("TS0000", "NoUnitTests", Justification = "Simple configuration wrapper without special logic to be tested.")]
     public class RdefNetConfigurationSection
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
         : ConfigurationSection
 #endif
     {
         /// <summary>Defines a default name of the RDeF.net configuration section.</summary>
         public const string DefaultConfigurationSectionName = "rdef.net";
-#if NETSTANDARD1_6
+#if NETSTANDARD2_0
         private const string ConfigurationFileName = "appsettings.json";
         private static readonly IConfigurationRoot Configuration;
         private static IDictionary<string, RdefNetConfigurationSection> _configurations = new ConcurrentDictionary<string, RdefNetConfigurationSection>();
@@ -49,12 +49,12 @@ namespace RDeF.Configuration
         }
 
         /// <summary>Gets a map of named entity context factory configurations.</summary>
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
         [ConfigurationProperty(FactoriesAttributeName)]
 #endif
         public FactoryConfigurationElementCollection Factories
         {
-#if NETSTANDARD1_6
+#if NETSTANDARD2_0
             get { return _factories; }
 
             internal set { _factories = value ?? new FactoryConfigurationElementCollection(); }
@@ -67,7 +67,7 @@ namespace RDeF.Configuration
 
         private static RdefNetConfigurationSection GetConfiguration(string name)
         {
-#if NETSTANDARD1_6
+#if NETSTANDARD2_0
             RdefNetConfigurationSection result;
             if (_configurations.TryGetValue(name, out result))
             {
@@ -95,7 +95,7 @@ namespace RDeF.Configuration
 #endif
         }
 
-#if NETSTANDARD1_6
+#if NETSTANDARD2_0
         private static string DiscoverConfigurationFile()
         {
             var path = Directory.GetCurrentDirectory();

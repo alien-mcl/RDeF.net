@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using RDeF.Entities;
+using RDeF.Mapping.Reflection;
 using RollerCaster.Reflection;
 
 namespace RDeF.Mapping.Explicit
@@ -47,6 +48,14 @@ namespace RDeF.Mapping.Explicit
     /// <typeparam name="TEntity">Type of the entity being mapped.</typeparam>
     public class DefaultExplicitMappingsBuilder<TEntity> : DefaultExplicitMappingsBuilder, IExplicitMappingsBuilder<TEntity> where TEntity : IEntity
     {
+        private readonly bool _allowSinglePropertyOnly;
+        private bool _isPropertyConfigured;
+
+        internal DefaultExplicitMappingsBuilder(bool allowSinglePropertyOnly = false)
+        {
+            _allowSinglePropertyOnly = allowSinglePropertyOnly;
+        }
+
         /// <inheritdoc />
         public IExplicitMappingsBuilder<TEntity> MappedTo(Iri term, Iri graph = null)
         {
@@ -89,7 +98,35 @@ namespace RDeF.Mapping.Explicit
                 throw new ArgumentOutOfRangeException(nameof(collection));
             }
 
+            EnsureSingleProperty();
             return new DefaultExplicitCollectionMappingBuilder<TEntity>(this, propertyInfo);
+        }
+
+        /// <inheritdoc />
+        public IExplicitPropertyMappingBuilder<TEntity> WithCollection(Type collectionType, string name)
+        {
+            if (collectionType == null)
+            {
+                throw new ArgumentNullException(nameof(collectionType));
+            }
+
+            if (!collectionType.IsAnEnumerable())
+            {
+                throw new ArgumentOutOfRangeException(nameof(collectionType));
+            }
+
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (name.Length == 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(name));
+            }
+
+            EnsureSingleProperty();
+            return new DefaultExplicitPropertyMappingBuilder<TEntity>(this, new DynamicPropertyInfo(typeof(TEntity), collectionType, name));
         }
 
         /// <inheritdoc />
@@ -106,7 +143,30 @@ namespace RDeF.Mapping.Explicit
                 throw new ArgumentOutOfRangeException(nameof(property));
             }
 
+            EnsureSingleProperty();
             return new DefaultExplicitPropertyMappingBuilder<TEntity>(this, propertyInfo);
+        }
+
+        /// <inheritdoc />
+        public IExplicitPropertyMappingBuilder<TEntity> WithProperty(Type propertyType, string name)
+        {
+            if (propertyType == null)
+            {
+                throw new ArgumentNullException(nameof(propertyType));
+            }
+
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (name.Length == 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(name));
+            }
+
+            EnsureSingleProperty();
+            return new DefaultExplicitPropertyMappingBuilder<TEntity>(this, new DynamicPropertyInfo(typeof(TEntity), propertyType, name));
         }
 
         private static PropertyInfo GetSelectedMember<TMember>(Expression<Func<TEntity, TMember>> member)
@@ -141,6 +201,16 @@ namespace RDeF.Mapping.Explicit
             {
                 throw new ArgumentOutOfRangeException(nameof(term));
             }
+        }
+
+        private void EnsureSingleProperty()
+        {
+            if ((_allowSinglePropertyOnly) && (_isPropertyConfigured))
+            {
+                throw new InvalidOperationException("Only single property configuration is allowed.");
+            }
+
+            _isPropertyConfigured = true;
         }
     }
 }

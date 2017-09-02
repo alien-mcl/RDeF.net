@@ -21,9 +21,7 @@ namespace RDeF.Mapping
         /// <summary>Initializes a new instance of the <see cref="DefaultMappingRepository"/> class.</summary>
         /// <param name="mappingSources">Collection of mapping sources.</param>
         /// <param name="mappingsBuilder">Mapping builder.</param>
-        public DefaultMappingRepository(
-            IEnumerable<IMappingSource> mappingSources,
-            IMappingBuilder mappingsBuilder)
+        public DefaultMappingRepository(IEnumerable<IMappingSource> mappingSources, IMappingBuilder mappingsBuilder)
         {
             if (mappingSources == null)
             {

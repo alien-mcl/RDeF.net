@@ -1,0 +1,16 @@
+﻿{
+    "@graph": [
+        {
+            "@id": "@default", 
+            "@graph": [
+                {
+                    "@id": "temp:test",
+                    "temp:categories": [ "category1" ],
+                    "temp:description": [ "Product description" ],
+                    "@type": [ "temp:class1", "temp:class2" ],
+                    "temp:name": [ "Product name" ]
+                }
+            ]
+        }
+    ] 
+}

@@ -25,7 +25,7 @@ namespace RDeF.Mapping
         public AmbiguousMappingException(string message, Exception innerException) : base(message, innerException)
         {
         }
-#if !NETSTANDARD1_6
+
         /// <summary>Initializes a new instance of the <see cref="AmbiguousMappingException" /> class.</summary>
         /// <param name="info">Serialization info.</param>
         /// <param name="context">Serialization context.</param>
@@ -34,6 +34,5 @@ namespace RDeF.Mapping
         protected AmbiguousMappingException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-#endif
     }
 }

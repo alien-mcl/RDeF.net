@@ -74,7 +74,7 @@ namespace RDeF.Entities
                 value = propertyMapping.ValueConverter.ConvertFrom(statement);
             }
 
-            entity.SetPropertyInternal(propertyMapping.EntityMapping.Type, propertyMapping.Name, value);
+            entity.SetPropertyInternal(propertyMapping.PropertyInfo, value);
         }
 
         internal static void SetList(this Entity entity, Iri head, ICollectionMapping collectionMapping, EntityInitializationContext context)

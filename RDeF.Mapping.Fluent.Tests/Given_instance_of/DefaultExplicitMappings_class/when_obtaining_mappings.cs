@@ -1,11 +1,10 @@
-﻿#if NETSTANDARD1_6
-using System.Reflection;
-#endif
+﻿using System;
 using System.Reflection;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using RDeF.Data;
+using RDeF.Entities;
 using RDeF.Mapping;
 using RDeF.Mapping.Explicit;
 
@@ -20,10 +19,15 @@ namespace Given_instance_of.DefaultExplicitMappings_class
 
         private DefaultExplicitMappings Mappings { get; set; }
 
+        public void TheTest()
+        {
+            Mappings.Set(EntityMapping.Object);
+        }
+
         [Test]
         public void Should_retrieve_entity_mapping()
         {
-            Mappings.FindEntityMappingFor(typeof(IProduct)).Should().Be(EntityMapping.Object);
+            Mappings.FindEntityMappingFor(typeof(IProduct)).Type.Should().Be<IProduct>();
         }
 
         [Test]
@@ -37,11 +41,15 @@ namespace Given_instance_of.DefaultExplicitMappings_class
         {
             PropertyMapping = new Mock<IPropertyMapping>(MockBehavior.Strict);
             PropertyMapping.SetupGet(instance => instance.Name).Returns("Description");
+            PropertyMapping.SetupGet(instance => instance.Term).Returns(new Iri("description"));
+            PropertyMapping.SetupGet(instance => instance.Graph).Returns((Iri)null);
+            PropertyMapping.SetupGet(instance => instance.ValueConverter).Returns((ILiteralConverter)null);
             EntityMapping = new Mock<IEntityMapping>(MockBehavior.Strict);
             EntityMapping.SetupGet(instance => instance.Type).Returns(typeof(IProduct));
+            EntityMapping.SetupGet(instance => instance.Classes).Returns(Array.Empty<IStatementMapping>());
             EntityMapping.SetupGet(instance => instance.Properties).Returns(new[] { PropertyMapping.Object });
             Mappings = new DefaultExplicitMappings();
-            Mappings.Set(EntityMapping.Object);
+            TheTest();
         }
     }
 }

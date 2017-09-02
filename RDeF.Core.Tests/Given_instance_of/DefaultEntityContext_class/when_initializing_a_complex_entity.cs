@@ -133,6 +133,7 @@ namespace Given_instance_of.DefaultEntityContext_class
             var result = new Mock<ICollectionMapping>(MockBehavior.Strict);
             var converter = SetupConverter(property);
             result.SetupGet(instance => instance.EntityMapping).Returns(entityMapping.Object);
+            result.SetupGet(instance => instance.PropertyInfo).Returns(property);
             result.SetupGet(instance => instance.Name).Returns(propertyName);
             result.SetupGet(instance => instance.Graph).Returns((Iri)null);
             result.SetupGet(instance => instance.ValueConverter).Returns(converter?.Object);

@@ -35,5 +35,4 @@ namespace RDeF.Serialization
             return (node is RDFDataset.BlankNode ? new Iri() : new Iri(((RDFDataset.IRI)node).GetValue()));
         }
     }
-
 }

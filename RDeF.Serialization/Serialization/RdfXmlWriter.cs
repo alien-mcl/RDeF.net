@@ -173,7 +173,8 @@ namespace RDeF.Serialization
                 }
 
                 await xmlWriter.WriteEndElementAsync();
-            } while (item != null);
+            }
+            while (item != null);
         }
 
         private async Task WriteValue(XmlWriter xmlWriter, Statement value, IDictionary<string, string> namespaces)

@@ -6,10 +6,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-#if NETSTANDARD1_6
-using Microsoft.Extensions.DependencyModel;
-#endif
-
 namespace RDeF.Reflection
 {
     internal static class CustomAttributeProviderExtensions
@@ -43,17 +39,9 @@ namespace RDeF.Reflection
             }
 
             TypeImplementations[typeof(T)] = result = new HashSet<Type>();
-#if NETSTANDARD1_6
-            var assemblies = from library in DependencyContext.Default.RuntimeLibraries
-                             where ((assemblyNamePattern == null) || (assemblyNamePattern.IsMatch(library.Name)))
-                             let assembly = Assembly.Load(new AssemblyName(library.Name))
-                             where (!assembly.IsDynamic)
-                             select assembly;
-#else
             var assemblies = from assembly in AppDomain.CurrentDomain.GetAssemblies()
                              where (!assembly.IsDynamic) && ((assemblyNamePattern == null) || (assemblyNamePattern.IsMatch(assembly.FullName)))
                              select assembly;
-#endif
             foreach (var assembly in assemblies)
             {
                 try

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 
 namespace RDeF.Mapping
 {
@@ -13,6 +14,9 @@ namespace RDeF.Mapping
 
         /// <summary>Gets a return type of the property.</summary>
         Type ReturnType { get; }
+
+        /// <summary>Gets the underlying property info.</summary>
+        PropertyInfo PropertyInfo { get; }
 
         /// <summary>Gets the value converter used by the mapping.</summary>
         IConverter ValueConverter { get; }

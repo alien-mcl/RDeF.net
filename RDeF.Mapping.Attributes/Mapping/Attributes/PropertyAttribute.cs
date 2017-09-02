@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-#if NETSTANDARD1_6
-using System.Reflection;
-#endif
 
 namespace RDeF.Mapping.Attributes
 {

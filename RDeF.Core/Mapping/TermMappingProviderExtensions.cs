@@ -1,8 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-#if NETSTANDARD1_6
-using System.Reflection;
-#endif
 using RDeF.Mapping.Providers;
 
 namespace RDeF.Mapping

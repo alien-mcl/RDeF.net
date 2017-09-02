@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -9,15 +10,16 @@ using RollerCaster;
 
 namespace Given_instance_of.DefaultEntityContext_class
 {
-    public class when_initializing_an_entity : DefaultEntityContextTest
+    [TestFixture]
+    public abstract class ScenarioTest : DefaultEntityContextTest
     {
         private const string ExpectedName = "Product name";
         private static readonly Iri PredicateIri = new Iri("name");
         private static readonly Iri Iri = new Iri(new Uri("http://test.com/"));
 
-        private Entity Entity { get; set; }
+        protected Mock<IPropertyMapping> PropertyMapping { get; private set; }
 
-        private Mock<IPropertyMapping> PropertyMapping { get; set; }
+        private Entity Entity { get; set; }
 
         private Mock<IEntityMapping> EntityMapping { get; set; }
 
@@ -74,13 +76,18 @@ namespace Given_instance_of.DefaultEntityContext_class
             Converter = new Mock<IConverter>(MockBehavior.Strict);
             Converter.Setup(instance => instance.ConvertFrom(It.IsAny<Statement>()))
                 .Returns<Statement>(statement => statement.Value);
+            var property = new Mock<PropertyInfo>(MockBehavior.Strict);
+            property.SetupGet(instance => instance.Name).Returns("Name");
+            property.SetupGet(instance => instance.PropertyType).Returns(typeof(string));
+            property.SetupGet(instance => instance.DeclaringType).Returns(typeof(IProduct));
+            property.Setup(instance => instance.GetHashCode()).Returns(typeof(IProduct).GetProperty("Name").GetHashCode());
+            property.Setup(instance => instance.Equals(It.IsAny<object>())).Returns<object>(obj => (obj as PropertyInfo)?.Name == "Name");
             PropertyMapping = new Mock<IPropertyMapping>(MockBehavior.Strict);
             PropertyMapping.SetupGet(instance => instance.EntityMapping).Returns(EntityMapping.Object);
+            PropertyMapping.SetupGet(instance => instance.PropertyInfo).Returns(property.Object);
             PropertyMapping.SetupGet(instance => instance.Name).Returns("Name");
             PropertyMapping.SetupGet(instance => instance.Graph).Returns((Iri)null);
             PropertyMapping.SetupGet(instance => instance.ValueConverter).Returns(Converter.Object);
-            MappingsRepository.Setup(instance => instance.FindPropertyMappingFor(It.IsAny<Iri>(), It.IsAny<Iri>()))
-                .Returns<Iri, Iri>((iri, graph) => PropertyMapping.Object);
         }
     }
 }

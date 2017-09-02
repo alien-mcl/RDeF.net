@@ -18,9 +18,7 @@ namespace RDeF.Mapping.Visitors
 
             if (collectionMappingProvider.StoreAs == CollectionStorageModel.Unspecified)
             {
-                collectionMappingProvider.StoreAs = collectionMappingProvider.Property.PropertyType.IsAList()
-                    ? CollectionStorageModel.LinkedList
-                    : CollectionStorageModel.Simple;
+                collectionMappingProvider.StoreAs = GetStorageModel(collectionMappingProvider.Property.PropertyType);
             }
         }
 
@@ -43,6 +41,11 @@ namespace RDeF.Mapping.Visitors
         [SuppressMessage("UnitTests", "TS0000:NoUnitTests", Justification = "Method is not used.")]
         public void Visit(IEntityMappingProvider entityMappingProvider)
         {
+        }
+
+        internal static CollectionStorageModel GetStorageModel(Type type)
+        {
+            return (type.IsAList() ? CollectionStorageModel.LinkedList : CollectionStorageModel.Simple);
         }
     }
 }

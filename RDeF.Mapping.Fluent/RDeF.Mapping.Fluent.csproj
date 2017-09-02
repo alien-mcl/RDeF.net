@@ -45,11 +45,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -61,6 +56,7 @@
     </Compile>
     <Compile Include="Entities\EntityContextExtensions.cs" />
     <Compile Include="Entities\ExplicitMappingsAwareChangeDetector.cs" />
+    <Compile Include="Entities\UnmappedPropertyEventArgsExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Mapping\Explicit\DefaultExplicitPropertyValueConverterBuilder.cs" />
     <Compile Include="Mapping\Explicit\DefaultExplicitCollectionValueConverterBuilder.cs" />
@@ -84,6 +80,7 @@
     <Compile Include="Mapping\Providers\FluentPropertyMappingProvider.cs" />
     <Compile Include="Mapping\Providers\FluentTermMappingProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reflection\DynamicPropertyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RDeF.Contracts\RDeF.Contracts.csproj">

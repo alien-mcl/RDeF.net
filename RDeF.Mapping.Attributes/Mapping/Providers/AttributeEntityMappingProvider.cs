@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-#if NETSTANDARD1_6
-using System.Linq;
-#endif
 using System.Reflection;
 using RDeF.Entities;
 using RDeF.Mapping.Attributes;
@@ -47,14 +44,8 @@ namespace RDeF.Mapping.Providers
             var parameters = new List<object>() { type };
             AddTerm(types, parameters, classMapping.MappedIri, classMapping.Prefix, classMapping.Term);
             AddTerm(types, parameters, classMapping.GraphIri, classMapping.GraphPrefix, classMapping.GraphTerm);
-#if NETSTANDARD1_6
-            return (AttributeEntityMappingProvider)typeof(AttributeEntityMappingProvider)
-                .GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance)
-                .First(ctor => ctor.GetParameters().Select(parameter => parameter.ParameterType).SequenceEqual(types)).Invoke(parameters.ToArray());
-#else
             return (AttributeEntityMappingProvider)typeof(AttributeEntityMappingProvider)
                 .GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, types.ToArray(), null).Invoke(parameters.ToArray());
-#endif
         }
     }
 }

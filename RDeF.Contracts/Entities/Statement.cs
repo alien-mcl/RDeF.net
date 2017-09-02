@@ -129,10 +129,8 @@ namespace RDeF.Entities
         /// <remarks>In case the language is not set, this property will return <b>null</b>.</remarks>
         public string Language { get; }
 
-#if !NETSTANDARD1_6
         [ExcludeFromCodeCoverage]
         [SuppressMessage("UnitTests", "TS0000:NoUnitTests", Justification = "Debugging facility.")]
-#endif
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Debugging facility.")]
         internal string AsString
         {

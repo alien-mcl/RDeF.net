@@ -1,4 +1,4 @@
-﻿#if NETSTANDARD1_6
+﻿#if NETSTANDARD2_0
 using System.Collections.Generic;
 #else
 using System.Configuration;
@@ -12,11 +12,11 @@ namespace RDeF.Configuration
     [ExcludeFromCodeCoverage]
     [SuppressMessage("TS0000", "NoUnitTests", Justification = "Simple configuration wrapper without special logic to be tested.")]
     [SuppressMessage("Microsoft.Design", "CA1010:CollectionsShouldImplementGenericInterface", Justification = "Part of built in configuration API - manual usage is not recommended.")]
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
     [ConfigurationCollection(typeof(FactoryConfigurationElement))]
 #endif
     public class FactoryConfigurationElementCollection
-#if NETSTANDARD1_6
+#if NETSTANDARD2_0
         : List<FactoryConfigurationElement>
 #else
         : ConfigurationElementCollection
@@ -26,7 +26,7 @@ namespace RDeF.Configuration
         /// <param name="name">Name of the factory to obtain.</param>
         /// <returns>Instance of the <see cref="FactoryConfigurationElement" /> if a matching <paramref name="name" /> was found; otherwise <b>null</b>.</returns>
         public
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
             new
 #endif
             FactoryConfigurationElement this[string name]
@@ -34,7 +34,7 @@ namespace RDeF.Configuration
             get { return this.Cast<FactoryConfigurationElement>().FirstOrDefault(factory => factory.Name == name); }
         }
 
-#if !NETSTANDARD1_6
+#if !NETSTANDARD2_0
         /// <inheritdoc />
         protected override ConfigurationElement CreateNewElement()
         {

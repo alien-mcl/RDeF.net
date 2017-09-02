@@ -35,10 +35,22 @@ namespace RDeF.Mapping.Explicit
         /// <returns>Instance of the <see cref="IExplicitPropertyMappingBuilder{TEntity}" /> allowing to map a selected <paramref name="property" /> to some term.</returns>
         IExplicitPropertyMappingBuilder<TEntity> WithProperty<TProperty>(Expression<Func<TEntity, TProperty>> property);
 
+        /// <summary>Allows to map a collection of a given property <paramref name="name" /> to some term.</summary>
+        /// <param name="propertyType">Type of the property being mapped.</param>
+        /// <param name="name">Name of the property.</param>
+        /// <returns>Instance of the <see cref="IExplicitPropertyMappingBuilder{TEntity}" /> allowing to map a declared property to some term.</returns>
+        IExplicitPropertyMappingBuilder<TEntity> WithProperty(Type propertyType, string name);
+
         /// <summary>Allows to map a collection of a given <paramref name="collection" /> to some term.</summary>
         /// <typeparam name="TProperty">Type of the collection being mapped.</typeparam>
         /// <param name="collection">Collection to be mapped.</param>
         /// <returns>Instance of the <see cref="IExplicitCollectionMappingBuilder{TEntity}" /> allowing to map a selected <paramref name="collection" /> to some term.</returns>
         IExplicitCollectionMappingBuilder<TEntity> WithCollection<TProperty>(Expression<Func<TEntity, TProperty>> collection);
+
+        /// <summary>Allows to map a collection of a given property <paramref name="name" /> to some term.</summary>
+        /// <param name="collectionType">Type of the property being mapped.</param>
+        /// <param name="name">Name of the property.</param>
+        /// <returns>Instance of the <see cref="IExplicitPropertyMappingBuilder{TEntity}" /> allowing to map a declared property to some term.</returns>
+        IExplicitPropertyMappingBuilder<TEntity> WithCollection(Type collectionType, string name);
     }
 }

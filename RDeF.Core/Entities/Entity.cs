@@ -3,9 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
-#if NETSTANDARD1_6
 using System.Reflection;
-#endif
 using RollerCaster;
 using RollerCaster.Collections;
 
@@ -82,19 +80,19 @@ namespace RDeF.Entities
         internal Iri IriOverride { get; set; }
 
         /// <inheritdoc />
-        public override object GetProperty(Type objectType, string propertyName)
+        public override object GetProperty(PropertyInfo propertyInfo)
         {
             EnsureInitialized();
             IsChanged = true;
-            return GetPropertyInternal(objectType, propertyName);
+            return base.GetProperty(propertyInfo);
         }
 
         /// <inheritdoc />
-        public override void SetProperty(Type objectType, string propertyName, object value)
+        public override void SetProperty(PropertyInfo propertyInfo, object value)
         {
             EnsureInitialized();
             IsChanged = true;
-            SetPropertyInternal(objectType, propertyName, value);
+            SetPropertyInternal(propertyInfo, value);
         }
 
         /// <inheritdoc />
@@ -132,14 +130,9 @@ namespace RDeF.Entities
             return Iri.GetHashCode();
         }
 
-        internal object GetPropertyInternal(Type objectType, string propertyName)
+        internal void SetPropertyInternal(PropertyInfo propertyInfo, object value)
         {
-            return base.GetProperty(objectType, propertyName);
-        }
-
-        internal void SetPropertyInternal(Type objectType, string propertyName, object value)
-        {
-            base.SetProperty(objectType, propertyName, value);
+            base.SetProperty(propertyInfo, value);
         }
 
         /// <inheritdoc />

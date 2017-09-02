@@ -5,9 +5,6 @@ using System.Reflection;
 using RDeF.Entities;
 using RDeF.Mapping.Attributes;
 using RDeF.Mapping.Visitors;
-#if NETSTANDARD1_6
-using System.Linq;
-#endif
 
 namespace RDeF.Mapping.Providers
 {
@@ -78,14 +75,8 @@ namespace RDeF.Mapping.Providers
             types.Add(typeof(Type));
             parameters.Add(collectionMapping.ValueConverterType);
             AddTerm(types, parameters, collectionMapping.GraphIri, collectionMapping.GraphPrefix, collectionMapping.GraphTerm);
-#if NETSTANDARD1_6
-            return (AttributeCollectionMappingProvider)typeof(AttributeCollectionMappingProvider)
-                .GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance)
-                .First(ctor => ctor.GetParameters().Select(parameter => parameter.ParameterType).SequenceEqual(types)).Invoke(parameters.ToArray());
-#else
             return (AttributeCollectionMappingProvider)typeof(AttributeCollectionMappingProvider)
                 .GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, types.ToArray(), null).Invoke(parameters.ToArray());
-#endif
         }
     }
 }

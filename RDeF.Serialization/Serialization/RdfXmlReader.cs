@@ -12,7 +12,6 @@ namespace RDeF.Serialization
     /// <summary>Deserializies RDF/XML into a graph aligned statements.</summary>
     public class RdfXmlReader : IRdfReader
     {
-
         /// <inheritdoc />
         public async Task<IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>>> Read(StreamReader streamReader)
         {

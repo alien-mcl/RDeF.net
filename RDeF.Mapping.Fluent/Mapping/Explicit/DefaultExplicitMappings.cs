@@ -8,21 +8,42 @@ namespace RDeF.Mapping.Explicit
 {
     internal class DefaultExplicitMappings : IExplicitMappings
     {
-        internal IDictionary<Type, IEntityMapping> ExplicitMappings { get; } = new ConcurrentDictionary<Type, IEntityMapping>();
+        internal IDictionary<Type, MergingEntityMapping> ExplicitMappings { get; } = new ConcurrentDictionary<Type, MergingEntityMapping>();
 
         /// <inheritdoc />
         public void Set(IEntityMapping entityMapping)
         {
             if (entityMapping != null)
             {
-                ExplicitMappings[entityMapping.Type] = entityMapping;
+                MergingEntityMapping currentEntityMapping;
+                if (!ExplicitMappings.TryGetValue(entityMapping.Type, out currentEntityMapping))
+                {
+                    var newEntityMapping = entityMapping as MergingEntityMapping;
+                    if (newEntityMapping != null)
+                    {
+                        ExplicitMappings[entityMapping.Type] = newEntityMapping;
+                        return;
+                    }
+
+                    ExplicitMappings[entityMapping.Type] = currentEntityMapping = new MergingEntityMapping(entityMapping.Type);
+                }
+
+                foreach (var @class in entityMapping.Classes)
+                {
+                    currentEntityMapping.Classes.Add(@class);
+                }
+
+                foreach (var property in entityMapping.Properties)
+                {
+                    currentEntityMapping.Properties.Add(property);
+                }
             }
         }
 
         /// <inheritdoc />
         public IEntityMapping FindEntityMappingFor(Type type)
         {
-            IEntityMapping result;
+            MergingEntityMapping result;
             return (type != null && ExplicitMappings.TryGetValue(type, out result) ? result : null);
         }
 

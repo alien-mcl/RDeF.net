@@ -162,15 +162,21 @@ namespace RDeF.Mapping.Entities
             }
         }
 
-        private static void BuildExplicitMappings<TEntity>(this IEntityContext entityContext, Action<IExplicitMappingsBuilder<TEntity>> mappingsBuilder) where TEntity : IEntity
+        internal static IPropertyMapping BuildExplicitMappings<TEntity>(
+            this IEntityContext entityContext,
+            Action<IExplicitMappingsBuilder<TEntity>> mappingsBuilder,
+            bool allowSinglePropertyOnly = false)
+            where TEntity : IEntity
         {
-            var builder = new DefaultExplicitMappingsBuilder<TEntity>();
+            var builder = new DefaultExplicitMappingsBuilder<TEntity>(allowSinglePropertyOnly);
             mappingsBuilder(builder);
             var mappingProviders = new List<ITermMappingProvider>();
             mappingProviders.AddClasses(builder);
             mappingProviders.AddCollections(builder);
             mappingProviders.AddProperties(builder);
-            ExplicitMappings[entityContext].Set(mappingProviders.BuildMapping<TEntity>());
+            IPropertyMapping propertyMapping;
+            ExplicitMappings[entityContext].Set(mappingProviders.BuildMapping<TEntity>(out propertyMapping));
+            return propertyMapping;
         }
 
         private static void AddClasses<TEntity>(this ICollection<ITermMappingProvider> mappingProviders, DefaultExplicitMappingsBuilder<TEntity> builder) where TEntity : IEntity
@@ -188,8 +194,9 @@ namespace RDeF.Mapping.Entities
             mappingProviders.AddProperties(typeof(TEntity), builder);
         }
 
-        private static IEntityMapping BuildMapping<TEntity>(this ICollection<ITermMappingProvider> mappingProviders)
+        private static IEntityMapping BuildMapping<TEntity>(this ICollection<ITermMappingProvider> mappingProviders, out IPropertyMapping firstPropertyMapping)
         {
+            firstPropertyMapping = null;
             var entityMapping = new MergingEntityMapping(typeof(TEntity));
             foreach (var mappingProvider in mappingProviders)
             {
@@ -218,6 +225,10 @@ namespace RDeF.Mapping.Entities
                     ? CollectionMapping.CreateFrom(entityMapping, collectionMappingProvider, valueConverter, QIriMappings)
                     : PropertyMapping.CreateFrom(entityMapping, propertyMappingProvider, valueConverter, QIriMappings));
                 entityMapping.Properties.Add(propertyMapping);
+                if (firstPropertyMapping == null)
+                {
+                    firstPropertyMapping = propertyMapping;
+                }
             }
 
             return entityMapping;

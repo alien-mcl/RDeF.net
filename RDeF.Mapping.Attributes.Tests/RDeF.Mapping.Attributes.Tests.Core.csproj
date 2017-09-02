@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AssemblyName>RDeF.Mapping.Attributes.Tests</AssemblyName>
     <RootNamespace>RDeF</RootNamespace>
@@ -17,6 +17,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
     <TreatSpecificWarningsAsErrors />
+    <LangVersion>6</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <LangVersion>6</LangVersion>
+    <DefineConstants>RELEASE;NETCOREAPP2_0</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -33,17 +39,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="4.19.2" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
-    <PackageReference Include="Moq" Version="4.7.49" />
-    <PackageReference Include="NUnit" Version="3.7.1" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.8.0-alpha1" />
+    <PackageReference Include="FluentAssertions" Version="4.19.4" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
+    <PackageReference Include="Moq" Version="4.7.99" />
+    <PackageReference Include="NUnit" Version="3.8.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.8.0" />
     <PackageReference Include="RollerCaster" Version="1.0.0" />
     <PackageReference Include="System.Collections.NonGeneric" Version="4.3.0" />
     <PackageReference Include="System.Diagnostics.Tools" Version="4.3.0" />
     <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
     <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
-    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.3.0" />
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.4.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
-#if NETSTANDARD1_6
-using System.Reflection;
-#endif
 using RDeF.Entities;
 using RDeF.Mapping.Providers;
 using RollerCaster.Reflection;

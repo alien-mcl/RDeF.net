@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Reflection;
+using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using RDeF.Data;
@@ -48,8 +49,8 @@ namespace Given_instance_of.Entity_class
             Context.Setup(instance => instance.Initialize(It.IsAny<Entity>()))
                 .Callback<Entity>(entity =>
                 {
-                    entity.SetPropertyInternal(typeof(IProduct), "Name", ExpectedName);
-                    entity.SetPropertyInternal(typeof(IProduct), "Description", ExpectedDescription);
+                    entity.SetPropertyInternal(typeof(IProduct).GetTypeInfo().GetProperty("Name"), ExpectedName);
+                    entity.SetPropertyInternal(typeof(IProduct).GetTypeInfo().GetProperty("Description"), ExpectedDescription);
                 });
             Product = Entity.ActLike<IProduct>();
         }

@@ -13,6 +13,7 @@ using RDeF.Mapping.Visitors;
 
 namespace Given_a_context.with_explicitly_mapped_entity.when_an_entity
 {
+    [TestFixture]
     public abstract class ScenarioTest : ExplicitMappingsTest
     {
         internal Mock<IExplicitMappings> Mappings { get; set; }

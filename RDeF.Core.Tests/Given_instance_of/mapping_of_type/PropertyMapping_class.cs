@@ -1,7 +1,8 @@
-﻿using System;
+﻿using System.Reflection;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
+using RDeF.Data;
 using RDeF.Entities;
 using RDeF.Mapping;
 
@@ -10,8 +11,7 @@ namespace Given_instance_of.mapping_of_type
     [TestFixture]
     public class PropertyMapping_class
     {
-        private const string ExpectedName = "Name";
-        private static readonly Type ExpectedReturnType = typeof(string);
+        private static readonly PropertyInfo ExpectedProperty = typeof(IProduct).GetProperty("Name");
         private static readonly Iri ExpectedGraph = new Iri("iri");
         private static readonly Iri ExpectedPredicate = new Iri("predicate");
 
@@ -28,15 +28,21 @@ namespace Given_instance_of.mapping_of_type
         }
 
         [Test]
+        public void Should_get_the_property()
+        {
+            Mapping.PropertyInfo.Should().BeSameAs(ExpectedProperty);
+        }
+
+        [Test]
         public void Should_get_the_property_name()
         {
-            Mapping.Name.Should().Be(ExpectedName);
+            Mapping.Name.Should().Be(ExpectedProperty.Name);
         }
 
         [Test]
         public void Should_get_the_property_return_type()
         {
-            Mapping.ReturnType.Should().Be(ExpectedReturnType);
+            Mapping.ReturnType.Should().Be(ExpectedProperty.PropertyType);
         }
 
         [Test]
@@ -62,7 +68,7 @@ namespace Given_instance_of.mapping_of_type
         {
             EntityMapping = new Mock<IEntityMapping>(MockBehavior.Strict);
             Converter = new Mock<IConverter>(MockBehavior.Strict);
-            Mapping = new PropertyMapping(EntityMapping.Object, ExpectedName, ExpectedReturnType, ExpectedGraph, ExpectedPredicate, Converter.Object);
+            Mapping = new PropertyMapping(EntityMapping.Object, ExpectedProperty, ExpectedGraph, ExpectedPredicate, Converter.Object);
         }
     }
 }

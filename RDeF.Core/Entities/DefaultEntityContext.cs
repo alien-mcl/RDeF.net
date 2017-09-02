@@ -31,6 +31,9 @@ namespace RDeF.Entities
         public event EventHandler Disposed;
 
         /// <inheritdoc />
+        public event EventHandler<UnmappedPropertyEventArgs> UnmappedPropertyEncountered;
+
+        /// <inheritdoc />
         public virtual IMappingsRepository Mappings { get; }
 
         /// <inheritdoc />
@@ -189,7 +192,7 @@ namespace RDeF.Entities
 
                         foreach (var propertyValue in valuesToSet.Concat(entity.Value.OriginalValues))
                         {
-                            entity.Value.SetPropertyInternal(propertyValue.CastedType, propertyValue.Property.Name, propertyValue.Value);
+                            entity.Value.SetPropertyInternal(propertyValue.Property, propertyValue.Value);
                         }
 
                         entity.Value.IsInitialized = true;
@@ -254,11 +257,23 @@ namespace RDeF.Entities
 
                 if (statement.IsTypeAssertion())
                 {
-                    entity.CastedTypes.Add(Mappings.FindEntityMappingFor(statement.Object).Type);
+                    var entityMapping = Mappings.FindEntityMappingFor(statement.Object);
+                    if (entityMapping != null)
+                    {
+                        entity.CastedTypes.Add(entityMapping.Type);
+                    }
+
                     continue;
                 }
 
                 var propertyMapping = Mappings.FindPropertyMappingFor(statement.Predicate);
+                if ((propertyMapping == null) && (UnmappedPropertyEncountered != null))
+                {
+                    var e = new UnmappedPropertyEventArgs(this, statement);
+                    UnmappedPropertyEncountered(this, e);
+                    propertyMapping = e.PropertyMapping;
+                }
+
                 if ((propertyMapping == null) || (!statement.Matches(propertyMapping.Graph)))
                 {
                     continue;

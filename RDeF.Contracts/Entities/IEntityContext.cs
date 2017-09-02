@@ -10,6 +10,10 @@ namespace RDeF.Entities
         /// <summary>Notifies on disposal.</summary>
         event EventHandler Disposed;
 
+        /// <summary>Raised in case a statement with a predicate without a mapping is encountered.</summary>
+        /// <remarks>This event should be used to dynamically provide mappings for variable predicates.</remarks>
+        event EventHandler<UnmappedPropertyEventArgs> UnmappedPropertyEncountered;
+
         /// <summary>Gets the mappings repository.</summary>
         IMappingsRepository Mappings { get; }
 

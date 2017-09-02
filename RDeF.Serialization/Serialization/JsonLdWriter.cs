@@ -35,7 +35,7 @@ namespace RDeF.Serialization
         };
 
         /// <inheritdoc />
-        public async Task Write(StreamWriter streamWriter, IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>>graphs)
+        public async Task Write(StreamWriter streamWriter, IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>> graphs)
         {
             if (streamWriter == null)
             {
@@ -52,7 +52,6 @@ namespace RDeF.Serialization
                 await WriteInternal(jsonWriter, graphs);
             }
         }
-
 
         /// <summary>Serializes given <paramref name="graphs" /> into an <see cref="JsonWriter" />,</summary>
         /// <param name="jsonWriter">Target writer to receive data.</param>
@@ -71,20 +70,6 @@ namespace RDeF.Serialization
             }
 
             await WriteInternal(jsonWriter, graphs);
-        }
-
-        private async Task WriteInternal(JsonWriter jsonWriter, IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>> graphs)
-        {
-            await jsonWriter.WriteStartObjectAsync();
-            await jsonWriter.WritePropertyNameAsync("@graph");
-            await jsonWriter.WriteStartArrayAsync();
-            foreach (var graph in graphs)
-            {
-                await WriteGraph(jsonWriter, graph.Key, graph.Value);
-            }
-
-            await jsonWriter.WriteEndArrayAsync();
-            await jsonWriter.WriteEndObjectAsync();
         }
 
         private static async Task WriteGraph(JsonWriter jsonWriter, Iri graph, IEnumerable<Statement> statements)
@@ -164,7 +149,8 @@ namespace RDeF.Serialization
 
                     var rest = item.FirstOrDefault(statement => statement.Predicate == rdf.rest);
                     item = (rest != null ? subjects.FirstOrDefault(subject => subject.Key == rest.Object) : null);
-                } while (item != null);
+                }
+                while (item != null);
             }
 
             await jsonWriter.WriteEndArrayAsync();
@@ -223,6 +209,20 @@ namespace RDeF.Serialization
             }
 
             await jsonWriter.WriteValueAsync(value.Value);
+        }
+
+        private async Task WriteInternal(JsonWriter jsonWriter, IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>> graphs)
+        {
+            await jsonWriter.WriteStartObjectAsync();
+            await jsonWriter.WritePropertyNameAsync("@graph");
+            await jsonWriter.WriteStartArrayAsync();
+            foreach (var graph in graphs)
+            {
+                await WriteGraph(jsonWriter, graph.Key, graph.Value);
+            }
+
+            await jsonWriter.WriteEndArrayAsync();
+            await jsonWriter.WriteEndObjectAsync();
         }
     }
 }
