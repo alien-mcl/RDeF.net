@@ -1,7 +1,7 @@
 ﻿{
     "@graph": [
         {
-            "@id": "@default", 
+            "@id": "@default",
             "@graph": [
                 {
                     "@id": "test",
@@ -9,6 +9,13 @@
                     "description": [ "Product description" ],
                     "@type": [ "class1", "class2" ],
                     "name": [ "Product name" ]
+                },
+                {
+                    "@id": "another",
+                    "categories": [ "category1" ],
+                    "description": [ "Product description" ],
+                    "@type": [ "class1", "class2" ],
+                    "label": [ "Another product name" ]
                 }
             ]
         }

@@ -32,10 +32,14 @@ namespace Given_a_context.with_explicitly_mapped_entity
         protected override void ScenarioSetup()
         {
             Context = new DefaultEntityContextFactory().Create();
-            var product = Context.Create<IUnmappedProduct>(new Iri("test"), MapEntity);
-            product.Name = "Product name";
-            product.Description = "Product description";
-            product.Categories.Add("category 1");
+            var primaryProduct = Context.Create<IUnmappedProduct>(new Iri("test"), MapPrimaryEntity);
+            primaryProduct.Name = "Product name";
+            primaryProduct.Description = "Product description";
+            primaryProduct.Categories.Add("category 1");
+            var secondaryProduct = Context.Create<IUnmappedProduct>(new Iri("another"), MapSecondaryEntity);
+            secondaryProduct.Name = "Another product name";
+            secondaryProduct.Description = "Product description";
+            secondaryProduct.Categories.Add("category 1");
             Context.Commit();
             Buffer = new MemoryStream();
         }

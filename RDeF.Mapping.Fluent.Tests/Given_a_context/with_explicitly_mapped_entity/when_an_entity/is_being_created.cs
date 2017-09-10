@@ -13,7 +13,7 @@ namespace Given_a_context.with_explicitly_mapped_entity.when_an_entity
     {
         public override void TheTest()
         {
-            Context.Create<IUnmappedProduct>(new Iri("test"), MapEntity);
+            Context.Create<IUnmappedProduct>(new Iri("test"), MapPrimaryEntity);
         }
 
         [Test]

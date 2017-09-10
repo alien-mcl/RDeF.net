@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using FluentAssertions;
 using NUnit.Framework;
 using RDeF.Data;
@@ -11,21 +12,33 @@ namespace Given_a_context.with_explicitly_mapped_entity
     [TestFixture]
     public class when_deserializing : ExplicitMappingsTest
     {
-        private IUnmappedProduct Result { get; set; }
+        private IUnmappedProduct PrimaryEntity { get; set; }
+
+        private IUnmappedProduct SecondaryEntity { get; set; }
+
+        private int MappingCalls { get; set; }
 
         public override void TheTest()
         {
-            Result = Context.Load<IUnmappedProduct>(new Iri("temp:test"));
+            PrimaryEntity = Context.Load<IUnmappedProduct>(new Iri("temp:test"));
+            SecondaryEntity = Context.Load<IUnmappedProduct>(new Iri("another:test"));
         }
 
         [Test]
-        public void Should_serialize_explicitly_mapped_properties()
+        public void Should_deserialize_explicitly_mapped_properties()
         {
-            ((string)((dynamic)Result).Test).Should().Be("Product name");
+            ((string)((dynamic)PrimaryEntity).Test).Should().Be("Product name");
+        }
+
+        [Test]
+        public void Should_deserialize_separate_explicitly_mapped_properties_for_each_entity()
+        {
+            ((string)((dynamic)SecondaryEntity).Test2).Should().Be("Another product name");
         }
 
         protected override void ScenarioSetup()
         {
+            MappingCalls = 1;
             Context = new DefaultEntityContextFactory().Create();
             Context.UnmappedPropertyEncountered += OnUnmappedPropertyEncountered;
             ((ISerializableEntitySource)Context.EntitySource).Read(new StreamReader(typeof(when_deserializing).GetEmbeddedResource(".json")), new JsonLdReader());
@@ -36,7 +49,9 @@ namespace Given_a_context.with_explicitly_mapped_entity
             if (e.Statement.Predicate == "temp:name")
             {
                 e.OfEntity<IUnmappedProduct>(config => config
-                    .WithProperty(typeof(string), "Test").MappedTo(e.Statement.Predicate, e.Statement.Graph).WithDefaultConverter());
+                    .WithProperty(typeof(string), "Test" + (MappingCalls == 1 ? String.Empty : MappingCalls.ToString()))
+                        .MappedTo(e.Statement.Predicate, e.Statement.Graph).WithDefaultConverter());
+                MappingCalls++;
             }
         }
     }
