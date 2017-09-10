@@ -39,7 +39,7 @@ namespace RDeF.Entities
             });
             _container = new SimpleContainer();
             _container.Register<IMappingBuilder, DefaultMappingBuilder>();
-            _container.Register<IMappingsRepository, DefaultMappingRepository>();
+            _container.Register<IMappingsRepository, DefaultMappingsRepository>();
             _container.Register<IModule>(new Regex("^RDeF\\.*", RegexOptions.IgnoreCase));
             foreach (var module in _container.Resolve<IEnumerable<IModule>>())
             {

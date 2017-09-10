@@ -35,7 +35,7 @@ namespace RDeF.Mapping.Entities
             var entity = entityContext.Create<TEntity>(iri);
             if ((mappingsBuilder != null) && (ExplicitMappings.ContainsKey(entityContext)))
             {
-                entityContext.BuildExplicitMappings(mappingsBuilder);
+                entityContext.BuildExplicitMappings(mappingsBuilder, iri);
             }
 
             return entity;
@@ -57,7 +57,7 @@ namespace RDeF.Mapping.Entities
             var entity = entityContext.Load<TEntity>(iri);
             if ((mappingsBuilder != null) && (ExplicitMappings.ContainsKey(entityContext)))
             {
-                entityContext.BuildExplicitMappings(mappingsBuilder);
+                entityContext.BuildExplicitMappings(mappingsBuilder, iri);
             }
 
             return entity;
@@ -165,6 +165,7 @@ namespace RDeF.Mapping.Entities
         internal static IPropertyMapping BuildExplicitMappings<TEntity>(
             this IEntityContext entityContext,
             Action<IExplicitMappingsBuilder<TEntity>> mappingsBuilder,
+            Iri owningEntity,
             bool allowSinglePropertyOnly = false)
             where TEntity : IEntity
         {
@@ -175,7 +176,7 @@ namespace RDeF.Mapping.Entities
             mappingProviders.AddCollections(builder);
             mappingProviders.AddProperties(builder);
             IPropertyMapping propertyMapping;
-            ExplicitMappings[entityContext].Set(mappingProviders.BuildMapping<TEntity>(out propertyMapping));
+            ExplicitMappings[entityContext].Set(mappingProviders.BuildMapping<TEntity>(out propertyMapping), owningEntity);
             return propertyMapping;
         }
 

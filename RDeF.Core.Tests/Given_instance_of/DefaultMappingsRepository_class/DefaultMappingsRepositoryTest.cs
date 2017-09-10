@@ -2,11 +2,11 @@
 using NUnit.Framework;
 using RDeF.Mapping;
 
-namespace Given_instance_of.DefaultMappingRepository_class
+namespace Given_instance_of.DefaultMappingsRepository_class
 {
-    public abstract class DefaultMappingRepositoryTest
+    public abstract class DefaultMappingsRepositoryTest
     {
-        protected DefaultMappingRepository MappingRepository { get; set; }
+        protected DefaultMappingsRepository MappingsRepository { get; set; }
 
         protected Mock<IMappingBuilder> MappingBuilder { get; private set; }
 
@@ -22,7 +22,7 @@ namespace Given_instance_of.DefaultMappingRepository_class
             MappingBuilder = new Mock<IMappingBuilder>(MockBehavior.Strict);
             MappingSource = new Mock<IMappingSource>(MockBehavior.Strict);
             ScenarioSetup();
-            MappingRepository = new DefaultMappingRepository(new[] { MappingSource.Object }, MappingBuilder.Object);
+            MappingsRepository = new DefaultMappingsRepository(new[] { MappingSource.Object }, MappingBuilder.Object);
             TheTest();
         }
 

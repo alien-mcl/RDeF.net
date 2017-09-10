@@ -245,10 +245,16 @@ namespace RDeF.Entities
             return _entityCache[entity.Iri] = entity;
         }
 
-        internal virtual void InitializeInternal(Entity entity, IEnumerable<Statement> statements, EntityInitializationContext context)
+        internal virtual void InitializeInternal(Entity entity, IEnumerable<Statement> statements, EntityInitializationContext context, Action<Statement> onIteration = null)
         {
+            if (onIteration == null)
+            {
+                onIteration = _ => { };
+            }
+
             foreach (var statement in statements)
             {
+                onIteration(statement);
                 if (!statement.IsRelatedTo(entity))
                 {
                     context.EntityStatements.EnsureKey(statement.Subject).Add(statement);

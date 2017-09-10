@@ -1,7 +1,7 @@
 ﻿using RDeF.Data;
 using RDeF.Entities;
 using RDeF.Mapping.Converters;
-using RDeF.Mapping.Mapping.Fluent;
+using RDeF.Mapping.Fluent;
 
 namespace RDeF.Mapping.Data
 {

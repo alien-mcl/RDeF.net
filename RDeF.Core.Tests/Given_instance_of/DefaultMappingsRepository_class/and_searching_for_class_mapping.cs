@@ -9,10 +9,10 @@ using RDeF.Entities;
 using RDeF.Mapping;
 using RDeF.Mapping.Providers;
 
-namespace Given_instance_of.DefaultMappingRepository_class.which_is_already_initialized
+namespace Given_instance_of.DefaultMappingsRepository_class.which_is_already_initialized
 {
     [TestFixture]
-    public class and_searching_for_class_mapping : DefaultMappingRepositoryTest
+    public class and_searching_for_class_mapping : DefaultMappingsRepositoryTest
     {
         private const string ExpectedClass = "Product";
 
@@ -20,7 +20,7 @@ namespace Given_instance_of.DefaultMappingRepository_class.which_is_already_init
 
         public override void TheTest()
         {
-            Result = MappingRepository.FindEntityMappingFor(new Iri(ExpectedClass));
+            Result = MappingsRepository.FindEntityMappingFor(new Iri(ExpectedClass));
         }
 
         [Test]
@@ -32,7 +32,7 @@ namespace Given_instance_of.DefaultMappingRepository_class.which_is_already_init
         [Test]
         public void Should_throw_when_no_class_is_given()
         {
-            MappingRepository.Invoking(instance => instance.FindEntityMappingFor((Iri)null)).ShouldThrow<ArgumentNullException>();
+            MappingsRepository.Invoking(instance => instance.FindEntityMappingFor((Iri)null)).ShouldThrow<ArgumentNullException>();
         }
 
         protected override void ScenarioSetup()

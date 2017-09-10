@@ -15,7 +15,7 @@ namespace RDeF.Entities
         {
             if (e != null)
             {
-                e.PropertyMapping = e.EntityContext.BuildExplicitMappings(mappingsBuilder, true);
+                e.PropertyMapping = e.EntityContext.BuildExplicitMappings(mappingsBuilder, e.Statement.Subject, true);
             }
         }
     }

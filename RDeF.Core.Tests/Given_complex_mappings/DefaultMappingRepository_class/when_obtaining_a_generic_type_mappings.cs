@@ -13,7 +13,7 @@ namespace Given_complex_mappings.DefaultMappingRepository_class
     [TestFixture]
     public class when_obtaining_a_generic_type_mappings
     {
-        private DefaultMappingRepository Repository { get; set; }
+        private DefaultMappingsRepository Repository { get; set; }
 
         [TestCase(typeof(IProductOffering<IProduct>))]
         [TestCase(typeof(IProductOffering<ISpecialProduct>))]
@@ -39,7 +39,7 @@ namespace Given_complex_mappings.DefaultMappingRepository_class
             {
                 new CollectionStorageModelConventionVisitor()
             };
-            Repository = new DefaultMappingRepository(
+            Repository = new DefaultMappingsRepository(
                 new[] { new AttributesMappingSource(typeof(IProduct).GetTypeInfo().Assembly) },
                 new DefaultMappingBuilder(converterProvider, Array.Empty<QIriMapping>(), mappingProviderVisitors));
         }

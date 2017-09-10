@@ -31,7 +31,9 @@ namespace Given_instance_of.UnmappedPropertyEventArgs_class
         [Test]
         public void Should_set_the_dynamic_property_mapping()
         {
-            ExplicitMappings.Verify(instance => instance.Set(It.Is<IEntityMapping>(mapping => mapping.Type == typeof(IProduct) && mapping.Properties.First().Name == "Test")));
+            ExplicitMappings.Verify(instance => instance.Set(
+                It.Is<IEntityMapping>(mapping => mapping.Type == typeof(IProduct) && mapping.Properties.First().Name == "Test"),
+                It.Is<Iri>(iri => iri == new Iri("subject"))));
         }
 
         [Test]
@@ -47,7 +49,7 @@ namespace Given_instance_of.UnmappedPropertyEventArgs_class
         {
             ExplicitMappings = new Mock<IExplicitMappings>(MockBehavior.Strict);
             EntityContext = new Mock<IEntityContext>(MockBehavior.Strict);
-            ExplicitMappings.Setup(instance => instance.Set(It.IsAny<IEntityMapping>()));
+            ExplicitMappings.Setup(instance => instance.Set(It.IsAny<IEntityMapping>(), It.IsAny<Iri>()));
             ConverterProvider = new Mock<IConverterProvider>(MockBehavior.Strict);
             EventArgs = new UnmappedPropertyEventArgs(EntityContext.Object, new Statement(new Iri("subject"), new Iri("predicate"), "test"));
             EntityContextExtensions.ExplicitMappings[EntityContext.Object] = ExplicitMappings.Object;

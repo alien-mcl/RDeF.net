@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -49,8 +50,18 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
         public void Should_use_initialize_entity_with_statements()
         {
             Context.Verify(
-                instance => instance.InitializeInternal(It.Is<Entity>(entity => entity.Iri == ExpectedSubject), ExpectedStatements, It.IsAny<EntityInitializationContext>()),
+                instance => instance.InitializeInternal(
+                    It.Is<Entity>(entity => entity.Iri == ExpectedSubject),
+                    ExpectedStatements,
+                    It.IsAny<EntityInitializationContext>(),
+                    It.IsAny<Action<Statement>>()),
                 Times.Once);
+        }
+
+        [Test]
+        public void Should_gather_all_entity_statements()
+        {
+            EntitySource.Entities.First().Value.First().Subject.Should().Be(ExpectedSubject);
         }
 
         [Test]
@@ -71,8 +82,14 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
                 .ReturnsAsync(new Dictionary<Iri, IEnumerable<Statement>>() { { new Iri("graph"), ExpectedStatements } });
             Context.Setup(instance => instance.Clear());
             Context.Setup(instance => instance.CreateInternal(It.IsAny<Iri>(), It.IsAny<bool>()))
-                .Returns<Iri, bool>((iri, initialize) => new Entity(iri, Context.Object));
-            Context.Setup(instance => instance.InitializeInternal(It.IsAny<Entity>(), It.IsAny<IEnumerable<Statement>>(), It.IsAny<EntityInitializationContext>()));
+                .Returns<Iri, bool>((iri, initialize) => (Entity)EntitySource.Create(iri));
+            Context.Setup(instance => instance.InitializeInternal(
+                    It.IsAny<Entity>(),
+                    It.IsAny<IEnumerable<Statement>>(),
+                    It.IsAny<EntityInitializationContext>(),
+                    It.IsAny<Action<Statement>>()))
+                .Callback<Entity, IEnumerable<Statement>, EntityInitializationContext, Action<Statement>>(
+                    (entity, statements, context, handler) => statements.ToList().ForEach(handler));
         }
     }
 }

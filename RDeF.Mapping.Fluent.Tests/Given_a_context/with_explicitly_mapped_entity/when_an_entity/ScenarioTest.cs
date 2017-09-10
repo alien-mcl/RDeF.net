@@ -33,7 +33,7 @@ namespace Given_a_context.with_explicitly_mapped_entity.when_an_entity
         protected override void ScenarioSetup()
         {
             Mappings = new Mock<IExplicitMappings>(MockBehavior.Strict);
-            Mappings.Setup(instance => instance.Set(It.IsAny<IEntityMapping>())).Callback<IEntityMapping>(mapping => Mapping = mapping);
+            Mappings.Setup(instance => instance.Set(It.IsAny<IEntityMapping>(), It.IsAny<Iri>())).Callback<IEntityMapping, Iri>((mapping, iri) => Mapping = mapping);
             EntityContext = new Mock<IEntityContext>(MockBehavior.Strict);
             ConverterProvider = new Mock<IConverterProvider>(MockBehavior.Strict);
             ConverterProvider.Setup(instance => instance.FindConverter(It.IsAny<Type>())).Returns(new StringConverter());

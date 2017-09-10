@@ -36,7 +36,7 @@ namespace RDeF.Mapping.Reflection
         public override bool CanRead { get { return true; } }
 
         /// <inheritdoc />
-        public override bool CanWrite { get { return _propertyType.IsAnEnumerable(); } }
+        public override bool CanWrite { get { return !_propertyType.IsAnEnumerable(); } }
 
         /// <inheritdoc />
         public override string Name { get { return _name; } }

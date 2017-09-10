@@ -19,21 +19,23 @@ namespace Given_instance_of.DefaultExplicitMappings_class
 
         private DefaultExplicitMappings Mappings { get; set; }
 
+        private Iri OwningEntity { get; set; }
+
         public void TheTest()
         {
-            Mappings.Set(EntityMapping.Object);
+            Mappings.Set(EntityMapping.Object, OwningEntity);
         }
 
         [Test]
         public void Should_retrieve_entity_mapping()
         {
-            Mappings.FindEntityMappingFor(typeof(IProduct)).Type.Should().Be<IProduct>();
+            Mappings.FindEntityMappingFor(typeof(IProduct), OwningEntity).Type.Should().Be<IProduct>();
         }
 
         [Test]
         public void Should_retrieve_property_mapping()
         {
-            Mappings.FindPropertyMappingFor(typeof(IProduct).GetTypeInfo().GetProperty("Description")).Should().Be(PropertyMapping.Object);
+            Mappings.FindPropertyMappingFor(typeof(IProduct).GetTypeInfo().GetProperty("Description"), OwningEntity).Should().Be(PropertyMapping.Object);
         }
 
         [SetUp]
@@ -48,6 +50,7 @@ namespace Given_instance_of.DefaultExplicitMappings_class
             EntityMapping.SetupGet(instance => instance.Type).Returns(typeof(IProduct));
             EntityMapping.SetupGet(instance => instance.Classes).Returns(Array.Empty<IStatementMapping>());
             EntityMapping.SetupGet(instance => instance.Properties).Returns(new[] { PropertyMapping.Object });
+            OwningEntity = new Iri("http://temp.uri/");
             Mappings = new DefaultExplicitMappings();
             TheTest();
         }

@@ -96,7 +96,7 @@
     <Compile Include="Entities\IChangeDetector.cs" />
     <Compile Include="Entities\SimpleInMemoryEntitySource.cs" />
     <Compile Include="Mapping\DefaultConverterProvider.cs" />
-    <Compile Include="Mapping\DefaultMappingRepository.cs" />
+    <Compile Include="Mapping\DefaultMappingsRepository.cs" />
     <Compile Include="Mapping\DefaultMappingsBuilder.cs" />
     <Compile Include="Mapping\EntityMappingProvider.cs" />
     <Compile Include="Mapping\IMappingBuilder.cs" />

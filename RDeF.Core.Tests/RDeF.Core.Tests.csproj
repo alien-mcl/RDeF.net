@@ -130,12 +130,12 @@
     <Compile Include="Given_instance_of\DefaultEntityContext_class\when_committing_changes.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContext_class\when_rolling_back_changes.cs" />
     <Compile Include="Given_instance_of\DefaultMappingBuilder_class\when_building_mapping.cs" />
-    <Compile Include="Given_instance_of\DefaultMappingRepository_class\DefaultMappingRepositoryTest.cs" />
+    <Compile Include="Given_instance_of\DefaultMappingsRepository_class\DefaultMappingsRepositoryTest.cs" />
     <Compile Include="Given_instance_of\DefaultMappingBuilder_class\when_building_mappings.cs" />
-    <Compile Include="Given_instance_of\DefaultMappingRepository_class\and_searching_for_class_mapping.cs" />
-    <Compile Include="Given_instance_of\DefaultMappingRepository_class\and_searching_for_predicate_mapping.cs" />
-    <Compile Include="Given_instance_of\DefaultMappingRepository_class\and_searching_for_property_mapping.cs" />
-    <Compile Include="Given_instance_of\DefaultMappingRepository_class\and_searching_for_type_mapping.cs" />
+    <Compile Include="Given_instance_of\DefaultMappingsRepository_class\and_searching_for_class_mapping.cs" />
+    <Compile Include="Given_instance_of\DefaultMappingsRepository_class\and_searching_for_predicate_mapping.cs" />
+    <Compile Include="Given_instance_of\DefaultMappingsRepository_class\and_searching_for_property_mapping.cs" />
+    <Compile Include="Given_instance_of\DefaultMappingsRepository_class\and_searching_for_type_mapping.cs" />
     <Compile Include="Given_instance_of\DefaultMappingBuilder_class\DefaultMappingBuilderTest.cs" />
     <Compile Include="Given_instance_of\Entity_class\EntityTest.cs" />
     <Compile Include="Given_instance_of\Entity_class\when_comparing_for_equality.cs" />

@@ -19,6 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{D22B90
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".config", ".config", "{8E0D18F7-B367-4944-AA43-85EA4FC82739}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		CustomDictionary.xml = CustomDictionary.xml
 		RDeF.ruleset = RDeF.ruleset
 		RDeF.Tests.ruleset = RDeF.Tests.ruleset

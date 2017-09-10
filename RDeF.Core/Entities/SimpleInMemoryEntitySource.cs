@@ -159,10 +159,18 @@ namespace RDeF.Entities
                 throw new ArgumentNullException(nameof(rdfReader));
             }
 
-            _entityContext().Clear();
-            foreach (var subject in (await rdfReader.Read(streamReader)).SelectMany(graph => graph.Value).GroupBy(statement => statement.Subject))
+            var entityContext = _entityContext();
+            entityContext.Clear();
+            var entityStatements =
+                from graph in await rdfReader.Read(streamReader)
+                from statement in graph.Value
+                group statement by statement.Subject
+                into graphStatements
+                select graphStatements;
+            foreach (var subject in entityStatements)
             {
-                _entityContext().InitializeInternal(_entityContext().CreateInternal(subject.Key), subject, new EntityInitializationContext());
+                var entity = entityContext.CreateInternal(subject.Key);
+                entityContext.InitializeInternal(entity, subject, new EntityInitializationContext(), statement => Entities[entity].Add(statement));
             }
         }
 

@@ -12,16 +12,16 @@ namespace RDeF.Mapping
 {
     /// <summary>Provides a default implementation of the <see cref="IMappingsRepository" /> which gathers mapping from various sources.</summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Justification = "The type is not considered a collection.")]
-    public sealed class DefaultMappingRepository : IMappingsRepository
+    public sealed class DefaultMappingsRepository : IMappingsRepository
     {
         private readonly IMappingBuilder _mappingBuilder;
         private readonly IDictionary<Type, IEntityMapping> _mappings;
         private readonly IDictionary<Type, ICollection<ITermMappingProvider>> _openGenericProviders;
 
-        /// <summary>Initializes a new instance of the <see cref="DefaultMappingRepository"/> class.</summary>
+        /// <summary>Initializes a new instance of the <see cref="DefaultMappingsRepository"/> class.</summary>
         /// <param name="mappingSources">Collection of mapping sources.</param>
         /// <param name="mappingsBuilder">Mapping builder.</param>
-        public DefaultMappingRepository(IEnumerable<IMappingSource> mappingSources, IMappingBuilder mappingsBuilder)
+        public DefaultMappingsRepository(IEnumerable<IMappingSource> mappingSources, IMappingBuilder mappingsBuilder)
         {
             if (mappingSources == null)
             {

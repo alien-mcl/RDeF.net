@@ -6,7 +6,7 @@ using System.Reflection;
 using RDeF.Entities;
 using RDeF.Mapping.Entities;
 using RDeF.Mapping.Explicit;
-using RDeF.Mapping.Mapping.Fluent;
+using RDeF.Mapping.Fluent;
 using RDeF.Mapping.Providers;
 
 namespace RDeF.Mapping

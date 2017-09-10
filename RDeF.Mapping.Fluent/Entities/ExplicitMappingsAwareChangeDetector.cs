@@ -21,14 +21,14 @@ namespace RDeF.Mapping.Entities
         }
 
         /// <inheritdoc />
-        protected override IEntityMapping GetEntityMapping(Type type)
+        protected override IEntityMapping GetEntityMapping(Type type, Iri owningEntity)
         {
-            return _entityMappings.FindEntityMappingFor(type) ?? base.GetEntityMapping(type);
+            return _entityMappings.FindEntityMappingFor(type, owningEntity) ?? base.GetEntityMapping(type, owningEntity);
         }
 
-        protected override IPropertyMapping GetPropertyMapping(PropertyInfo property)
+        protected override IPropertyMapping GetPropertyMapping(PropertyInfo property, Iri owningEntity)
         {
-            return _entityMappings.FindPropertyMappingFor(property) ?? base.GetPropertyMapping(property);
+            return _entityMappings.FindPropertyMappingFor(property, owningEntity) ?? base.GetPropertyMapping(property, owningEntity);
         }
     }
 }
