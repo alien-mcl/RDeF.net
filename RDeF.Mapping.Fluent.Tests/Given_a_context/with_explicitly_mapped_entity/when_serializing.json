@@ -14,6 +14,7 @@
                     "@id": "another",
                     "categories": [ "category1" ],
                     "description": [ "Product description" ],
+                    "display-name": [ "Alternative product name" ],
                     "@type": [ "class1", "class2" ],
                     "label": [ "Another product name" ]
                 }

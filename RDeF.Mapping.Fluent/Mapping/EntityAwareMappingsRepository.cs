@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using RDeF.Entities;
+using RDeF.Mapping.Entities;
 using RDeF.Mapping.Explicit;
 
 namespace RDeF.Mapping
@@ -12,59 +13,112 @@ namespace RDeF.Mapping
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Justification = "This is not supposed to be a collection - IEnumerable implementation is only for convinience of use.")]
     public class EntityAwareMappingsRepository : IMappingsRepository
     {
-        private readonly IMappingsRepository _mappingsRepository;
-        private readonly IExplicitMappings _explicitMappings;
-        private readonly Iri _owningEntity;
+        private readonly DefaultMappingsRepository _mappingsRepository;
+        private readonly Func<IEntityContext> _entityContext;
 
-        internal EntityAwareMappingsRepository(IMappingsRepository mappingsRepository, IExplicitMappings explicitMappings, Iri owningEntity)
+        /// <summary>Initializes a new instance of the <see cref="EntityAwareMappingsRepository" /> class.</summary>
+        /// <param name="entityContext">Entity context provider.</param>
+        /// <param name="mappingsRepository">Mapping repository.</param>
+        public EntityAwareMappingsRepository(Func<IEntityContext> entityContext, DefaultMappingsRepository mappingsRepository)
         {
+            if (entityContext == null)
+            {
+                throw new ArgumentNullException(nameof(entityContext));
+            }
+
+            _entityContext = entityContext;
             _mappingsRepository = mappingsRepository;
-            _explicitMappings = explicitMappings;
-            _owningEntity = owningEntity;
         }
 
         /// <inheritdoc />
-        public IEntityMapping FindEntityMappingFor(Iri @class, Iri graph = null)
+        public IEntityMapping FindEntityMappingFor(IEntity entity, Iri @class, Iri graph = null)
         {
-            return _mappingsRepository.FindEntityMappingFor(@class, graph);
+            return _mappingsRepository.FindEntityMappingFor(entity, @class, graph);
         }
 
         /// <inheritdoc />
-        public IEntityMapping FindEntityMappingFor(Type type)
+        public IEntityMapping FindEntityMappingFor(IEntity entity, Type type)
         {
-            return _explicitMappings.FindEntityMappingFor(type, _owningEntity) ?? _mappingsRepository.FindEntityMappingFor(type);
+            IEntityMapping result = null;
+            if (entity != null)
+            {
+                var explicitMappings = GetExplicitMappingsFor(_entityContext());
+                if (explicitMappings != null)
+                {
+                    result = explicitMappings.FindEntityMappingFor(type, entity.Iri);
+                }
+            }
+
+            return result ?? _mappingsRepository.FindEntityMappingFor(entity, type);
         }
 
         /// <inheritdoc />
-        public IEntityMapping FindEntityMappingFor<TEntity>() where TEntity : IEntity
+        public IEntityMapping FindEntityMappingFor<TEntity>(TEntity entity) where TEntity : IEntity
         {
-            return FindEntityMappingFor(typeof(TEntity));
+            return FindEntityMappingFor(entity, typeof(TEntity));
         }
 
         /// <inheritdoc />
-        public IPropertyMapping FindPropertyMappingFor(Iri predicate, Iri graph = null)
+        public IPropertyMapping FindPropertyMappingFor(IEntity entity, Iri predicate, Iri graph = null)
         {
-            return _mappingsRepository.FindPropertyMappingFor(predicate, graph);
+            IPropertyMapping result = null;
+            if (entity != null)
+            {
+                var explicitMappings = GetExplicitMappingsFor(_entityContext());
+                if (explicitMappings != null)
+                {
+                    result = explicitMappings.FindPropertyMappingFor(predicate, graph, entity.Iri);
+                }
+            }
+
+            return result ?? _mappingsRepository.FindPropertyMappingFor(entity, predicate, graph);
         }
 
         /// <inheritdoc />
-        public IPropertyMapping FindPropertyMappingFor(PropertyInfo property)
+        public IPropertyMapping FindPropertyMappingFor(IEntity entity, PropertyInfo property)
         {
-            return _explicitMappings.FindPropertyMappingFor(property, _owningEntity) ?? _mappingsRepository.FindPropertyMappingFor(property);
+            IPropertyMapping result = null;
+            if (entity != null)
+            {
+                var explicitMappings = GetExplicitMappingsFor(_entityContext());
+                if (explicitMappings != null)
+                {
+                    result = explicitMappings.FindPropertyMappingFor(property, entity.Iri);
+                }
+            }
+
+            return result ?? _mappingsRepository.FindPropertyMappingFor(entity, property);
         }
 
         /// <inheritdoc />
         public IEnumerator<IEntityMapping> GetEnumerator()
         {
-            return new JoinEnumerator(_explicitMappings.GetEnumerator(_owningEntity), _mappingsRepository.GetEnumerator());
+            var explicitMappings = GetExplicitMappingsFor(_entityContext());
+            if (explicitMappings != null)
+            {
+                return new JoinEnumerator(explicitMappings.GetEnumerator(), _mappingsRepository.GetEnumerator());
+            }
+
+            return _mappingsRepository.GetEnumerator();
         }
 
         /// <inheritdoc />
         [ExcludeFromCodeCoverage]
-        [SuppressMessage("UnitTests", "TS0000:NoUnitTests", Justification = "Not really used anymore.")]
+        [SuppressMessage("TS0000", "NoUnitTests", Justification = "Implemented only to match the requirements. No special logic to be tested here.")]
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        private static IExplicitMappings GetExplicitMappingsFor(IEntityContext entityContext)
+        {
+            IExplicitMappings explicitMappings;
+            if ((entityContext == null) || (!EntityContextExtensions.ExplicitMappings.TryGetValue(entityContext, out explicitMappings)))
+            {
+                return null;
+            }
+
+            return explicitMappings;
         }
 
         internal class JoinEnumerator : IEnumerator<IEntityMapping>

@@ -4,8 +4,6 @@ using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
 using RDeF.Data;
-using RDeF.Entities;
-using RDeF.Mapping;
 using RDeF.Mapping.Providers;
 
 namespace Given_instance_of.FluentMappingSource_class
@@ -13,8 +11,6 @@ namespace Given_instance_of.FluentMappingSource_class
     [TestFixture]
     public class when_gathering_entity_mappings : FluentMappingSourceTest
     {
-        private static readonly QIriMapping QIriMapping = new QIriMapping("prefix", new Iri("test_"));
-
         private IEnumerable<ITermMappingProvider> Result { get; set; }
 
         public override void TheTest()

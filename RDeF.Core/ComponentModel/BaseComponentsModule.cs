@@ -19,7 +19,7 @@ namespace RDeF.ComponentModel
                 throw new ArgumentNullException(nameof(componentConfigurator));
             }
 
-            componentConfigurator.WithComponent<IChangeDetector, DefaultChangeDetector>();
+            componentConfigurator.WithComponent<IChangeDetector, DefaultChangeDetector>(Lifestyle.BoundToEntityContext);
             componentConfigurator.WithComponent<IConverterProvider, DefaultConverterProvider>();
             componentConfigurator.WithInstance(new QIriMapping("xsd", xsd.Namespace), "xsd");
             componentConfigurator.WithInstance(new QIriMapping("rdf", rdf.Namespace), "rdf");

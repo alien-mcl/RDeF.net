@@ -17,6 +17,7 @@ namespace RDeF.ComponentModel
         private const string AttributeMappingsAssembly = "RDeF.Mapping.Attributes";
         private const string FluentMappingsAssembly = "RDeF.Mapping.Fluent";
 
+        private readonly ICollection<SimpleContainer> _childScopes = new List<SimpleContainer>();
         private readonly IDictionary<Type, ISet<IComponentRegistration>> _entityContextBoundServiceRegistrations =
             new ConcurrentDictionary<Type, ISet<IComponentRegistration>>();
 
@@ -44,6 +45,16 @@ namespace RDeF.ComponentModel
         public SimpleContainer BeginScope()
         {
             var result = new SimpleContainer(this);
+            result._areStandardLibrariesLoaded = _areStandardLibrariesLoaded;
+            foreach (var type in _entityContextBoundServiceRegistrations.Keys)
+            {
+                foreach (var registration in _entityContextBoundServiceRegistrations[type])
+                {
+                    result._entityContextBoundServiceRegistrations.EnsureKey(type).Add(registration);
+                }
+            }
+
+            _childScopes.Add(result);
             foreach (var serviceRegistration in _entityContextBoundServiceRegistrations)
             {
                 var registrations = result._serviceRegistrations.EnsureKey(serviceRegistration.Key);
@@ -151,6 +162,12 @@ namespace RDeF.ComponentModel
             foreach (var instanceRegistration in _instanceRegistrations.Values.SelectMany(item => item))
             {
                 (instanceRegistration.Instance as IDisposable)?.Dispose();
+            }
+
+            foreach (var childScope in _childScopes.ToList())
+            {
+                childScope.Dispose();
+                childScope._owner._childScopes.Remove(childScope);
             }
         }
 

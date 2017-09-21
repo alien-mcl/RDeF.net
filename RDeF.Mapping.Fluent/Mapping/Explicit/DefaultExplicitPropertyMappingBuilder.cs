@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Reflection;
 using RDeF.Entities;
+using RDeF.Mapping.Providers;
+using RDeF.Mapping.Reflection;
 
 namespace RDeF.Mapping.Explicit
 {
@@ -25,24 +27,25 @@ namespace RDeF.Mapping.Explicit
                 throw new ArgumentNullException(nameof(term));
             }
 
-            _mappingsBuilder.Properties[_propertyInfo] = new Tuple<Iri, Iri, Type>(term, graph, null);
-            return new DefaultExplicitPropertyValueConverterBuilder<TEntity>(_mappingsBuilder, _propertyInfo, false);
+            var propertyInfo = new ExplicitlyMappedPropertyInfo(_propertyInfo, term, graph);
+            _mappingsBuilder.Properties[propertyInfo] = new Tuple<Iri, Iri, Type>(term, graph, null);
+            return new DefaultExplicitPropertyValueConverterBuilder<TEntity>(_mappingsBuilder, propertyInfo);
         }
 
         /// <inheritdoc />
         public IExplicitValueConverterBuilder<TEntity> MappedTo(string prefix, string term, Iri graph = null)
         {
             ValidatePrefixAndTerm(prefix, term);
-            _mappingsBuilder.PropertyGraphs[_propertyInfo] = new Tuple<string, string, Iri, Type>(prefix, term, graph, null);
-            return new DefaultExplicitPropertyValueConverterBuilder<TEntity>(_mappingsBuilder, _propertyInfo, null);
+            return MappedTo(FluentTermMappingProvider.Resolve(null, prefix, term, _mappingsBuilder.QIriMappings), graph);
         }
 
         /// <inheritdoc />
         public IExplicitValueConverterBuilder<TEntity> MappedTo(string prefix, string term, string graphPrefix, string graphTerm)
         {
             ValidatePrefixAndTerm(prefix, term);
-            _mappingsBuilder.PropertyTerms[_propertyInfo] = new Tuple<string, string, string, string, Type>(prefix, term, graphPrefix, graphTerm, null);
-            return new DefaultExplicitPropertyValueConverterBuilder<TEntity>(_mappingsBuilder, _propertyInfo, true);
+            return MappedTo(
+                FluentTermMappingProvider.Resolve(null, prefix, term, _mappingsBuilder.QIriMappings),
+                FluentTermMappingProvider.Resolve(null, graphPrefix, graphTerm, _mappingsBuilder.QIriMappings));
         }
 
         private static void ValidatePrefixAndTerm(string prefix, string term)

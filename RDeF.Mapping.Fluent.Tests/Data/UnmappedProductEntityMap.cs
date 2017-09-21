@@ -7,7 +7,7 @@ namespace RDeF.Mapping.Data
 {
     public class UnmappedProductEntityMap : EntityMap<IUnmappedProduct>
     {
-        public UnmappedProductEntityMap()
+        public override void CreateMappings()
         {
             this.MappedTo(new Iri("class1"))
                 .MappedTo("prefix", "term", null, null)

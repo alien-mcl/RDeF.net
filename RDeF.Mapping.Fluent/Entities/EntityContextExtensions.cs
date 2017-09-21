@@ -69,16 +69,6 @@ namespace RDeF.Mapping.Entities
             {
                 mappingProviders.Add(new FluentEntityMappingProvider(entityType, @class.Item1, @class.Item2));
             }
-
-            foreach (var @class in builder.ClassTerms)
-            {
-                mappingProviders.Add(new FluentEntityMappingProvider(entityType, @class.Item1, @class.Item2, @class.Item3, @class.Item4));
-            }
-
-            foreach (var @class in builder.ClassGraphs)
-            {
-                mappingProviders.Add(new FluentEntityMappingProvider(entityType, @class.Item1, @class.Item2, @class.Item3));
-            }
         }
 
         internal static void AddCollections(this ICollection<ITermMappingProvider> mappingProviders, Type entityType, DefaultExplicitMappingsBuilder builder)
@@ -92,33 +82,6 @@ namespace RDeF.Mapping.Entities
                     collection.Value.Item3,
                     collection.Value.Item4,
                     collection.Value.Item2);
-                mappingProviders.Add(collectionMappingProvider);
-            }
-
-            foreach (var collection in builder.CollectionTerms)
-            {
-                var collectionMappingProvider = new FluentCollectionMappingProvider(
-                    entityType,
-                    collection.Key,
-                    collection.Value.Item1,
-                    collection.Value.Item2,
-                    collection.Value.Item5,
-                    collection.Value.Item6,
-                    collection.Value.Item3,
-                    collection.Value.Item4);
-                mappingProviders.Add(collectionMappingProvider);
-            }
-
-            foreach (var collection in builder.CollectionGraphs)
-            {
-                var collectionMappingProvider = new FluentCollectionMappingProvider(
-                    entityType,
-                    collection.Key,
-                    collection.Value.Item1,
-                    collection.Value.Item2,
-                    collection.Value.Item4,
-                    collection.Value.Item5,
-                    collection.Value.Item3);
                 mappingProviders.Add(collectionMappingProvider);
             }
         }
@@ -135,31 +98,6 @@ namespace RDeF.Mapping.Entities
                     property.Value.Item2);
                 mappingProviders.Add(propertyMappingProvider);
             }
-
-            foreach (var property in builder.PropertyTerms)
-            {
-                var propertyMappingProvider = new FluentPropertyMappingProvider(
-                    entityType,
-                    property.Key,
-                    property.Value.Item1,
-                    property.Value.Item2,
-                    property.Value.Item5,
-                    property.Value.Item3,
-                    property.Value.Item4);
-                mappingProviders.Add(propertyMappingProvider);
-            }
-
-            foreach (var property in builder.PropertyGraphs)
-            {
-                var propertyMappingProvider = new FluentPropertyMappingProvider(
-                    entityType,
-                    property.Key,
-                    property.Value.Item1,
-                    property.Value.Item2,
-                    property.Value.Item4,
-                    property.Value.Item3);
-                mappingProviders.Add(propertyMappingProvider);
-            }
         }
 
         internal static IPropertyMapping BuildExplicitMappings<TEntity>(
@@ -169,7 +107,7 @@ namespace RDeF.Mapping.Entities
             bool allowSinglePropertyOnly = false)
             where TEntity : IEntity
         {
-            var builder = new DefaultExplicitMappingsBuilder<TEntity>(allowSinglePropertyOnly);
+            var builder = new DefaultExplicitMappingsBuilder<TEntity>(QIriMappings, allowSinglePropertyOnly);
             mappingsBuilder(builder);
             var mappingProviders = new List<ITermMappingProvider>();
             mappingProviders.AddClasses(builder);

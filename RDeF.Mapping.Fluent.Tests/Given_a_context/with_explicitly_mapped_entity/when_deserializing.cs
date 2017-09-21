@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using FluentAssertions;
 using NUnit.Framework;
 using RDeF.Data;
@@ -16,8 +15,6 @@ namespace Given_a_context.with_explicitly_mapped_entity
 
         private IUnmappedProduct SecondaryEntity { get; set; }
 
-        private int MappingCalls { get; set; }
-
         public override void TheTest()
         {
             PrimaryEntity = Context.Load<IUnmappedProduct>(new Iri("temp:test"));
@@ -27,18 +24,23 @@ namespace Given_a_context.with_explicitly_mapped_entity
         [Test]
         public void Should_deserialize_explicitly_mapped_properties()
         {
-            ((string)((dynamic)PrimaryEntity).Test).Should().Be("Product name");
+            ((string)((dynamic)PrimaryEntity).TempName).Should().Be("Product name");
         }
 
         [Test]
         public void Should_deserialize_separate_explicitly_mapped_properties_for_each_entity()
         {
-            ((string)((dynamic)SecondaryEntity).Test2).Should().Be("Another product name");
+            ((string)((dynamic)SecondaryEntity).TempName).Should().Be("Another product name");
+        }
+
+        [Test]
+        public void Should_deserialize_another_separate_explicitly_mapped_properties_for_each_entity()
+        {
+            ((string)((dynamic)SecondaryEntity).TempLabel).Should().Be("Alternative product name");
         }
 
         protected override void ScenarioSetup()
         {
-            MappingCalls = 1;
             Context = new DefaultEntityContextFactory().Create();
             Context.UnmappedPropertyEncountered += OnUnmappedPropertyEncountered;
             ((ISerializableEntitySource)Context.EntitySource).Read(new StreamReader(typeof(when_deserializing).GetEmbeddedResource(".json")), new JsonLdReader());
@@ -46,12 +48,18 @@ namespace Given_a_context.with_explicitly_mapped_entity
 
         private void OnUnmappedPropertyEncountered(object sender, UnmappedPropertyEventArgs e)
         {
-            if (e.Statement.Predicate == "temp:name")
+            switch (e.Statement.Predicate.ToString())
             {
-                e.OfEntity<IUnmappedProduct>(config => config
-                    .WithProperty(typeof(string), "Test" + (MappingCalls == 1 ? String.Empty : MappingCalls.ToString()))
+                case "temp:name":
+                    e.OfEntity<IUnmappedProduct>(config => config
+                        .WithProperty(typeof(string), "TempName")
                         .MappedTo(e.Statement.Predicate, e.Statement.Graph).WithDefaultConverter());
-                MappingCalls++;
+                    break;
+                case "temp:label":
+                    e.OfEntity<IUnmappedProduct>(config => config
+                        .WithProperty(typeof(string), "TempLabel")
+                        .MappedTo(e.Statement.Predicate, e.Statement.Graph).WithDefaultConverter());
+                    break;
             }
         }
     }

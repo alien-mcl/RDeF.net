@@ -14,16 +14,6 @@ namespace RDeF.Mapping.Providers
         {
         }
 
-        internal FluentEntityMappingProvider(Type entityType, string prefix = null, string term = null, Iri graph = null)
-            : base(entityType, prefix, term, graph)
-        {
-        }
-
-        internal FluentEntityMappingProvider(Type entityType, string prefix = null, string term = null, string graphPrefix = null, string graphTerm = null)
-            : base(entityType, prefix, term, graphPrefix, graphTerm)
-        {
-        }
-
         /// <inheritdoc />
         public override void Accept(IMappingProviderVisitor visitor)
         {

@@ -37,18 +37,18 @@ namespace RDeF.Entities
         /// <param name="type">Type for which to obtain mapping.</param>
         /// <param name="owningEntity">Owning entity acting as an optional context when choosing mappings.</param>
         /// <returns>Entity mapping.</returns>
-        protected virtual IEntityMapping GetEntityMapping(Type type, Iri owningEntity)
+        protected virtual IEntityMapping GetEntityMapping(Type type, IEntity owningEntity)
         {
-            return _mappingsRepository.FindEntityMappingFor(type);
+            return _mappingsRepository.FindEntityMappingFor(owningEntity, type);
         }
 
         /// <summary>Obtains a property mapping.</summary>
         /// <param name="property">Property for which to obtain mapping.</param>
         /// <param name="owningEntity">Owning entity acting as an optional context when choosing mappings.</param>
         /// <returns>Property mapping.</returns>
-        protected virtual IPropertyMapping GetPropertyMapping(PropertyInfo property, Iri owningEntity)
+        protected virtual IPropertyMapping GetPropertyMapping(PropertyInfo property, IEntity owningEntity)
         {
-            return _mappingsRepository.FindPropertyMappingFor(property);
+            return _mappingsRepository.FindPropertyMappingFor(owningEntity, property);
         }
 
         private static void AddStatements(ISet<Statement> entityStatements, ICollectionMapping collectionMapping, IEntity entity, IEnumerable values)
@@ -128,7 +128,7 @@ namespace RDeF.Entities
             var type = value as Type;
             if (type != null)
             {
-                foreach (var @class in GetEntityMapping(type, entity.Iri).Classes)
+                foreach (var @class in GetEntityMapping(type, entity).Classes)
                 {
                     statements.EnsureKey(entity).Add(new Statement(entity.Iri, rdf.type, @class.Term, @class.Graph));
                 }
@@ -137,7 +137,7 @@ namespace RDeF.Entities
             }
 
             var propertyValue = value as MulticastPropertyValue;
-            var propertyMapping = GetPropertyMapping(propertyValue.Property, entity.Iri);
+            var propertyMapping = GetPropertyMapping(propertyValue.Property, entity);
             var collectionMapping = propertyMapping as ICollectionMapping;
             if (collectionMapping != null)
             {

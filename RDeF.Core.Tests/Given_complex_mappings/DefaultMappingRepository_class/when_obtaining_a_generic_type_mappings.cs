@@ -19,7 +19,7 @@ namespace Given_complex_mappings.DefaultMappingRepository_class
         [TestCase(typeof(IProductOffering<ISpecialProduct>))]
         public void Should_provide_entity_mapping(Type genericEntityType)
         {
-            Repository.FindEntityMappingFor(genericEntityType).Should().BeAssignableTo<IEntityMapping>().ContainMappingsFor(genericEntityType);
+            Repository.FindEntityMappingFor(null, genericEntityType).Should().BeAssignableTo<IEntityMapping>().ContainMappingsFor(genericEntityType);
         }
 
         [SetUp]

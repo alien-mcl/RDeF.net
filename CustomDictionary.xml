@@ -9,7 +9,7 @@
             <Word>oguid</Word>
             <Word>ns</Word>
             <Word>untyped</Word>
-            <Word>ld</Word>
+            <Word>Ld</Word>
             <Word>Irreflexive</Word>
         </Recognized>
         <DiscreteExceptions>
@@ -23,6 +23,7 @@
     </Words>
     <Acronyms>
         <CasingExceptions>
+            <Acronym>Ld</Acronym>
             <Acronym>rdf</Acronym>
             <Acronym>rdfs</Acronym>
             <Acronym>oguid</Acronym>

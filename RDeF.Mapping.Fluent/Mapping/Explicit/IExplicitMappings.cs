@@ -20,14 +20,20 @@ namespace RDeF.Mapping.Explicit
         IEntityMapping FindEntityMappingFor(Type type, Iri owningEntity);
 
         /// <summary>Gets a explicitely set property mapping.</summary>
+        /// <param name="predicate">Iri of the predicate for which to obtain mapping.</param>
+        /// <param name="graph">Iri of the graph to match in mapping.</param>
+        /// <param name="owningEntity">Owning entity of the mappings.</param>
+        /// <returns>Property mapping matching a given <paramref name="predicate" /> or <b>null</b>.</returns>
+        IPropertyMapping FindPropertyMappingFor(Iri predicate, Iri graph, Iri owningEntity);
+
+        /// <summary>Gets a explicitely set property mapping.</summary>
         /// <param name="property">Property for which to obtain mapping.</param>
         /// <param name="owningEntity">Owning entity of the mappings.</param>
         /// <returns>Property mapping matching a given <paramref name="property" /> or <b>null</b>.</returns>
         IPropertyMapping FindPropertyMappingFor(PropertyInfo property, Iri owningEntity);
 
-        /// <summary>Gets the enumerator of <paramref name="owningEntity" /> mappings.</summary>
-        /// <param name="owningEntity">Owner of the mappings to obtain.</param>
-        /// <returns>Instance of the <see cref="IEnumerator{IEntityMapping}" /> of mappings owned by the <paramref name="owningEntity" />.</returns>
-        IEnumerator<IEntityMapping> GetEnumerator(Iri owningEntity);
+        /// <summary>Gets the enumerator of mappings.</summary>
+        /// <returns>Instance of the <see cref="IEnumerator{IEntityMapping}" /> of mappings.</returns>
+        IEnumerator<IEntityMapping> GetEnumerator();
     }
 }

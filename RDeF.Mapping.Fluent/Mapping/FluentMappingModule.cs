@@ -23,13 +23,13 @@ namespace RDeF.Mapping
             }
 
             componentConfigurator.WithMappingsProvidedBy<FluentMappingSourceProvider>();
-            componentConfigurator.WithComponent<IChangeDetector, ExplicitMappingsAwareChangeDetector>(Lifestyle.BoundToEntityContext);
-            componentConfigurator.WithComponent<IExplicitMappings, DefaultExplicitMappings>(
+            componentConfigurator.WithComponent<DefaultMappingsRepository, DefaultMappingsRepository>();
+            componentConfigurator.WithComponent<IMappingsRepository, EntityAwareMappingsRepository>(
                 Lifestyle.BoundToEntityContext,
-                (container, explicitMappings) =>
+                (container, mappingsRepository) =>
                 {
                     var context = container.Resolve<IEntityContext>();
-                    EntityContextExtensions.ExplicitMappings[context] = explicitMappings;
+                    EntityContextExtensions.ExplicitMappings[context] = new DefaultExplicitMappings();
                     if (EntityContextExtensions.ConverterProvider == null)
                     {
                         EntityContextExtensions.ConverterProvider = container.Resolve<IConverterProvider>();

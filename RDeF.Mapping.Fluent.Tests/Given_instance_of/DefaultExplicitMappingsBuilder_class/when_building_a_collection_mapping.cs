@@ -8,6 +8,7 @@ using RDeF.Entities;
 using RDeF.Mapping;
 using RDeF.Mapping.Converters;
 using RDeF.Mapping.Explicit;
+using RDeF.Mapping.Reflection;
 
 namespace Given_instance_of.DefaultExplicitMappingsBuilder_class
 {
@@ -43,7 +44,7 @@ namespace Given_instance_of.DefaultExplicitMappingsBuilder_class
         public void Should_prepare_collection_data_model_correctly_with_pointed_value_converter()
         {
             ((DefaultExplicitMappingsBuilder<IProduct>)ValueConverter.WithValueConverter<TestConverter>())
-                .Collections.Should().ContainKey(typeof(IProduct).GetTypeInfo().GetProperty("Categories"))
+                .Collections.Should().ContainKey(new ExplicitlyMappedPropertyInfo(typeof(IProduct).GetTypeInfo().GetProperty("Categories"), new Iri("term"), new Iri("graph")))
                     .WhichValue.ShouldBeEquivalentTo(
                         new Tuple<Iri, Iri, CollectionStorageModel, Type>(new Iri("term"), new Iri("graph"), CollectionStorageModel.Simple, typeof(TestConverter)));
         }
@@ -52,7 +53,7 @@ namespace Given_instance_of.DefaultExplicitMappingsBuilder_class
         public void Should_prepare_collection_data_model_correctly_with_default_value_converter()
         {
             ((DefaultExplicitMappingsBuilder<IProduct>)ValueConverter.WithDefaultConverter())
-                .Collections.Should().ContainKey(typeof(IProduct).GetTypeInfo().GetProperty("Categories"))
+                .Collections.Should().ContainKey(new ExplicitlyMappedPropertyInfo(typeof(IProduct).GetTypeInfo().GetProperty("Categories"), new Iri("term"), new Iri("graph")))
                 .WhichValue.ShouldBeEquivalentTo(
                     new Tuple<Iri, Iri, CollectionStorageModel, Type>(new Iri("term"), new Iri("graph"), CollectionStorageModel.Simple, null));
         }

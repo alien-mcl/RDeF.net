@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Reflection;
 using RDeF.Entities;
+using RDeF.Mapping.Reflection;
 using RDeF.Mapping.Visitors;
 
 namespace RDeF.Mapping.Providers
@@ -10,24 +11,12 @@ namespace RDeF.Mapping.Providers
     [DebuggerDisplay("{EntityType.Name,nq}.{Property.Name,nq} ({Iri.ToString()??Prefix+\":\"+Term,nq})")]
     public class FluentPropertyMappingProvider : FluentTermMappingProvider, IPropertyMappingProvider
     {
+        private readonly ExplicitlyMappedPropertyInfo _propertyInfo;
+
         internal FluentPropertyMappingProvider(Type entityType, PropertyInfo property, Iri iri, Type valueConverterType = null, Iri graph = null)
             : base(entityType, iri, graph)
         {
-            Property = property;
-            ValueConverterType = valueConverterType;
-        }
-
-        internal FluentPropertyMappingProvider(Type entityType, PropertyInfo property, string prefix, string term, Type valueConverterType = null, Iri graph = null)
-            : base(entityType, prefix, term, graph)
-        {
-            Property = property;
-            ValueConverterType = valueConverterType;
-        }
-
-        internal FluentPropertyMappingProvider(Type entityType, PropertyInfo property, string prefix, string term, Type valueConverterType = null, string graphPrefix = null, string graphTerm = null)
-            : base(entityType, prefix, term, graphPrefix, graphTerm)
-        {
-            Property = property;
+            _propertyInfo = (Property = property) as ExplicitlyMappedPropertyInfo;
             ValueConverterType = valueConverterType;
         }
 
@@ -36,6 +25,18 @@ namespace RDeF.Mapping.Providers
 
         /// <inheritdoc />
         public Type ValueConverterType { get; set; }
+
+        /// <inheritdoc />
+        protected override Iri Iri
+        {
+            get { return _propertyInfo?.Predicate ?? base.Iri; }
+        }
+
+        /// <inheritdoc />
+        protected override Iri Graph
+        {
+            get { return _propertyInfo?.Graph ?? base.Graph; }
+        }
 
         /// <inheritdoc />
         public override void Accept(IMappingProviderVisitor visitor)

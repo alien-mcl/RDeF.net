@@ -1,11 +1,14 @@
 ﻿using System.Reflection;
 using NUnit.Framework;
+using RDeF.Entities;
 using RDeF.Mapping;
 
 namespace Given_instance_of.FluentMappingSource_class
 {
     public abstract class FluentMappingSourceTest
     {
+        protected static readonly QIriMapping QIriMapping = new QIriMapping("prefix", new Iri("test_"));
+        
         protected FluentMappingSource Source { get; private set; }
 
         public virtual void TheTest()
@@ -15,7 +18,7 @@ namespace Given_instance_of.FluentMappingSource_class
         [SetUp]
         public void Setup()
         {
-            Source = new FluentMappingSource(GetType().GetTypeInfo().Assembly);
+            Source = new FluentMappingSource(GetType().GetTypeInfo().Assembly, new[] { QIriMapping });
             ScenarioSetup();
             TheTest();
         }

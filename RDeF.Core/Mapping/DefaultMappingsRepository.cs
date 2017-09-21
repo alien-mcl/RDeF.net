@@ -12,7 +12,7 @@ namespace RDeF.Mapping
 {
     /// <summary>Provides a default implementation of the <see cref="IMappingsRepository" /> which gathers mapping from various sources.</summary>
     [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Justification = "The type is not considered a collection.")]
-    public sealed class DefaultMappingsRepository : IMappingsRepository
+    public class DefaultMappingsRepository : IMappingsRepository
     {
         private readonly IMappingBuilder _mappingBuilder;
         private readonly IDictionary<Type, IEntityMapping> _mappings;
@@ -38,7 +38,7 @@ namespace RDeF.Mapping
         }
 
         /// <inheritdoc />
-        public IEntityMapping FindEntityMappingFor(Iri @class, Iri graph = null)
+        public virtual IEntityMapping FindEntityMappingFor(IEntity entity, Iri @class, Iri graph = null)
         {
             if (@class == null)
             {
@@ -52,7 +52,7 @@ namespace RDeF.Mapping
         }
 
         /// <inheritdoc />
-        public IEntityMapping FindEntityMappingFor(Type type)
+        public virtual IEntityMapping FindEntityMappingFor(IEntity entity, Type type)
         {
             if (type == null)
             {
@@ -77,13 +77,13 @@ namespace RDeF.Mapping
         }
 
         /// <inheritdoc />
-        public IEntityMapping FindEntityMappingFor<TEntity>() where TEntity : IEntity
+        public virtual IEntityMapping FindEntityMappingFor<TEntity>(TEntity entity) where TEntity : IEntity
         {
-            return FindEntityMappingFor(typeof(TEntity));
+            return FindEntityMappingFor(entity, typeof(TEntity));
         }
 
         /// <inheritdoc />
-        public IPropertyMapping FindPropertyMappingFor(Iri predicate, Iri graph = null)
+        public virtual IPropertyMapping FindPropertyMappingFor(IEntity entity, Iri predicate, Iri graph = null)
         {
             if (predicate == null)
             {
@@ -97,7 +97,7 @@ namespace RDeF.Mapping
         }
 
         /// <inheritdoc />
-        public IPropertyMapping FindPropertyMappingFor(PropertyInfo property)
+        public virtual IPropertyMapping FindPropertyMappingFor(IEntity entity, PropertyInfo property)
         {
             if (property == null)
             {
@@ -137,7 +137,7 @@ namespace RDeF.Mapping
         }
 
         /// <inheritdoc />
-        public IEnumerator<IEntityMapping> GetEnumerator()
+        public virtual IEnumerator<IEntityMapping> GetEnumerator()
         {
             return _mappings.Values.GetEnumerator();
         }

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reflection;
 using FluentAssertions;
 using NUnit.Framework;
@@ -21,7 +22,7 @@ namespace Given_instance_of.FluentMappingSourceProvider_class
         [SetUp]
         public void Setup()
         {
-            Provider = new FluentMappingSourceProvider();
+            Provider = new FluentMappingSourceProvider(Array.Empty<QIriMapping>());
         }
     }
 }

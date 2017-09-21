@@ -4,15 +4,14 @@ using System.Reflection;
 using FluentAssertions;
 using NUnit.Framework;
 using RDeF.Data;
-using RDeF.Mapping.Reflection;
 using RollerCaster;
 
-namespace Given_instance_of.DynamicPropertyInfo_class
+namespace Given_instance_of.property_of_type
 {
     [TestFixture]
-    public class when_working_with_it
+    public abstract class PropertyInfoTest<TProperty> where TProperty : PropertyInfo
     {
-        private DynamicPropertyInfo PropertyInfo { get; set; }
+        protected abstract TProperty PropertyInfo { get; }
 
         private IUnmappedProduct Entity { get; set; }
 
@@ -98,7 +97,6 @@ namespace Given_instance_of.DynamicPropertyInfo_class
         [SetUp]
         public void Setup()
         {
-            PropertyInfo = new DynamicPropertyInfo(typeof(IUnmappedProduct), typeof(string), "Name");
             var entity = new MulticastObject();
             entity.SetProperty(PropertyInfo, "test");
             Entity = entity.ActLike<IUnmappedProduct>();

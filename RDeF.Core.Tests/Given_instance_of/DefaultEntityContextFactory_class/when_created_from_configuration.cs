@@ -11,7 +11,7 @@ namespace Given_instance_of.DefaultEntityContextFactory_class
         [Test]
         public void Should_include_pointed_mapping_assemblies()
         {
-            EntityContextFactory.FromConfiguration("test").Mappings.FindEntityMappingFor<IProduct>().Should().NotBeNull();
+            EntityContextFactory.FromConfiguration("test").Mappings.FindEntityMappingFor<IProduct>(null).Should().NotBeNull();
         }
     }
 }

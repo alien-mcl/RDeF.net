@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Reflection;
 using FluentAssertions;
+using Moq;
 using NUnit.Framework;
 using RDeF.Data;
 using RDeF.Entities;
+using RDeF.Mapping;
 using RollerCaster;
 
 namespace Given_instance_of.DefaultEntityContext_class
@@ -101,6 +104,13 @@ namespace Given_instance_of.DefaultEntityContext_class
         {
             SourceContext = new DefaultEntityContext(EntitySource.Object, MappingsRepository.Object, ChangeDetector.Object);
             Source = SourceContext.Create<IProduct>(new Iri("source"));
+            MappingsRepository.Setup(instance => instance.FindPropertyMappingFor(It.IsAny<IEntity>(), It.IsAny<PropertyInfo>()))
+                .Returns<IEntity, PropertyInfo>((entity, propertyInfo) =>
+                {
+                    var result = new Mock<IPropertyMapping>(MockBehavior.Strict);
+                    result.SetupGet(instance => instance.PropertyInfo).Returns(propertyInfo);
+                    return result.Object;
+                });
         }
     }
 }

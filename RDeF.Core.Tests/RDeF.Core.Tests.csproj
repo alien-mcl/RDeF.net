@@ -137,6 +137,7 @@
     <Compile Include="Given_instance_of\DefaultMappingsRepository_class\and_searching_for_property_mapping.cs" />
     <Compile Include="Given_instance_of\DefaultMappingsRepository_class\and_searching_for_type_mapping.cs" />
     <Compile Include="Given_instance_of\DefaultMappingBuilder_class\DefaultMappingBuilderTest.cs" />
+    <Compile Include="Given_instance_of\Entity_class\EntityPropertyTest.cs" />
     <Compile Include="Given_instance_of\Entity_class\EntityTest.cs" />
     <Compile Include="Given_instance_of\Entity_class\when_comparing_for_equality.cs" />
     <Compile Include="Given_instance_of\Entity_class\when_verifying_mapped_classes.cs" />

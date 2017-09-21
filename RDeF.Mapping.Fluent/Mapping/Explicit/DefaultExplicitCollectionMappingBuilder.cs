@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Reflection;
 using RDeF.Entities;
+using RDeF.Mapping.Providers;
+using RDeF.Mapping.Reflection;
 
 namespace RDeF.Mapping.Explicit
 {
@@ -25,26 +27,25 @@ namespace RDeF.Mapping.Explicit
                 throw new ArgumentNullException(nameof(term));
             }
 
-            _mappingsBuilder.Collections[_propertyInfo] = new Tuple<Iri, Iri, CollectionStorageModel, Type>(term, graph, CollectionStorageModel.Unspecified, null);
-            return new DefaultExplicitCollectionStorageModelBuilder<TEntity>(_mappingsBuilder, _propertyInfo, false);
+            var propertyInfo = new ExplicitlyMappedPropertyInfo(_propertyInfo, term, graph);
+            _mappingsBuilder.Collections[propertyInfo] = new Tuple<Iri, Iri, CollectionStorageModel, Type>(term, graph, CollectionStorageModel.Unspecified, null);
+            return new DefaultExplicitCollectionStorageModelBuilder<TEntity>(_mappingsBuilder, propertyInfo);
         }
 
         /// <inheritdoc />
         public IExplicitCollectionStorageModelBuilder<TEntity> MappedTo(string prefix, string term, Iri graph = null)
         {
             ValidatePrefixAndTerm(prefix, term);
-            _mappingsBuilder.CollectionGraphs[_propertyInfo] =
-                new Tuple<string, string, Iri, CollectionStorageModel, Type>(prefix, term, graph, CollectionStorageModel.Unspecified, null);
-            return new DefaultExplicitCollectionStorageModelBuilder<TEntity>(_mappingsBuilder, _propertyInfo, null);
+            return MappedTo(FluentTermMappingProvider.Resolve(null, prefix, term, _mappingsBuilder.QIriMappings), graph);
         }
 
         /// <inheritdoc />
         public IExplicitCollectionStorageModelBuilder<TEntity> MappedTo(string prefix, string term, string graphPrefix, string graphTerm)
         {
             ValidatePrefixAndTerm(prefix, term);
-            _mappingsBuilder.CollectionTerms[_propertyInfo] =
-                new Tuple<string, string, string, string, CollectionStorageModel, Type>(prefix, term, graphPrefix, graphTerm, CollectionStorageModel.Unspecified, null);
-            return new DefaultExplicitCollectionStorageModelBuilder<TEntity>(_mappingsBuilder, _propertyInfo, true);
+            return MappedTo(
+                FluentTermMappingProvider.Resolve(null, prefix, term, _mappingsBuilder.QIriMappings),
+                FluentTermMappingProvider.Resolve(null, graphPrefix, graphTerm, _mappingsBuilder.QIriMappings));
         }
 
         private static void ValidatePrefixAndTerm(string prefix, string term)

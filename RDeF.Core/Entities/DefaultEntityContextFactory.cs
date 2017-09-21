@@ -64,7 +64,8 @@ namespace RDeF.Entities
         {
             var scope = _container.BeginScope();
             scope.Register<IEntityContext, DefaultEntityContext>();
-            _container.Register<Func<DefaultEntityContext>>(() => (DefaultEntityContext)scope.Resolve<IEntityContext>());
+            scope.Register<Func<DefaultEntityContext>>(() => (DefaultEntityContext)scope.Resolve<IEntityContext>());
+            scope.Register<Func<IEntityContext>>(() => scope.Resolve<IEntityContext>());
             if (!_container.IsRegistered<IEntitySource>())
             {
                 scope.Register<IEntitySource, SimpleInMemoryEntitySource>();

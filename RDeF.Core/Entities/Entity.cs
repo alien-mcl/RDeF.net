@@ -84,7 +84,7 @@ namespace RDeF.Entities
         {
             EnsureInitialized();
             IsChanged = true;
-            return base.GetProperty(propertyInfo);
+            return base.GetProperty(GetActualProperty(propertyInfo));
         }
 
         /// <inheritdoc />
@@ -92,7 +92,7 @@ namespace RDeF.Entities
         {
             EnsureInitialized();
             IsChanged = true;
-            SetPropertyInternal(propertyInfo, value);
+            SetPropertyInternal(GetActualProperty(propertyInfo), value);
         }
 
         /// <inheritdoc />
@@ -182,6 +182,16 @@ namespace RDeF.Entities
             OriginalValues.Remove(propertyValue);
             OriginalValues.Add(new MulticastPropertyValue(propertyValue.CastedType, propertyValue.Property, originalValue));
             ((IObservableCollection)sender).ClearCollectionChanged();
+        }
+
+        private PropertyInfo GetActualProperty(PropertyInfo propertyInfo)
+        {
+            if ((propertyInfo.Name != nameof(IEntity.Iri)) && (propertyInfo.Name != nameof(IEntity.Context)))
+            {
+                return _context.Mappings.FindPropertyMappingFor(this, propertyInfo)?.PropertyInfo ?? propertyInfo;
+            }
+
+            return propertyInfo;
         }
     }
 }

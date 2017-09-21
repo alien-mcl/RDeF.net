@@ -19,7 +19,7 @@ namespace Given_instance_of.DefaultMappingsRepository_class.which_is_already_ini
 
         public override void TheTest()
         {
-            Result = MappingsRepository.FindPropertyMappingFor(ExpectedProperty);
+            Result = MappingsRepository.FindPropertyMappingFor(null, ExpectedProperty);
         }
 
         [Test]
@@ -31,7 +31,7 @@ namespace Given_instance_of.DefaultMappingsRepository_class.which_is_already_ini
         [Test]
         public void Should_throw_when_no_property_is_given()
         {
-            MappingsRepository.Invoking(instance => instance.FindPropertyMappingFor(null)).ShouldThrow<ArgumentNullException>();
+            MappingsRepository.Invoking(instance => instance.FindPropertyMappingFor(null, null)).ShouldThrow<ArgumentNullException>();
         }
 
         protected override void ScenarioSetup()

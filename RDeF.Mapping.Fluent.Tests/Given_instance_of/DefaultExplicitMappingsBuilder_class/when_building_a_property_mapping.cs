@@ -6,6 +6,7 @@ using RDeF.Data;
 using RDeF.Entities;
 using RDeF.Mapping.Converters;
 using RDeF.Mapping.Explicit;
+using RDeF.Mapping.Reflection;
 
 namespace Given_instance_of.DefaultExplicitMappingsBuilder_class
 {
@@ -47,7 +48,7 @@ namespace Given_instance_of.DefaultExplicitMappingsBuilder_class
         public void Should_prepare_property_data_model_correctly_with_pointed_value_converter()
         {
             ((DefaultExplicitMappingsBuilder<IProduct>)ValueConverter.WithValueConverter<TestConverter>())
-                .Properties.Should().ContainKey(typeof(IProduct).GetTypeInfo().GetProperty("Description"))
+                .Properties.Should().ContainKey(new ExplicitlyMappedPropertyInfo(typeof(IProduct).GetTypeInfo().GetProperty("Description"), new Iri("term"), new Iri("graph")))
                 .WhichValue.ShouldBeEquivalentTo(
                     new Tuple<Iri, Iri, Type>(new Iri("term"), new Iri("graph"), typeof(TestConverter)));
         }
@@ -56,7 +57,7 @@ namespace Given_instance_of.DefaultExplicitMappingsBuilder_class
         public void Should_prepare_property_data_model_correctly_with_default_value_converter()
         {
             ((DefaultExplicitMappingsBuilder<IProduct>)ValueConverter.WithDefaultConverter())
-                .Properties.Should().ContainKey(typeof(IProduct).GetTypeInfo().GetProperty("Description"))
+                .Properties.Should().ContainKey(new ExplicitlyMappedPropertyInfo(typeof(IProduct).GetTypeInfo().GetProperty("Description"), new Iri("term"), new Iri("graph")))
                 .WhichValue.ShouldBeEquivalentTo(
                     new Tuple<Iri, Iri, Type>(new Iri("term"), new Iri("graph"), null));
         }

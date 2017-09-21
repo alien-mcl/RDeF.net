@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using RDeF.Entities;
+using RDeF.Mapping.Providers;
 using RDeF.Mapping.Reflection;
 using RollerCaster.Reflection;
 
@@ -12,48 +13,33 @@ namespace RDeF.Mapping.Explicit
     /// <summary>Provides a base type for <see cref="DefaultExplicitMappingsBuilder{TEntity}" />.</summary>
     public class DefaultExplicitMappingsBuilder
     {
-        internal DefaultExplicitMappingsBuilder()
+        internal DefaultExplicitMappingsBuilder(IEnumerable<QIriMapping> qIriMappings = null)
         {
             Classes = new List<Tuple<Iri, Iri>>();
-            ClassTerms = new List<Tuple<string, string, string, string>>();
-            ClassGraphs = new List<Tuple<string, string, Iri>>();
             Properties = new Dictionary<PropertyInfo, Tuple<Iri, Iri, Type>>();
-            PropertyTerms = new Dictionary<PropertyInfo, Tuple<string, string, string, string, Type>>();
-            PropertyGraphs = new Dictionary<PropertyInfo, Tuple<string, string, Iri, Type>>();
             Collections = new Dictionary<PropertyInfo, Tuple<Iri, Iri, CollectionStorageModel, Type>>();
-            CollectionTerms = new Dictionary<PropertyInfo, Tuple<string, string, string, string, CollectionStorageModel, Type>>();
-            CollectionGraphs = new Dictionary<PropertyInfo, Tuple<string, string, Iri, CollectionStorageModel, Type>>();
+            QIriMappings = qIriMappings ?? Array.Empty<QIriMapping>();
         }
+
+        internal IEnumerable<QIriMapping> QIriMappings { get; set; }
 
         internal ICollection<Tuple<Iri, Iri>> Classes { get; }
 
-        internal ICollection<Tuple<string, string, string, string>> ClassTerms { get; }
-
-        internal ICollection<Tuple<string, string, Iri>> ClassGraphs { get; }
-
         internal IDictionary<PropertyInfo, Tuple<Iri, Iri, Type>> Properties { get; }
 
-        internal IDictionary<PropertyInfo, Tuple<string, string, string, string, Type>> PropertyTerms { get; }
-
-        internal IDictionary<PropertyInfo, Tuple<string, string, Iri, Type>> PropertyGraphs { get; }
-
         internal IDictionary<PropertyInfo, Tuple<Iri, Iri, CollectionStorageModel, Type>> Collections { get; }
-
-        internal IDictionary<PropertyInfo, Tuple<string, string, string, string, CollectionStorageModel, Type>> CollectionTerms { get; }
-
-        internal IDictionary<PropertyInfo, Tuple<string, string, Iri, CollectionStorageModel, Type>> CollectionGraphs { get; }
     }
 
     /// <summary>Provides a default implementation of the <see cref="IExplicitMappingsBuilder{TEntity}" />.</summary>
     /// <typeparam name="TEntity">Type of the entity being mapped.</typeparam>
     public class DefaultExplicitMappingsBuilder<TEntity> : DefaultExplicitMappingsBuilder, IExplicitMappingsBuilder<TEntity> where TEntity : IEntity
     {
-        private readonly bool _allowSinglePropertyOnly;
+        private readonly bool _allowSingleProperty;
         private bool _isPropertyConfigured;
 
-        internal DefaultExplicitMappingsBuilder(bool allowSinglePropertyOnly = false)
+        internal DefaultExplicitMappingsBuilder(IEnumerable<QIriMapping> qIriMappings = null, bool allowSingleProperty = false) : base(qIriMappings)
         {
-            _allowSinglePropertyOnly = allowSinglePropertyOnly;
+            _allowSingleProperty = allowSingleProperty;
         }
 
         /// <inheritdoc />
@@ -72,7 +58,7 @@ namespace RDeF.Mapping.Explicit
         public IExplicitMappingsBuilder<TEntity> MappedTo(string prefix, string term, Iri graph = null)
         {
             ValidatePrefixAndTerm(prefix, term);
-            ClassGraphs.Add(new Tuple<string, string, Iri>(prefix, term, graph));
+            Classes.Add(new Tuple<Iri, Iri>(FluentTermMappingProvider.Resolve(null, prefix, term, QIriMappings), graph));
             return this;
         }
 
@@ -80,7 +66,9 @@ namespace RDeF.Mapping.Explicit
         public IExplicitMappingsBuilder<TEntity> MappedTo(string prefix, string term, string graphPrefix, string graphTerm)
         {
             ValidatePrefixAndTerm(prefix, term);
-            ClassTerms.Add(new Tuple<string, string, string, string>(prefix, term, graphPrefix, graphTerm));
+            Classes.Add(new Tuple<Iri, Iri>(
+                FluentTermMappingProvider.Resolve(null, prefix, term, QIriMappings),
+                FluentTermMappingProvider.Resolve(null, graphPrefix, graphTerm, QIriMappings)));
             return this;
         }
 
@@ -205,7 +193,7 @@ namespace RDeF.Mapping.Explicit
 
         private void EnsureSingleProperty()
         {
-            if ((_allowSinglePropertyOnly) && (_isPropertyConfigured))
+            if ((_allowSingleProperty) && (_isPropertyConfigured))
             {
                 throw new InvalidOperationException("Only single property configuration is allowed.");
             }

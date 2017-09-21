@@ -40,6 +40,8 @@ namespace Given_a_context.with_explicitly_mapped_entity
             secondaryProduct.Name = "Another product name";
             secondaryProduct.Description = "Product description";
             secondaryProduct.Categories.Add("category 1");
+            secondaryProduct = Context.Load<IUnmappedProduct>(new Iri("another"), AlternativeMapSecondaryEntity);
+            secondaryProduct.Name = "Alternative product name";
             Context.Commit();
             Buffer = new MemoryStream();
         }

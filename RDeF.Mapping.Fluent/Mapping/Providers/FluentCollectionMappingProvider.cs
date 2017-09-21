@@ -22,33 +22,6 @@ namespace RDeF.Mapping.Providers
             StoreAs = storeAs;
         }
 
-        internal FluentCollectionMappingProvider(
-            Type entityType,
-            PropertyInfo property,
-            string prefix,
-            string term,
-            CollectionStorageModel storeAs = CollectionStorageModel.Unspecified,
-            Type valueConverterType = null,
-            Iri graph = null)
-            : base(entityType, property, prefix, term, valueConverterType, graph)
-        {
-            StoreAs = storeAs;
-        }
-
-        internal FluentCollectionMappingProvider(
-            Type entityType,
-            PropertyInfo property,
-            string prefix,
-            string term, 
-            CollectionStorageModel storeAs = CollectionStorageModel.Unspecified,
-            Type valueConverterType = null,
-            string graphPrefix = null,
-            string graphTerm = null)
-            : base(entityType, property, prefix, term, valueConverterType, graphPrefix, graphTerm)
-        {
-            StoreAs = storeAs;
-        }
-
         /// <inheritdoc />
         public CollectionStorageModel StoreAs { get; set; }
 

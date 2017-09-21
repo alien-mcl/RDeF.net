@@ -55,7 +55,6 @@
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Entities\EntityContextExtensions.cs" />
-    <Compile Include="Entities\ExplicitMappingsAwareChangeDetector.cs" />
     <Compile Include="Entities\UnmappedPropertyEventArgsExtensions.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Mapping\EntityAwareMappingsRepository.cs" />
@@ -76,12 +75,14 @@
     <Compile Include="Mapping\FluentMappingSource.cs" />
     <Compile Include="Mapping\FluentMappingSourceProvider.cs" />
     <Compile Include="Mapping\Fluent\EntityMap.cs" />
-    <Compile Include="Mapping\MappingsRepositoryExtensions.cs" />
+    <Compile Include="Mapping\Fluent\IEntityMap.cs" />
     <Compile Include="Mapping\Providers\FluentCollectionMappingProvider.cs" />
     <Compile Include="Mapping\Providers\FluentEntityMappingProvider.cs" />
     <Compile Include="Mapping\Providers\FluentPropertyMappingProvider.cs" />
     <Compile Include="Mapping\Providers\FluentTermMappingProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reflection\WrappingPropertyInfo.cs" />
+    <Compile Include="Reflection\ExplicitlyMappedPropertyInfo.cs" />
     <Compile Include="Reflection\DynamicPropertyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

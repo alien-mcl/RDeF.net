@@ -17,31 +17,11 @@ namespace RDeF.Mapping.Providers
             Graph = graph;
         }
 
-        internal FluentTermMappingProvider(Type entityType, string prefix, string term, Iri graph = null)
-        {
-            EntityType = entityType;
-            Prefix = prefix;
-            Term = term;
-            Graph = graph;
-        }
-
-        internal FluentTermMappingProvider(Type entityType, string prefix, string term, string graphPrefix = null, string graphTerm = null)
-        {
-            EntityType = entityType;
-            Prefix = prefix;
-            Term = term;
-            GraphPrefix = graphPrefix;
-            GraphTerm = graphTerm;
-        }
-
         /// <inheritdoc />
         public Type EntityType { get; }
 
         /// <summary>Gets the mapped iri.</summary>
-        protected Iri Iri { get; }
-
-        /// <summary>Gets the mapped iri prefix.</summary>
-        protected string Prefix { get; }
+        protected virtual Iri Iri { get; }
 
         /// <summary>Gets the mapped iri term.</summary>
         [SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods", Justification = "Protected and public members won't collide.")]
@@ -49,30 +29,24 @@ namespace RDeF.Mapping.Providers
 
         /// <summary>Gets the required graph.</summary>
         [SuppressMessage("Microsoft.Naming", "CA1721:PropertyNamesShouldNotMatchGetMethods", Justification = "Protected and public members won't collide.")]
-        protected Iri Graph { get; }
-
-        /// <summary>Gets the mapped iri prefix.</summary>
-        protected string GraphPrefix { get; }
-
-        /// <summary>Gets the mapped iri term.</summary>
-        protected string GraphTerm { get; }
+        protected virtual Iri Graph { get; }
 
         /// <inheritdoc />
         public Iri GetGraph(IEnumerable<QIriMapping> qiriMappings)
         {
-            return Resolve(Graph, GraphPrefix, GraphTerm, qiriMappings);
+            return Resolve(Graph, null, null, qiriMappings);
         }
 
         /// <inheritdoc />
         public Iri GetTerm(IEnumerable<QIriMapping> qiriMappings)
         {
-            return Resolve(Iri, Prefix, Term, qiriMappings);
+            return Resolve(Iri, null, null, qiriMappings);
         }
 
         /// <inheritdoc />
         public abstract void Accept(IMappingProviderVisitor visitor);
 
-        private static Iri Resolve(Iri iri, string prefix, string term, IEnumerable<QIriMapping> qiriMappings)
+        internal static Iri Resolve(Iri iri, string prefix, string term, IEnumerable<QIriMapping> qiriMappings)
         {
             if (iri != null)
             {

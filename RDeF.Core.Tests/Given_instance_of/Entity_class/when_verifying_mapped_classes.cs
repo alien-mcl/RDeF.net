@@ -44,7 +44,7 @@ namespace Given_instance_of.Entity_class
             EntityMapping = new Mock<IEntityMapping>(MockBehavior.Strict);
             EntityMapping.SetupGet(instance => instance.Classes).Returns(new[] { PrimaryClassMapping.Object, SecondaryClassMapping.Object });
             Mappings = new Mock<IMappingsRepository>(MockBehavior.Strict);
-            Mappings.Setup(instance => instance.FindEntityMappingFor(It.IsAny<Type>())).Returns(EntityMapping.Object);
+            Mappings.Setup(instance => instance.FindEntityMappingFor(It.IsAny<IEntity>(), It.IsAny<Type>())).Returns(EntityMapping.Object);
             Context.Setup(instance => instance.Initialize(It.IsAny<Entity>()));
             Context.SetupGet(instance => instance.Mappings).Returns(Mappings.Object);
             Entity.ActLike<IProduct>();

@@ -21,7 +21,7 @@ namespace RDeF.Entities
             var result = new List<Iri>();
             foreach (var type in proxy.CastedTypes)
             {
-                var entityMapping = entity.Context.Mappings.FindEntityMappingFor(type);
+                var entityMapping = entity.Context.Mappings.FindEntityMappingFor(entity, type);
                 if (entityMapping != null)
                 {
                     result.AddRange(entityMapping.Classes.Select(@class => @class.Term));

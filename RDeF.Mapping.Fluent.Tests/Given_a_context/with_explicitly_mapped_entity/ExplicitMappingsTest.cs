@@ -55,5 +55,15 @@ namespace Given_a_context.with_explicitly_mapped_entity
                 .WithProperty(instance => instance.Name).MappedTo(new Iri("label")).WithValueConverter<StringConverter>()
                 .WithCollection(instance => instance.Categories).MappedTo(new Iri("categories")).StoredAs(CollectionStorageModel.Simple).WithValueConverter<StringConverter>();
         }
+
+        protected virtual void AlternativeMapSecondaryEntity(IExplicitMappingsBuilder<IUnmappedProduct> entity)
+        {
+            entity
+                .MappedTo(new Iri("class1"))
+                .MappedTo(new Iri("class2"))
+                .WithProperty(instance => instance.Description).MappedTo(new Iri("description")).WithValueConverter<StringConverter>()
+                .WithProperty(instance => instance.Name).MappedTo(new Iri("display-name")).WithValueConverter<StringConverter>()
+                .WithCollection(instance => instance.Categories).MappedTo(new Iri("categories")).StoredAs(CollectionStorageModel.Simple).WithValueConverter<StringConverter>();
+        }
     }
 }

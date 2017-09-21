@@ -26,8 +26,8 @@ namespace Given_instance_of.DefaultChangeDetector_class.when_processing
             Converter = new Mock<IConverter>(MockBehavior.Strict);
             Converter.Setup(instance => instance.ConvertTo(It.IsAny<Iri>(), It.IsAny<Iri>(), It.IsAny<object>(), null))
                 .Returns<Iri, Iri, object, Iri>((subject, predicate, value, graph) => new Statement(subject, predicate, String.Format(CultureInfo.InvariantCulture, "{0}", value), graph));
-            MappingsRepository.Setup(instance => instance.FindEntityMappingFor(It.IsAny<Type>()))
-                .Returns<Type>(type =>
+            MappingsRepository.Setup(instance => instance.FindEntityMappingFor(It.IsAny<IEntity>(), It.IsAny<Type>()))
+                .Returns<IEntity, Type>((entity, type) =>
                 {
                     var entityMapping = new Mock<IEntityMapping>(MockBehavior.Strict);
                     var classMapping = new Mock<IStatementMapping>(MockBehavior.Strict);
@@ -36,13 +36,14 @@ namespace Given_instance_of.DefaultChangeDetector_class.when_processing
                     entityMapping.SetupGet(instance => instance.Classes).Returns(new[] { classMapping.Object });
                     return entityMapping.Object;
                 });
-            MappingsRepository.Setup(instance => instance.FindPropertyMappingFor(It.IsAny<PropertyInfo>()))
-                .Returns<PropertyInfo>(property =>
+            MappingsRepository.Setup(instance => instance.FindPropertyMappingFor(It.IsAny<IEntity>(), It.IsAny<PropertyInfo>()))
+                .Returns<IEntity, PropertyInfo>((entity, property) =>
                 {
                     var propertyMapping = new Mock<IPropertyMapping>(MockBehavior.Strict);
                     propertyMapping.SetupGet(instance => instance.ValueConverter).Returns(Converter.Object);
                     propertyMapping.SetupGet(instance => instance.Term).Returns(new Iri(property.Name.ToLower()));
                     propertyMapping.SetupGet(instance => instance.Graph).Returns((Iri)null);
+                    propertyMapping.SetupGet(instance => instance.PropertyInfo).Returns(property);
                     if (property.PropertyType.IsAnEnumerable())
                     {
                         var collectionMapping = propertyMapping.As<ICollectionMapping>();
@@ -55,7 +56,9 @@ namespace Given_instance_of.DefaultChangeDetector_class.when_processing
                 });
             RetractedStatements = new Dictionary<IEntity, ISet<Statement>>();
             AddedStatements = new Dictionary<IEntity, ISet<Statement>>();
-            Entity = new Entity(new Iri("test"), (Context = new Mock<DefaultEntityContext>(null, MappingsRepository.Object, Detector)).Object);
+            Context = new Mock<DefaultEntityContext>(null, MappingsRepository.Object, Detector);
+            Context.SetupGet(instance => instance.Mappings).Returns(MappingsRepository.Object);
+            Entity = new Entity(new Iri("test"), Context.Object);
         }
     }
 }

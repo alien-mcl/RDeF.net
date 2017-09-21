@@ -28,7 +28,7 @@ namespace Given_instance_of.DefaultEntityContext_class
                     e.PropertyMapping = PropertyMapping.Object;
                 }
             };
-            MappingsRepository.Setup(instance => instance.FindPropertyMappingFor(It.IsAny<Iri>(), It.IsAny<Iri>())).Returns((IPropertyMapping)null);
+            MappingsRepository.Setup(instance => instance.FindPropertyMappingFor(It.IsAny<IEntity>(), It.IsAny<Iri>(), It.IsAny<Iri>())).Returns((IPropertyMapping)null);
         }
     }
 }

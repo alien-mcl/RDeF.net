@@ -8,7 +8,7 @@ using RollerCaster;
 namespace Given_instance_of.Entity_class
 {
     [TestFixture]
-    public class when_setting_a_property : EntityTest
+    public class when_setting_a_property : EntityPropertyTest
     {
         private const string ExpectedName = "Product name";
         private const string ExpectedDescription = "Product description";
@@ -39,6 +39,7 @@ namespace Given_instance_of.Entity_class
 
         protected override void ScenarioSetup()
         {
+            base.ScenarioSetup();
             Context.Setup(instance => instance.Initialize(It.IsAny<Entity>()));
         }
     }

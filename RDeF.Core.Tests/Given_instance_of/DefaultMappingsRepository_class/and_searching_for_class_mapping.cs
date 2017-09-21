@@ -20,7 +20,7 @@ namespace Given_instance_of.DefaultMappingsRepository_class.which_is_already_ini
 
         public override void TheTest()
         {
-            Result = MappingsRepository.FindEntityMappingFor(new Iri(ExpectedClass));
+            Result = MappingsRepository.FindEntityMappingFor(null, new Iri(ExpectedClass));
         }
 
         [Test]
@@ -32,7 +32,7 @@ namespace Given_instance_of.DefaultMappingsRepository_class.which_is_already_ini
         [Test]
         public void Should_throw_when_no_class_is_given()
         {
-            MappingsRepository.Invoking(instance => instance.FindEntityMappingFor((Iri)null)).ShouldThrow<ArgumentNullException>();
+            MappingsRepository.Invoking(instance => instance.FindEntityMappingFor(null, (Iri)null)).ShouldThrow<ArgumentNullException>();
         }
 
         protected override void ScenarioSetup()

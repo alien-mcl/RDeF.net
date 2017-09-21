@@ -82,7 +82,9 @@
     <Compile Include="Given_a_context\with_explicitly_mapped_entity\when_serializing.cs" />
     <Compile Include="Given_instance_of\DefaultExplicitCollectionMappingBuilder_class\when_building_a_collection.cs" />
     <Compile Include="Given_instance_of\DefaultExplicitPropertyMappingBuilder_class\when_building_a_property.cs" />
-    <Compile Include="Given_instance_of\DynamicPropertyInfo_class\when_working_with_it.cs" />
+    <Compile Include="Given_instance_of\property_of_type\ExplicitlyMappedPropertyInfo_class.cs" />
+    <Compile Include="Given_instance_of\property_of_type\PropertyInfoTest.cs" />
+    <Compile Include="Given_instance_of\property_of_type\DynamicPropertyInfo_class.cs" />
     <Compile Include="Given_instance_of\EntityAwareMappingsRepository_class\EntityAwareMappingsRepositoryTest.cs" />
     <Compile Include="Given_instance_of\EntityAwareMappingsRepository_class\when_obtaining_mappings.cs" />
     <Compile Include="Given_instance_of\EntityAwareMappingsRepository_class\while_enumerating.cs" />
@@ -95,7 +97,6 @@
     <Compile Include="Given_instance_of\DefaultExplicitMappingsBuilder_class\when_building_an_entity.cs" />
     <Compile Include="Given_instance_of\DefaultExplicitMappingsBuilder_class\when_building_a_property_mapping.cs" />
     <Compile Include="Given_instance_of\DefaultExplicitMappings_class\when_obtaining_mappings.cs" />
-    <Compile Include="Given_instance_of\MappingsRepository_class\when_adding_entity_into_context.cs" />
     <Compile Include="Given_instance_of\UnmappedPropertyEventArgs_class\when_mapping_property.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

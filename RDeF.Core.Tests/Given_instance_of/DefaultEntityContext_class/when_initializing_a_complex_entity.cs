@@ -120,10 +120,12 @@ namespace Given_instance_of.DefaultEntityContext_class
                 SetupPropertyMapping(entityMapping, "Doubles"),
                 SetupPropertyMapping(entityMapping, "Other")
             };
-            MappingsRepository.Setup(instance => instance.FindEntityMappingFor(It.IsAny<Iri>(), null))
-                .Returns<Iri, Iri>((iri, graph) => entityMapping.Object);
-            MappingsRepository.Setup(instance => instance.FindPropertyMappingFor(It.IsAny<Iri>(), null))
-                .Returns<Iri, Iri>((iri, graph) => properties.Where(property => property.Object.Term == iri).Select(property => property.Object).First());
+            MappingsRepository.Setup(instance => instance.FindEntityMappingFor(It.IsAny<IEntity>(), It.IsAny<Iri>(), null))
+                .Returns<IEntity, Iri, Iri>((entity, iri, graph) => entityMapping.Object);
+            MappingsRepository.Setup(instance => instance.FindPropertyMappingFor(It.IsAny<IEntity>(), It.IsAny<Iri>(), null))
+                .Returns<IEntity, Iri, Iri>((entity, iri, graph) => properties.Where(property => property.Object.Term == iri).Select(property => property.Object).First());
+            MappingsRepository.Setup(instance => instance.FindPropertyMappingFor(It.IsAny<IEntity>(), It.IsAny<PropertyInfo>()))
+                .Returns<IEntity, PropertyInfo>((entity, propertyInfo) => properties.Where(property => property.Object.PropertyInfo == propertyInfo).Select(property => property.Object).First());
         }
 
         private Mock<ICollectionMapping> SetupPropertyMapping(Mock<IEntityMapping> entityMapping, string propertyName)

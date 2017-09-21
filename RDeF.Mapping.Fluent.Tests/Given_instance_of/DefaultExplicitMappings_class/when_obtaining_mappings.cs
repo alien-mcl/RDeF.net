@@ -46,6 +46,7 @@ namespace Given_instance_of.DefaultExplicitMappings_class
             PropertyMapping.SetupGet(instance => instance.Term).Returns(new Iri("description"));
             PropertyMapping.SetupGet(instance => instance.Graph).Returns((Iri)null);
             PropertyMapping.SetupGet(instance => instance.ValueConverter).Returns((ILiteralConverter)null);
+            PropertyMapping.SetupGet(instance => instance.PropertyInfo).Returns(typeof(IProduct).GetTypeInfo().GetProperty("Description"));
             EntityMapping = new Mock<IEntityMapping>(MockBehavior.Strict);
             EntityMapping.SetupGet(instance => instance.Type).Returns(typeof(IProduct));
             EntityMapping.SetupGet(instance => instance.Classes).Returns(Array.Empty<IStatementMapping>());

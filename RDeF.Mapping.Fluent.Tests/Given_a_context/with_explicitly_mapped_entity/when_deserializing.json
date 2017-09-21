@@ -15,6 +15,7 @@
                     "temp:categories": [ "category1" ],
                     "temp:description": [ "Product description" ],
                     "@type": [ "temp:class1", "temp:class2" ],
+                    "temp:label": [ "Alternative product name" ],
                     "temp:name": [ "Another product name" ]
                 }
             ]

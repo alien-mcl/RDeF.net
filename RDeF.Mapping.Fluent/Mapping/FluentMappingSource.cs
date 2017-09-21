@@ -16,21 +16,29 @@ namespace RDeF.Mapping
     public class FluentMappingSource : IMappingSource
     {
         private readonly Assembly _assembly;
+        private readonly IEnumerable<QIriMapping> _qiriMappings;
         private readonly IList<ITermMappingProvider> _entityMappingProviders;
         private readonly object _sync = new Object();
         private bool _isInitialized;
 
         /// <summary>Initializes a new instance of the <see cref="FluentMappingSource"/> class.</summary>
         /// <param name="assembly">The assembly to gather mappings from.</param>
-        public FluentMappingSource(Assembly assembly)
+        /// <param name="qiriMappings">qIri mappings.</param>
+        public FluentMappingSource(Assembly assembly, IEnumerable<QIriMapping> qiriMappings)
         {
             if (assembly == null)
             {
                 throw new ArgumentNullException(nameof(assembly));
             }
 
+            if (qiriMappings == null)
+            {
+                throw new ArgumentNullException(nameof(qiriMappings));
+            }
+
             _entityMappingProviders = new List<ITermMappingProvider>();
             _assembly = assembly;
+            _qiriMappings = qiriMappings;
         }
 
         /// <inheritdoc />
@@ -61,6 +69,8 @@ namespace RDeF.Mapping
             foreach (var type in types)
             {
                 var entityMap = (DefaultExplicitMappingsBuilder)type.EntityMapType.GetConstructor(Type.EmptyTypes).Invoke(null);
+                entityMap.QIriMappings = _qiriMappings;
+                ((IEntityMap)entityMap).CreateMappings();
                 _entityMappingProviders.AddClasses(type.EntityType, entityMap);
                 _entityMappingProviders.AddCollections(type.EntityType, entityMap);
                 _entityMappingProviders.AddProperties(type.EntityType, entityMap);

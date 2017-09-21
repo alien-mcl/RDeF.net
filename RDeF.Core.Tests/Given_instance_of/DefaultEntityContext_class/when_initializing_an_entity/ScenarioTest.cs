@@ -39,7 +39,7 @@ namespace Given_instance_of.DefaultEntityContext_class
         [Test]
         public void Should_search_for_mappings_for_a_statement()
         {
-            MappingsRepository.Verify(instance => instance.FindPropertyMappingFor(PredicateIri, null), Times.Once);
+            MappingsRepository.Verify(instance => instance.FindPropertyMappingFor(It.IsAny<IEntity>(), PredicateIri, null), Times.Once);
         }
 
         [Test]
@@ -68,6 +68,8 @@ namespace Given_instance_of.DefaultEntityContext_class
 
         protected override void ScenarioSetup()
         {
+            MappingsRepository.Setup(instance => instance.FindPropertyMappingFor(It.IsAny<IEntity>(), It.IsAny<PropertyInfo>()))
+                .Returns<IEntity, PropertyInfo>((entity, propertyInfo) => PropertyMapping.Object);
             Entity = new Entity(Iri, Context);
             EntitySource.Setup(instance => instance.Load(It.IsAny<Iri>()))
                 .Returns<Iri>(iri => new[] { new Statement(iri, PredicateIri, ExpectedName) });

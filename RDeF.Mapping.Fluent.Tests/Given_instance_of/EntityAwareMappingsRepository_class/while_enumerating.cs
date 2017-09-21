@@ -17,7 +17,7 @@ namespace Given_instance_of.EntityAwareMappingsRepository_class
 
         protected override void ScenarioSetup()
         {
-            ExplicitMappings.Setup(instance => instance.GetEnumerator(OwningEntity))
+            ExplicitMappings.Setup(instance => instance.GetEnumerator())
                 .Returns(Enumerable.Range(0, 2).Select(_ => EntityMapping.Object).GetEnumerator());
             MappingRepository.As<IEnumerable<IEntityMapping>>().Setup(instance => instance.GetEnumerator())
                 .Returns(Enumerable.Range(0, 3).Select(_ => EntityMapping.Object).GetEnumerator());

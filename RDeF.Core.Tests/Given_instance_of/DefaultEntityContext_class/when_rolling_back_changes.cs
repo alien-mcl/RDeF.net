@@ -1,7 +1,10 @@
-﻿using FluentAssertions;
+﻿using System.Reflection;
+using FluentAssertions;
+using Moq;
 using NUnit.Framework;
 using RDeF.Data;
 using RDeF.Entities;
+using RDeF.Mapping;
 
 namespace Given_instance_of.DefaultEntityContext_class
 {
@@ -53,6 +56,13 @@ namespace Given_instance_of.DefaultEntityContext_class
 
         protected override void ScenarioSetup()
         {
+            MappingsRepository.Setup(instance => instance.FindPropertyMappingFor(It.IsAny<IEntity>(), It.IsAny<PropertyInfo>()))
+                .Returns<IEntity, PropertyInfo>((entity, propertyInfo) =>
+                {
+                    var result = new Mock<IPropertyMapping>(MockBehavior.Strict);
+                    result.SetupGet(instance => instance.PropertyInfo).Returns(propertyInfo);
+                    return result.Object;
+                });
             Product = Context.Create<IProduct>(new Iri("test"));
             Product.Description = "Product description";
             Product.Name = "Product name";
