@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Xml;
+using RDeF.Collections;
 using RDeF.Entities;
 using RDeF.Vocabularies;
 using RDeF.Xml;
@@ -20,7 +21,7 @@ namespace RDeF.Serialization
                 throw new ArgumentNullException(nameof(streamReader));
             }
 
-            var statements = new List<Statement>();
+            var statements = new TypePrioritizingStatementCollection();
             var blankNodes = new Dictionary<string, Iri>();
             using (var reader = XmlReader.Create(streamReader, new XmlReaderSettings() { Async = true }))
             {
@@ -56,10 +57,10 @@ namespace RDeF.Serialization
         {
             bool isEmptyElement = reader.IsEmptyElement;
             Iri predicate = new Iri(reader.NamespaceURI + reader.LocalName);
-            Iri @object = null;
-            string value = null;
-            string language = null;
-            Iri datatype = null;
+            Iri @object;
+            string value;
+            string language;
+            Iri datatype;
             ReadAttributes(reader, blankNodes, out @object, out value, out datatype, out language);
             if (isEmptyElement)
             {

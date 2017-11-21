@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using FluentAssertions.Collections;
@@ -8,6 +9,12 @@ namespace RDeF.FluentAssertions
 {
     internal static class AssertionsExtensions
     {
+        internal static T After<T>(this T instance, Action<T> action)
+        {
+            action(instance);
+            return instance;
+        }
+
         internal static void MatchStatements(
             this GenericCollectionAssertions<KeyValuePair<Iri, IEnumerable<Statement>>> assertion,
             IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>> expected)

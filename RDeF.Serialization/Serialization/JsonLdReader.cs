@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using JsonLD.Core;
 using JsonLD.Util;
+using RDeF.Collections;
 using RDeF.Entities;
 
 namespace RDeF.Serialization
@@ -22,7 +23,7 @@ namespace RDeF.Serialization
                 throw new ArgumentNullException(nameof(streamReader));
             }
 
-            var defaultGraph = new List<Statement>();
+            var defaultGraph = new TypePrioritizingStatementCollection();
             var graphMap = new Dictionary<Iri, IEnumerable<Statement>>();
             var dataset = (RDFDataset)JsonLdProcessor.ToRDF(JSONUtils.FromReader(streamReader));
             foreach (var graphName in dataset.GraphNames())
@@ -35,7 +36,7 @@ namespace RDeF.Serialization
                 }
                 else if (!graphMap.TryGetValue(graphIri, out statements))
                 {
-                    graphMap[graphIri] = statements = new List<Statement>();
+                    graphMap[graphIri] = statements = new TypePrioritizingStatementCollection();
                 }
 
                 var statementsCollection = (ICollection<Statement>)statements;

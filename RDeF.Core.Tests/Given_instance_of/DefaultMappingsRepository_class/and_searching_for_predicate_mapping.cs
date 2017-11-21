@@ -15,11 +15,13 @@ namespace Given_instance_of.DefaultMappingsRepository_class.which_is_already_ini
     {
         private const string ExpectedProperty = "Name";
 
+        private IEntity Entity { get; set; }
+
         private IPropertyMapping Result { get; set; }
 
         public override void TheTest()
         {
-            Result = MappingsRepository.FindPropertyMappingFor(null, new Iri(ExpectedProperty));
+            Result = MappingsRepository.FindPropertyMappingFor(Entity, new Iri(ExpectedProperty));
         }
 
         [Test]
@@ -36,15 +38,43 @@ namespace Given_instance_of.DefaultMappingsRepository_class.which_is_already_ini
 
         protected override void ScenarioSetup()
         {
+            MappingBuilder.Setup(instance => instance.BuildMappings(It.IsAny<IEnumerable<IMappingSource>>(), It.IsAny<IDictionary<Type, ICollection<ITermMappingProvider>>>()))
+                .Returns(new Dictionary<Type, IEntityMapping>()
+                {
+                    { typeof(IComplexEntity), CreateEntityMapping<IComplexEntity>(new Iri("ComplexEntity")) },
+                    { typeof(IProduct), CreateEntityMapping<IProduct>(new Iri("Product")) }
+                });
+            var entitySource = new Mock<IEntitySource>(MockBehavior.Strict);
+            var changeDetector = new Mock<IChangeDetector>(MockBehavior.Strict);
+            var context = new Mock<DefaultEntityContext>(MockBehavior.Strict, entitySource.Object, MappingsRepository, changeDetector.Object);
+            context.SetupGet(instance => instance.Mappings).Returns(() => MappingsRepository);
+            var entity = new Entity(new Iri(), context.Object);
+            entity.CastedTypes.Add(typeof(IProduct));
+            Entity = entity;
+        }
+
+        private IEntityMapping CreateEntityMapping<TEntity>(Iri @class = null)
+        {
             var entityMapping = new Mock<IEntityMapping>(MockBehavior.Strict);
-            entityMapping.SetupGet(instance => instance.Type).Returns(typeof(IProduct));
+            entityMapping.SetupGet(instance => instance.Type).Returns(typeof(TEntity));
+            if (@class != null)
+            {
+                var typeMapping = new Mock<IStatementMapping>(MockBehavior.Strict);
+                typeMapping.SetupGet(instance => instance.Term).Returns(@class);
+                typeMapping.SetupGet(instance => instance.Graph).Returns((Iri)null);
+                entityMapping.SetupGet(instance => instance.Classes).Returns(new[] { typeMapping.Object });
+            }
+            else
+            {
+                entityMapping.SetupGet(instance => instance.Classes).Returns(Array.Empty<IStatementMapping>());
+            }
+
             var propertyMapping = new Mock<IPropertyMapping>(MockBehavior.Strict);
             propertyMapping.SetupGet(instance => instance.Name).Returns(ExpectedProperty);
             propertyMapping.SetupGet(instance => instance.Term).Returns(new Iri(ExpectedProperty));
             propertyMapping.SetupGet(instance => instance.Graph).Returns((Iri)null);
             entityMapping.SetupGet(instance => instance.Properties).Returns(new[] { propertyMapping.Object });
-            MappingBuilder.Setup(instance => instance.BuildMappings(It.IsAny<IEnumerable<IMappingSource>>(), It.IsAny<IDictionary<Type, ICollection<ITermMappingProvider>>>()))
-                .Returns(new Dictionary<Type, IEntityMapping>() { { typeof(IProduct), entityMapping.Object } });
+            return entityMapping.Object;
         }
     }
 }

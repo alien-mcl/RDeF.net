@@ -263,7 +263,7 @@ namespace RDeF.Entities
 
                 if (statement.IsTypeAssertion())
                 {
-                    var entityMapping = Mappings.FindEntityMappingFor(entity, statement.Object);
+                    var entityMapping = Mappings.FindEntityMappingFor(entity, statement.Object, statement.Graph);
                     if (entityMapping != null)
                     {
                         entity.CastedTypes.Add(entityMapping.Type);
@@ -272,7 +272,7 @@ namespace RDeF.Entities
                     continue;
                 }
 
-                var propertyMapping = Mappings.FindPropertyMappingFor(entity, statement.Predicate);
+                var propertyMapping = Mappings.FindPropertyMappingFor(entity, statement.Predicate, statement.Graph);
                 if ((propertyMapping == null) && (UnmappedPropertyEncountered != null))
                 {
                     var e = new UnmappedPropertyEventArgs(this, statement);
