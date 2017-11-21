@@ -1,8 +1,9 @@
 ﻿using System.IO;
 using System.Text;
 using FluentAssertions;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
-using RDeF;
 using RDeF.Data;
 using RDeF.Entities;
 using RDeF.Mapping.Entities;
@@ -14,9 +15,17 @@ namespace Given_a_context.with_explicitly_mapped_entity
     [TestFixture]
     public class when_serializing : ExplicitMappingsTest
     {
-        private static readonly string Expected = new StreamReader(typeof(when_serializing).GetEmbeddedResource(".json")).ReadToEnd().Cleaned();
+        private static readonly JObject Expected =
+            (JObject)JsonConvert.DeserializeObject(new StreamReader(typeof(when_serializing).GetEmbeddedResource(".json")).ReadToEnd());
 
         private MemoryStream Buffer { get; set; }
+
+        private JObject Result { get; set; }
+
+        private JObject ResultConverted
+        {
+            get { return Result ?? (Result = (JObject)JsonConvert.DeserializeObject(Encoding.UTF8.GetString(Buffer.ToArray()))); }
+        }
 
         public override void TheTest()
         {
@@ -26,7 +35,7 @@ namespace Given_a_context.with_explicitly_mapped_entity
         [Test]
         public void Should_serialize_explicitly_mapped_properties()
         {
-            Encoding.UTF8.GetString(Buffer.ToArray()).Cleaned().Should().Be(Expected);
+            ResultConverted.ShouldBeEquivalentTo(Expected);
         }
 
         protected override void ScenarioSetup()
