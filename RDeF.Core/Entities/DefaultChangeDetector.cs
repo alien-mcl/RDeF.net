@@ -128,9 +128,12 @@ namespace RDeF.Entities
             var type = value as Type;
             if (type != null)
             {
-                foreach (var @class in GetEntityMapping(type, entity).Classes)
+                if (typeof(IEntity).IsAssignableFrom(type))
                 {
-                    statements.EnsureKey(entity).Add(new Statement(entity.Iri, rdf.type, @class.Term, @class.Graph));
+                    foreach (var @class in GetEntityMapping(type, entity).Classes)
+                    {
+                        statements.EnsureKey(entity).Add(new Statement(entity.Iri, rdf.type, @class.Term, @class.Graph));
+                    }
                 }
 
                 return;
