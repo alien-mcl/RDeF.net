@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using RDeF.Entities;
 using RDeF.Mapping.Visitors;
 
@@ -60,13 +59,13 @@ namespace RDeF.Mapping.Providers
         /// <inheritdoc />
         public Iri GetGraph(IEnumerable<QIriMapping> qiriMappings)
         {
-            return Resolve(Graph, GraphPrefix, GraphTerm, qiriMappings);
+            return qiriMappings.Resolve(Graph, GraphPrefix, GraphTerm);
         }
 
         /// <inheritdoc />
         public Iri GetTerm(IEnumerable<QIriMapping> qiriMappings)
         {
-            return Resolve(Iri, Prefix, Term, qiriMappings);
+            return qiriMappings.Resolve(Iri, Prefix, Term);
         }
 
         /// <inheritdoc />
@@ -92,29 +91,6 @@ namespace RDeF.Mapping.Providers
                 parameters.Add(prefix);
                 parameters.Add(term);
             }
-        }
-
-        private static Iri Resolve(Iri iri, string prefix, string term, IEnumerable<QIriMapping> qiriMappings)
-        {
-            if (iri != null)
-            {
-                return iri;
-            }
-
-            if ((prefix == null) || (term == null))
-            {
-                return null;
-            }
-
-            var result = (from qIriMapping in qiriMappings
-                          where qIriMapping.Prefix == prefix
-                          select qIriMapping.Iri).FirstOrDefault();
-            if (result == null)
-            {
-                throw new InvalidOperationException($"Unable to resolve prefix '{prefix}'.");
-            }
-
-            return result + term;
         }
     }
 }

@@ -81,6 +81,10 @@
     <Compile Include="Given_complex_mappings\DefaultMappingBuilder_class\when_building_mappings.cs" />
     <Compile Include="Given_complex_mappings\DefaultMappingRepository_class\when_obtaining_a_generic_type_mappings.cs" />
     <Compile Include="Given_instance_of\AmbiguousMappingException_class\when_initializing.cs" />
+    <Compile Include="Given_instance_of\InternalMappingSource_class\InternalMappingSourceTest.cs" />
+    <Compile Include="Given_instance_of\InternalMappingSource_class\when_gathering_entity_mappings.cs" />
+    <Compile Include="Given_instance_of\InternalMappingSource_class\when_initializing.cs" />
+    <Compile Include="Given_instance_of\InternalMappingSourceProvider_class\when_getting_mapping_sources_for_assembly.cs" />
     <Compile Include="Given_instance_of\CollectionStorageModelConventionVisitor_class\CollectionStorageModelConventionVisitorTest.cs" />
     <Compile Include="Given_instance_of\CollectionStorageModelConventionVisitor_class\when_visiting_a_property_mapping.cs" />
     <Compile Include="Given_instance_of\CollectionStorageModelConventionVisitor_class\when_visiting_a_list_property_mapping.cs" />
@@ -91,6 +95,7 @@
     <Compile Include="Given_instance_of\ConverterConventionVisitor_class\when_visiting_a_property_mapping.cs" />
     <Compile Include="Given_instance_of\ConverterConventionVisitor_class\when_visiting_a_simple_property_mapping.cs" />
     <Compile Include="Given_instance_of\converter_of_type\Base64BinaryConverter_class.cs" />
+    <Compile Include="Given_instance_of\converter_of_type\IriConverter_class.cs" />
     <Compile Include="Given_instance_of\converter_of_type\UntypedConverter_class.cs" />
     <Compile Include="Given_instance_of\converter_of_type\UriConverter_class.cs" />
     <Compile Include="Given_instance_of\converter_of_type\BooleanConverter_class.cs" />
@@ -171,9 +176,11 @@
     <Compile Include="Given_instance_of\Statement_class\when_initializing_resource_relation.cs" />
     <Compile Include="Given_large_set_of_data\PerformanceTest.cs" />
     <Compile Include="Given_large_set_of_data\when_processing_entities_from_it.cs" />
+    <Compile Include="Given_some_graph\when_obtaining_types.cs" />
     <Compile Include="Mapping\Converters\ConverterExtensions.cs" />
     <Compile Include="Mapping\Converters\TestConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reflection\TypeExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="..\CustomDictionary.xml">

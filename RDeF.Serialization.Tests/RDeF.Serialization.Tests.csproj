@@ -70,9 +70,6 @@
     <Compile Include="..\.build\VersionAssemblyInfo.cs">
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="..\RDeF.Core.Tests\Data\IComplexEntity.cs">
-      <Link>Data\IComplexEntity.cs</Link>
-    </Compile>
     <Compile Include="FluentAssertions\AssertionsExtensions.cs" />
     <Compile Include="Given_a_data_model\when_serializing_it.cs" />
     <Compile Include="Given_instance_of\JsonLdReader_class\when_deserializing\named_graphs.cs" />
@@ -97,7 +94,6 @@
     <Compile Include="Testing\RdfTestSets.cs" />
     <Compile Include="Testing\RdfWriterTest.cs" />
     <Compile Include="Testing\RdfWriterSerializationTest.cs" />
-    <Compile Include="Reflection\TypeExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="..\CustomDictionary.xml">
@@ -130,6 +126,10 @@
     <ProjectReference Include="..\RDeF.Contracts\RDeF.Contracts.csproj">
       <Project>{b0f60589-f1ed-4cb5-9c42-4004f02536eb}</Project>
       <Name>RDeF.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RDeF.Core.Tests\RDeF.Core.Tests.csproj">
+      <Project>{9456a9f8-a059-42fa-bda1-c984cbba42ff}</Project>
+      <Name>RDeF.Core.Tests</Name>
     </ProjectReference>
     <ProjectReference Include="..\RDeF.Core\RDeF.Core.csproj">
       <Project>{f07900af-8275-48ad-a7ce-7a7de267de2a}</Project>

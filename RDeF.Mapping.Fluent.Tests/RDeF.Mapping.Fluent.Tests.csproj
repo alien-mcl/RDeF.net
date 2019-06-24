@@ -127,10 +127,6 @@
       <Project>{6d22e75c-55db-46a1-919d-b0cada218a8a}</Project>
       <Name>RDeF.Mapping.Fluent</Name>
     </ProjectReference>
-    <ProjectReference Include="..\RDeF.Serialization.Tests\RDeF.Serialization.Tests.csproj">
-      <Project>{57f8549e-302f-4f92-bc68-921a542bb6da}</Project>
-      <Name>RDeF.Serialization.Tests</Name>
-    </ProjectReference>
     <ProjectReference Include="..\RDeF.Serialization\RDeF.Serialization.csproj">
       <Project>{d20315ca-9f4f-4073-a205-ed66bdc5a177}</Project>
       <Name>RDeF.Serialization</Name>

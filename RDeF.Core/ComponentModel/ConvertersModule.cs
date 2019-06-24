@@ -28,6 +28,7 @@ namespace RDeF.ComponentModel
             componentConfigurator.WithConverter<StringConverter>();
             componentConfigurator.WithConverter<UntypedLiteralConverter>();
             componentConfigurator.WithConverter<UriConverter>();
+            componentConfigurator.WithConverter<IriConverter>();
         }
     }
 }

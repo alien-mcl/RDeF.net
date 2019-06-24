@@ -61,7 +61,7 @@ namespace RDeF.Entities
         internal static void SetProperty(this Entity entity, Statement statement, IPropertyMapping propertyMapping, EntityInitializationContext context)
         {
             object value;
-            if (statement.Object != null)
+            if (statement.Object != null && propertyMapping.ValueConverter == null)
             {
                 var otherEntity = (IEntity)((DefaultEntityContext)entity.Context)
                     .CreateInternal(statement.Object, false)

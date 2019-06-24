@@ -268,8 +268,6 @@ namespace RDeF.Entities
                     {
                         entity.CastedTypes.Add(entityMapping.Type);
                     }
-
-                    continue;
                 }
 
                 var propertyMapping = Mappings.FindPropertyMappingFor(entity, statement.Predicate, statement.Graph);

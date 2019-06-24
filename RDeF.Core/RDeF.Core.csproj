@@ -77,9 +77,11 @@
     <Compile Include="Entities\IriComparer.cs" />
     <Compile Include="Entities\MulticastPropertyValueExtensions.cs" />
     <Compile Include="Entities\StatementExtensions.cs" />
+    <Compile Include="Mapping\InternalMappingModule.cs" />
     <Compile Include="Mapping\Converters\BooleanConverter.cs" />
     <Compile Include="Mapping\Converters\Base64BinaryConverter.cs" />
     <Compile Include="Mapping\Converters\GuidConverter.cs" />
+    <Compile Include="Mapping\Converters\IriConverter.cs" />
     <Compile Include="Mapping\Converters\UriConverter.cs" />
     <Compile Include="Mapping\Converters\UntypedLiteralConverter.cs" />
     <Compile Include="Mapping\Converters\StringConverter.cs" />
@@ -101,6 +103,9 @@
     <Compile Include="Mapping\EntityMappingProvider.cs" />
     <Compile Include="Mapping\IMappingBuilder.cs" />
     <Compile Include="Mapping\DefaultMappingBuilder.cs" />
+    <Compile Include="Mapping\InternalMappingSource.cs" />
+    <Compile Include="Mapping\InternalMappingSourceProvider.cs" />
+    <Compile Include="Mapping\Internal\InternalCollectionMappingProvider.cs" />
     <Compile Include="Mapping\MergingEntityMapping.cs" />
     <Compile Include="Mapping\CollectionMapping.cs" />
     <Compile Include="Mapping\CollectionMappingProvider.cs" />

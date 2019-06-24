@@ -52,6 +52,7 @@
     <Compile Include="Entities\IEntity.cs" />
     <Compile Include="Entities\IReadableEntitySource.cs" />
     <Compile Include="Entities\ISerializableEntitySource.cs" />
+    <Compile Include="Entities\ITypedEntity.cs" />
     <Compile Include="Entities\UnmappedPropertyEventArgs.cs" />
     <Compile Include="Mapping\AmbiguousMappingException.cs" />
     <Compile Include="Mapping\IConverterProvider.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="Mapping\Providers\ICollectionMappingProvider.cs" />
     <Compile Include="Mapping\Providers\IDictionaryMappingProvider.cs" />
     <Compile Include="Mapping\Providers\IEntityMappingProvider.cs" />
+    <Compile Include="Mapping\QIriMappingExtensions.cs" />
     <Compile Include="Mapping\Visitors\IMappingProviderVisitor.cs" />
     <Compile Include="Mapping\Providers\ITermMappingProvider.cs" />
     <Compile Include="Mapping\Providers\IPropertyMappingProvider.cs" />
