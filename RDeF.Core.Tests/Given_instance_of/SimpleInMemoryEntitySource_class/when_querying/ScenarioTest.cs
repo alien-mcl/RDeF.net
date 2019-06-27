@@ -6,28 +6,21 @@ using RDeF.Data;
 using RDeF.Entities;
 using RollerCaster;
 
-namespace Given_instance_of.SimpleInMemoryEntitySource_class
+namespace Given_instance_of.SimpleInMemoryEntitySource_class.when_querying
 {
-    [TestFixture]
-    public class when_querying : SimpleInMemoryEntitySourceTest
+    public abstract class ScenarioTest<T> : SimpleInMemoryEntitySourceTest where T : IEntity
     {
-        private IQueryable<IProduct> Result { get; set; }
+        private IQueryable<T> Result { get; set; }
 
         public override void TheTest()
         {
-            Result = EntitySource.AsQueryable<IProduct>();
+            Result = EntitySource.AsQueryable<T>();
         }
 
         [Test]
-        public void Should_provide_a_queryable_collection_of_typed_entities()
+        public void Should_provide_a_queryable_collection_of_strongly_typed_entities()
         {
             Result.Should().HaveCount(1);
-        }
-
-        [Test]
-        public void Should_provide_a_queryable_collection_of_entities()
-        {
-            EntitySource.AsQueryable<IEntity>().Should().HaveCount(1);
         }
 
         protected override void ScenarioSetup()

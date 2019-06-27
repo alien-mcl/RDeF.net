@@ -13,6 +13,13 @@ namespace RDeF.Entities
     /// <summary>Provides a very simple in-memory based implementation of the <see cref="IEntitySource" />.</summary>
     public sealed class SimpleInMemoryEntitySource : IInMemoryEntitySource
     {
+        private static readonly IDictionary<Type, Func<IEnumerable<IEntity>, IQueryable>> StandardQueryableTypes =
+            new Dictionary<Type, Func<IEnumerable<IEntity>, IQueryable>>()
+            {
+                { typeof(IEntity), entities => entities.AsQueryable() },
+                { typeof(ITypedEntity), entities => entities.Select(_ => _.ActLike<ITypedEntity>()).AsQueryable() }
+            };
+
         private readonly object _sync = new Object();
         private readonly Func<DefaultEntityContext> _entityContext;
 
@@ -118,12 +125,13 @@ namespace RDeF.Entities
         /// <inheritdoc />
         public IQueryable<TEntity> AsQueryable<TEntity>() where TEntity : IEntity
         {
-            if (typeof(TEntity) == typeof(IEntity))
+            Func<IEnumerable<IEntity>, IQueryable> selector;
+            if (!StandardQueryableTypes.TryGetValue(typeof(TEntity), out selector))
             {
-                return (IQueryable<TEntity>)Entities.Keys.AsQueryable();
+                selector = entities => entities.Where(entity => entity.Is<TEntity>()).Select(entity => entity.ActLike<TEntity>()).AsQueryable();
             }
 
-            return Entities.Keys.Where(entity => entity.Is<TEntity>()).Select(entity => entity.ActLike<TEntity>()).AsQueryable();
+            return (IQueryable<TEntity>)selector(Entities.Keys);
         }
 
         /// <inheritdoc />

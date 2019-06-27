@@ -16,7 +16,9 @@ namespace Given_instance_of.InternalMappingSourceProvider_class
         [Test]
         public void Should_gather_all_mapping_sources_for_that_assembly()
         {
-            Provider.GetMappingSourcesFor(typeof(ITypedEntity).GetTypeInfo().Assembly).Should().HaveCount(1).And.Subject.First().Should().BeOfType<InternalMappingSource>();
+            Provider.GetMappingSourcesFor(typeof(ITypedEntity).GetTypeInfo().Assembly)
+                .Should().HaveCount(1)
+                .And.Subject.First().Should().BeOfType<InternalMappingSource>();
         }
 
         [Test]

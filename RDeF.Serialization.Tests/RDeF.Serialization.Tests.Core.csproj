@@ -37,7 +37,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\RDef.Core.Tests\Data\IComplexEntity.cs" Link="Data\IComplexEntity.cs" />
     <Compile Include="..\.build\CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
     <Compile Include="..\.build\VersionAssemblyInfo.cs" Link="Properties\VersionAssemblyInfo.cs" />
   </ItemGroup>
@@ -66,6 +65,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RDeF.Contracts\RDeF.Contracts.Core.csproj" />
+    <ProjectReference Include="..\RDeF.Core.Tests\RDeF.Core.Tests.Core.csproj" />
     <ProjectReference Include="..\RDeF.Mapping.Attributes\RDeF.Mapping.Attributes.Core.csproj" />
     <ProjectReference Include="..\RDeF.Serialization\RDeF.Serialization.Core.csproj" />
   </ItemGroup>

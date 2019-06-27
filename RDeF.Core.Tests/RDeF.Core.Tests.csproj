@@ -166,8 +166,11 @@
     <Compile Include="Given_instance_of\SimpleInMemoryEntitySource_class\when_deserializing.cs" />
     <Compile Include="Given_instance_of\SimpleInMemoryEntitySource_class\when_loading_an_entity.cs" />
     <Compile Include="Given_instance_of\SimpleInMemoryEntitySource_class\when_deleting.cs" />
+    <Compile Include="Given_instance_of\SimpleInMemoryEntitySource_class\when_querying\for_entities.cs" />
+    <Compile Include="Given_instance_of\SimpleInMemoryEntitySource_class\when_querying\for_typed_entities.cs" />
+    <Compile Include="Given_instance_of\SimpleInMemoryEntitySource_class\when_querying\ScenarioTest.cs" />
     <Compile Include="Given_instance_of\SimpleInMemoryEntitySource_class\when_serializing.cs" />
-    <Compile Include="Given_instance_of\SimpleInMemoryEntitySource_class\when_querying.cs" />
+    <Compile Include="Given_instance_of\SimpleInMemoryEntitySource_class\when_querying\for_products.cs" />
     <Compile Include="Given_instance_of\SimpleInMemoryEntitySource_class\when_creating_an_entity.cs" />
     <Compile Include="Given_instance_of\SimpleInMemoryEntitySource_class\when_committing_changes.cs" />
     <Compile Include="Given_instance_of\Statement_class\when_comparing.cs" />
