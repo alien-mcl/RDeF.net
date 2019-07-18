@@ -102,7 +102,7 @@ namespace Given_instance_of.DefaultEntityContext_class
 
         protected override void ScenarioSetup()
         {
-            SourceContext = new DefaultEntityContext(EntitySource.Object, MappingsRepository.Object, ChangeDetector.Object);
+            SourceContext = new DefaultEntityContext(EntitySource.Object, MappingsRepository.Object, ChangeDetector.Object, Array.Empty<ILiteralConverter>());
             Source = SourceContext.Create<IProduct>(new Iri("source"));
             MappingsRepository.Setup(instance => instance.FindPropertyMappingFor(It.IsAny<IEntity>(), It.IsAny<PropertyInfo>()))
                 .Returns<IEntity, PropertyInfo>((entity, propertyInfo) =>

@@ -102,6 +102,7 @@ namespace RDeF.Entities
             Predicate = predicate;
             Value = value;
             Language = language;
+            DataType = rdf.langString;
         }
 
         /// <summary>Gets the graph.</summary>

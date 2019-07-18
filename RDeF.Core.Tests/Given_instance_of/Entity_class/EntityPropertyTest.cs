@@ -7,11 +7,8 @@ namespace Given_instance_of.Entity_class
 {
     public abstract class EntityPropertyTest : EntityTest
     {
-        protected Mock<IMappingsRepository> MappingsRepository { get; private set; }
-
         protected override void ScenarioSetup()
         {
-            MappingsRepository = new Mock<IMappingsRepository>(MockBehavior.Strict);
             MappingsRepository.Setup(instance => instance.FindPropertyMappingFor(It.IsAny<IEntity>(), It.IsAny<PropertyInfo>()))
                 .Returns<IEntity, PropertyInfo>((entity, propertyInfo) =>
                 {
@@ -19,7 +16,6 @@ namespace Given_instance_of.Entity_class
                     result.SetupGet(instance => instance.PropertyInfo).Returns(propertyInfo);
                     return result.Object;
                 });
-            Context.SetupGet(instance => instance.Mappings).Returns(MappingsRepository.Object);
         }
     }
 }

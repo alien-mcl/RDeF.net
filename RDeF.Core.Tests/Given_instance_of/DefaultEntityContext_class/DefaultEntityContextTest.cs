@@ -13,6 +13,8 @@ namespace Given_instance_of.DefaultEntityContext_class
 
         protected Mock<IMappingsRepository> MappingsRepository { get; private set; }
 
+        protected Mock<ILiteralConverter> LiteralConverter { get; private set; }
+
         protected DefaultEntityContext Context { get; set; }
 
         public virtual void TheTest()
@@ -25,10 +27,12 @@ namespace Given_instance_of.DefaultEntityContext_class
             EntitySource = new Mock<IEntitySource>(MockBehavior.Strict);
             MappingsRepository = new Mock<IMappingsRepository>(MockBehavior.Strict);
             ChangeDetector = new Mock<IChangeDetector>(MockBehavior.Strict);
+            LiteralConverter = new Mock<ILiteralConverter>(MockBehavior.Strict);
             Context = new DefaultEntityContext(
                 EntitySource.Object,
                 MappingsRepository.Object,
-                ChangeDetector.Object);
+                ChangeDetector.Object,
+                new[] { LiteralConverter.Object });
             ScenarioSetup();
             TheTest();
         }

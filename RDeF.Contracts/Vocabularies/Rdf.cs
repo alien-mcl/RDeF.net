@@ -72,6 +72,10 @@ namespace RDeF.Vocabularies
         /// <summary>Defines rdf:value predicate.</summary>
         [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "This is due to compliance with RDF namespace convention.")]
         public static readonly Iri value = Namespace + "value";
+
+        /// <summary>Defines rdf:langString predicate.</summary>
+        [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", Justification = "This is due to compliance with RDF namespace convention.")]
+        public static readonly Iri langString = Namespace + "langString";
     }
 }
 #pragma warning restore SA1303 // Const field names must begin with upper-case letter

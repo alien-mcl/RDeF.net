@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using RDeF.Collections;
 using RDeF.Mapping;
 using RDeF.Vocabularies;
 using RollerCaster;
@@ -18,7 +19,7 @@ namespace RDeF.Entities
         public static IEnumerable<Iri> GetTypes(this IEntity entity)
         {
             var proxy = entity.Unwrap();
-            var result = new List<Iri>();
+            var result = new HashSet<Iri>();
             foreach (var type in proxy.CastedTypes)
             {
                 var entityMapping = entity.Context.Mappings.FindEntityMappingFor(entity, type);
@@ -117,6 +118,30 @@ namespace RDeF.Entities
             }
 
             context.LinkedLists.Remove(entity.Iri);
+        }
+
+        internal static void SetUnmappedProperty(this Entity entity, Statement statement, IEnumerable<ILiteralConverter> literalConverters)
+        {
+            Relation relation;
+            if (statement.Object != null)
+            {
+                var relatedEntity = new LazyLoadedEntity(entity.Context, statement.Object);
+                relation = new Relation(statement.Predicate, relatedEntity, statement.Graph);
+                relatedEntity.Relation = relation;
+            }
+            else
+            {
+                ILiteralConverter converter = null;
+                if (statement.DataType != null)
+                {
+                    converter = literalConverters.FirstOrDefault(_ => _.SupportedDataTypes.Any(type => type == statement.DataType));
+                }
+
+                var value = converter != null ? converter.ConvertFrom(statement) : statement.Value;
+                relation = new Relation(statement.Predicate, value, statement.Graph);
+            }
+
+            entity.UnmappedRelationsSet.Add(relation);
         }
 
         private static Entity UnwrapEntity(this IEntity entity)

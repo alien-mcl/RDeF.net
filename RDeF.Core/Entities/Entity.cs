@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using RollerCaster;
 using RollerCaster.Collections;
@@ -10,9 +11,15 @@ using RollerCaster.Collections;
 namespace RDeF.Entities
 {
     /// <summary>Provides a wrapper class over RDF data entity.</summary>
-    [DebuggerDisplay("<{Iri,nq}>")]
+    [DebuggerDisplay("<{" + nameof(Iri) + ",nq}>")]
     internal sealed class Entity : MulticastObject, IEntity
     {
+        private static readonly string[] ForbiddenPropertyNames =
+        {
+            nameof(IEntity.Iri),
+            nameof(IEntity.Context)
+        };
+
         private readonly DefaultEntityContext _context;
         private bool _isInitialized;
 
@@ -24,11 +31,18 @@ namespace RDeF.Entities
             Iri = id;
             _isInitialized = false;
             _context = context;
+            UnmappedRelationsSet = new HashSet<Relation>();
             OriginalValues = new HashSet<MulticastPropertyValue>();
         }
 
         /// <inheritdoc />
         public Iri Iri { get; }
+
+        /// <inheritdoc />
+        public IEnumerable<Relation> UnmappedRelations
+        {
+            get { return UnmappedRelationsSet; }
+        }
 
         /// <inheritdoc />
         public IEntityContext Context { get { return _context; } }
@@ -78,6 +92,8 @@ namespace RDeF.Entities
         internal DefaultEntityContext EntityContextOverride { get; set; }
 
         internal Iri IriOverride { get; set; }
+
+        internal ISet<Relation> UnmappedRelationsSet { get; }
 
         /// <inheritdoc />
         public override object GetProperty(PropertyInfo propertyInfo)
@@ -158,40 +174,48 @@ namespace RDeF.Entities
 
         private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e, MulticastPropertyValue propertyValue)
         {
-            var originalValue = (IList)typeof(ObservableList<>).MakeGenericType(propertyValue.Value.GetType().GetGenericArguments()[0])
-                .GetConstructor(Type.EmptyTypes).Invoke(null);
-            if (e.Action == NotifyCollectionChangedAction.Remove)
+            if (e.Action != NotifyCollectionChangedAction.Reset)
             {
-                foreach (var removed in e.OldItems)
+                var originalValue = (IList)typeof(ObservableList<>).MakeGenericType(propertyValue.Value.GetType().GetGenericArguments()[0])
+                    .GetConstructor(Type.EmptyTypes).Invoke(null);
+                if (e.Action == NotifyCollectionChangedAction.Remove)
                 {
-                    originalValue.Add(removed);
-                }
-            }
-
-            foreach (var item in (IEnumerable)propertyValue.Value)
-            {
-                if (((e.Action == NotifyCollectionChangedAction.Remove) && (e.OldItems.Contains(item))) ||
-                    (e.Action == NotifyCollectionChangedAction.Add))
-                {
-                    continue;
+                    foreach (var removed in e.OldItems)
+                    {
+                        originalValue.Add(removed);
+                    }
                 }
 
-                originalValue.Add(item);
-            }
+                foreach (var item in (IEnumerable)propertyValue.Value)
+                {
+                    if (((e.Action == NotifyCollectionChangedAction.Remove) && (e.OldItems.Contains(item))) ||
+                        (e.Action == NotifyCollectionChangedAction.Add))
+                    {
+                        continue;
+                    }
 
-            OriginalValues.Remove(propertyValue);
-            OriginalValues.Add(new MulticastPropertyValue(propertyValue.CastedType, propertyValue.Property, originalValue));
-            ((IObservableCollection)sender).ClearCollectionChanged();
+                    originalValue.Add(item);
+                }
+
+                OriginalValues.Remove(propertyValue);
+                OriginalValues.Add(new MulticastPropertyValue(propertyValue.CastedType, propertyValue.Property, originalValue));
+                ((IObservableCollection)sender).ClearCollectionChanged();
+            }
         }
 
         private PropertyInfo GetActualProperty(PropertyInfo propertyInfo)
         {
-            if ((propertyInfo.Name != nameof(IEntity.Iri)) && (propertyInfo.Name != nameof(IEntity.Context)))
+            var result = propertyInfo;
+            if (!ForbiddenPropertyNames.Contains(propertyInfo.Name))
             {
-                return _context.Mappings.FindPropertyMappingFor(this, propertyInfo)?.PropertyInfo ?? propertyInfo;
+                var mappedProperty = _context.Mappings.FindPropertyMappingFor(this, propertyInfo);
+                if (mappedProperty != null && mappedProperty.PropertyInfo != null)
+                {
+                    result = mappedProperty.PropertyInfo;
+                }
             }
 
-            return propertyInfo;
+            return result;
         }
     }
 }

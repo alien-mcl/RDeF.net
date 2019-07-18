@@ -8,10 +8,10 @@ using RDeF.Entities;
 using RDeF.Mapping;
 using RDeF.Mapping.Providers;
 
-namespace Given_instance_of.DefaultMappingsRepository_class.which_is_already_initialized
+namespace Given_instance_of.DefaultMappingsRepository_class
 {
     [TestFixture]
-    public class and_searching_for_predicate_mapping : DefaultMappingsRepositoryTest
+    public class when_searching_for_predicate_mapping : DefaultMappingsRepositoryTest
     {
         private const string ExpectedProperty = "Name";
 
@@ -46,7 +46,12 @@ namespace Given_instance_of.DefaultMappingsRepository_class.which_is_already_ini
                 });
             var entitySource = new Mock<IEntitySource>(MockBehavior.Strict);
             var changeDetector = new Mock<IChangeDetector>(MockBehavior.Strict);
-            var context = new Mock<DefaultEntityContext>(MockBehavior.Strict, entitySource.Object, MappingsRepository, changeDetector.Object);
+            var context = new Mock<DefaultEntityContext>(
+                MockBehavior.Strict,
+                entitySource.Object,
+                MappingsRepository,
+                changeDetector.Object,
+                Array.Empty<ILiteralConverter>());
             context.SetupGet(instance => instance.Mappings).Returns(() => MappingsRepository);
             var entity = new Entity(new Iri(), context.Object);
             entity.CastedTypes.Add(typeof(IProduct));

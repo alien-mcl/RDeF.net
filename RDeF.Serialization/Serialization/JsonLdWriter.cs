@@ -173,23 +173,23 @@ namespace RDeF.Serialization
                 await jsonWriter.WriteEndObjectAsync();
                 return;
             }
-
-            if ((value.DataType != null) && (value.DataType != xsd.boolean) && (value.DataType != xsd.@integer) && (value.DataType != xsd.@double) && (value.DataType != xsd.@string))
+            
+            if (value.Language != null)
             {
                 await jsonWriter.WriteStartObjectAsync();
-                await jsonWriter.WritePropertyNameAsync("@type");
-                await jsonWriter.WriteValueAsync((string)value.DataType);
+                await jsonWriter.WritePropertyNameAsync("@language");
+                await jsonWriter.WriteValueAsync(value.Language);
                 await jsonWriter.WritePropertyNameAsync("@value");
                 await WriteLiteral(jsonWriter, value);
                 await jsonWriter.WriteEndObjectAsync();
                 return;
             }
 
-            if (value.Language != null)
+            if ((value.DataType != null) && (value.DataType != xsd.boolean) && (value.DataType != xsd.@integer) && (value.DataType != xsd.@double) && (value.DataType != xsd.@string))
             {
                 await jsonWriter.WriteStartObjectAsync();
-                await jsonWriter.WritePropertyNameAsync("@language");
-                await jsonWriter.WriteValueAsync(value.Language);
+                await jsonWriter.WritePropertyNameAsync("@type");
+                await jsonWriter.WriteValueAsync((string)value.DataType);
                 await jsonWriter.WritePropertyNameAsync("@value");
                 await WriteLiteral(jsonWriter, value);
                 await jsonWriter.WriteEndObjectAsync();

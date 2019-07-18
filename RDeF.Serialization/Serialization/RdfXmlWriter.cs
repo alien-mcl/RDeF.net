@@ -186,13 +186,13 @@ namespace RDeF.Serialization
             }
 
             await xmlWriter.WriteAttributeStringAsync("rdf", "parseType", namespaces["rdf"], "Literal");
-            if (value.DataType != null)
-            {
-                await xmlWriter.WriteAttributeStringAsync("rdf", "datatype", namespaces["rdf"], value.DataType);
-            }
-            else if (value.Language != null)
+            if (value.Language != null)
             {
                 await xmlWriter.WriteAttributeStringAsync("xml", "lang", String.Empty, value.Language);
+            }
+            else if (value.DataType != null)
+            {
+                await xmlWriter.WriteAttributeStringAsync("rdf", "datatype", namespaces["rdf"], value.DataType);
             }
 
             await xmlWriter.WriteStringAsync(value.Value);

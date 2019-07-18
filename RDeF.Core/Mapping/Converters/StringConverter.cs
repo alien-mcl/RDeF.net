@@ -9,7 +9,7 @@ namespace RDeF.Mapping.Converters
     /// <summary>Provides conversion for xsd:string data type.</summary>
     public class StringConverter : LiteralConverterBase
     {
-        private static readonly Iri[] DataTypes = { xsd.@string };
+        private static readonly Iri[] DataTypes = { xsd.@string, rdf.langString };
         private static readonly Type[] Types = { typeof(string) };
 
         /// <inheritdoc />

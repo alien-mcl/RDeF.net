@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using System;
+using Moq;
 using NUnit.Framework;
 using RDeF.Entities;
 using RDeF.Mapping;
@@ -29,7 +30,8 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
                 MockBehavior.Strict,
                 EntitySource,
                 new Mock<IMappingsRepository>(MockBehavior.Strict).Object,
-                new Mock<IChangeDetector>(MockBehavior.Strict).Object);
+                new Mock<IChangeDetector>(MockBehavior.Strict).Object,
+                Array.Empty<ILiteralConverter>());
         }
     }
 }

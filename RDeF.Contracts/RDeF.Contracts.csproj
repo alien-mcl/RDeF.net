@@ -53,6 +53,7 @@
     <Compile Include="Entities\IReadableEntitySource.cs" />
     <Compile Include="Entities\ISerializableEntitySource.cs" />
     <Compile Include="Entities\ITypedEntity.cs" />
+    <Compile Include="Entities\Relation.cs" />
     <Compile Include="Entities\UnmappedPropertyEventArgs.cs" />
     <Compile Include="Mapping\AmbiguousMappingException.cs" />
     <Compile Include="Mapping\IConverterProvider.cs" />

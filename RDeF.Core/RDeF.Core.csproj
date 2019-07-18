@@ -38,13 +38,22 @@
     <LangVersion>6</LangVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="RollerCaster, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\RollerCaster.1.1.1\lib\net461\RollerCaster.dll</HintPath>
+    <Reference Include="RollerCaster, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RollerCaster.1.3.0\lib\net461\RollerCaster.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Collections.NonGeneric, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.NonGeneric.4.3.0\lib\net46\System.Collections.NonGeneric.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Reflection.TypeExtensions, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reflection.TypeExtensions.4.4.0\lib\net461\System.Reflection.TypeExtensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -54,6 +63,7 @@
     <Compile Include="..\.build\VersionAssemblyInfo.cs">
       <Link>Properties\VersionAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Collections\CollectionExtensions.cs" />
     <Compile Include="Collections\DictionaryExtensions.cs" />
     <Compile Include="ComponentModel\ComponentRegistration.cs" />
     <Compile Include="ComponentModel\IComponentRegistration.cs" />
@@ -75,6 +85,7 @@
     <Compile Include="Entities\EntityInitializationContext.cs" />
     <Compile Include="Entities\IInMemoryEntitySource.cs" />
     <Compile Include="Entities\IriComparer.cs" />
+    <Compile Include="Entities\LazyLoadedEntity.cs" />
     <Compile Include="Entities\MulticastPropertyValueExtensions.cs" />
     <Compile Include="Entities\StatementExtensions.cs" />
     <Compile Include="Mapping\InternalMappingModule.cs" />

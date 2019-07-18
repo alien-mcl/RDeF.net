@@ -14,15 +14,21 @@ namespace RDeF.Entities
         private readonly object _sync = new Object();
         private readonly IEntitySource _entitySource;
         private readonly IChangeDetector _changeDetector;
+        private readonly IEnumerable<ILiteralConverter> _literalConverters;
         private readonly IDictionary<Iri, Entity> _entityCache;
         private readonly ICollection<Iri> _deletedEntities;
         private bool _disposed;
 
-        internal DefaultEntityContext(IEntitySource entitySource, IMappingsRepository mappingsRepository, IChangeDetector changeDetector)
+        internal DefaultEntityContext(
+            IEntitySource entitySource,
+            IMappingsRepository mappingsRepository,
+            IChangeDetector changeDetector,
+            IEnumerable<ILiteralConverter> literalConverters)
         {
             _entitySource = entitySource;
             Mappings = mappingsRepository;
             _changeDetector = changeDetector;
+            _literalConverters = literalConverters;
             _deletedEntities = new List<Iri>();
             _entityCache = new ConcurrentDictionary<Iri, Entity>();
         }
@@ -245,7 +251,11 @@ namespace RDeF.Entities
             return _entityCache[entity.Iri] = entity;
         }
 
-        internal virtual void InitializeInternal(Entity entity, IEnumerable<Statement> statements, EntityInitializationContext context, Action<Statement> onIteration = null)
+        internal virtual void InitializeInternal(
+            Entity entity,
+            IEnumerable<Statement> statements,
+            EntityInitializationContext context,
+            Action<Statement> onIteration = null)
         {
             if (onIteration == null)
             {
@@ -278,7 +288,13 @@ namespace RDeF.Entities
                     propertyMapping = e.PropertyMapping;
                 }
 
-                if ((propertyMapping == null) || (!statement.Matches(propertyMapping.Graph)))
+                if (propertyMapping == null)
+                {
+                    entity.SetUnmappedProperty(statement, _literalConverters);
+                    continue;
+                }
+
+                if (!statement.Matches(propertyMapping.Graph))
                 {
                     continue;
                 }

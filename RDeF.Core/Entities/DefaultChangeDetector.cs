@@ -125,33 +125,57 @@ namespace RDeF.Entities
 
         private void AddStatements<T>(IDictionary<IEntity, ISet<Statement>> statements, IEntity entity, T value)
         {
+            if (!AddTypeAssertion(statements, entity, value))
+            {
+                AddPropertyAssertion(statements, entity, value);
+            }
+        }
+
+        private bool AddTypeAssertion<T>(IDictionary<IEntity, ISet<Statement>> statements, IEntity entity, T value)
+        {
+            bool result = false;
             var type = value as Type;
             if (type != null)
             {
                 if (typeof(IEntity).IsAssignableFrom(type))
                 {
-                    foreach (var @class in GetEntityMapping(type, entity).Classes)
+                    var entityMapping = GetEntityMapping(type, entity);
+                    if (entityMapping != null)
                     {
-                        statements.EnsureKey(entity).Add(new Statement(entity.Iri, rdf.type, @class.Term, @class.Graph));
+                        foreach (var @class in entityMapping.Classes)
+                        {
+                            statements.EnsureKey(entity).Add(new Statement(entity.Iri, rdf.type, @class.Term, @class.Graph));
+                        }
                     }
                 }
 
-                return;
+                result = true;
             }
 
+            return result;
+        }
+
+        private void AddPropertyAssertion<T>(IDictionary<IEntity, ISet<Statement>> statements, IEntity entity, T value)
+        {
             var propertyValue = value as MulticastPropertyValue;
-            var propertyMapping = GetPropertyMapping(propertyValue.Property, entity);
-            var collectionMapping = propertyMapping as ICollectionMapping;
-            if (collectionMapping != null)
+            if (propertyValue?.Value != null)
             {
-                AddStatements(statements.EnsureKey(entity), collectionMapping, entity, (IEnumerable)propertyValue.Value);
-                return;
-            }
+                var propertyMapping = GetPropertyMapping(propertyValue.Property, entity);
+                if (propertyMapping != null)
+                {
+                    var collectionMapping = propertyMapping as ICollectionMapping;
+                    if (collectionMapping != null)
+                    {
+                        AddStatements(statements.EnsureKey(entity), collectionMapping, entity, (IEnumerable)propertyValue.Value);
+                        return;
+                    }
 
-            var entityValue = propertyValue.Value as IEntity;
-            statements.EnsureKey(entity).Add(entityValue != null
-                ? new Statement(entity.Iri, propertyMapping.Term, entityValue.Iri, propertyMapping.Graph)
-                : propertyMapping.ValueConverter.ConvertTo(entity.Iri, propertyMapping.Term, propertyValue.Value, propertyMapping.Graph));
+                    var entityValue = propertyValue.Value as IEntity;
+                    statements.EnsureKey(entity).Add(entityValue != null
+                        ? new Statement(entity.Iri, propertyMapping.Term, entityValue.Iri, propertyMapping.Graph)
+                        : propertyMapping.ValueConverter.ConvertTo(entity.Iri, propertyMapping.Term, propertyValue.Value, propertyMapping.Graph));
+                }
+            }
         }
     }
 }

@@ -9,10 +9,10 @@ using RDeF.Entities;
 using RDeF.Mapping;
 using RDeF.Mapping.Providers;
 
-namespace Given_instance_of.DefaultMappingsRepository_class.which_is_already_initialized
+namespace Given_instance_of.DefaultMappingsRepository_class
 {
     [TestFixture]
-    public class and_searching_for_class_mapping : DefaultMappingsRepositoryTest
+    public class when_searching_for_class_mapping : DefaultMappingsRepositoryTest
     {
         private const string ExpectedClass = "Product";
 
