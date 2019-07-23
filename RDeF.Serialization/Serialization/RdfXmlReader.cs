@@ -34,7 +34,7 @@ namespace RDeF.Serialization
                 }
             }
 
-            return new[] { new KeyValuePair<Iri, IEnumerable<Statement>>(null, statements) };
+            return new[] { new KeyValuePair<Iri, IEnumerable<Statement>>(Iri.DefaultGraph, statements) };
         }
 
         private static async Task ReadResource(XmlReader reader, ICollection<Statement> statements, IDictionary<string, Iri> blankNodes)

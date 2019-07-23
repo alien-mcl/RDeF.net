@@ -51,7 +51,12 @@ namespace RDeF.Mapping
         private void BuildPropertyMappings(Type type)
         {
             _entityMappingProviders.Add(
-                new InternalCollectionMappingProvider(type, type.GetProperty(nameof(ITypedEntity.Type)), rdf.type, CollectionStorageModel.Simple, typeof(IriConverter)));
+                new InternalCollectionMappingProvider(
+                    type,
+                    type.GetProperty(nameof(ITypedEntity.Type)),
+                    rdf.type,
+                    CollectionStorageModel.Simple,
+                    typeof(IriConverter)));
         }
     }
 }

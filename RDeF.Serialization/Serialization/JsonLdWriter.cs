@@ -75,8 +75,12 @@ namespace RDeF.Serialization
         private static async Task WriteGraph(JsonWriter jsonWriter, Iri graph, IEnumerable<Statement> statements)
         {
             await jsonWriter.WriteStartObjectAsync();
-            await jsonWriter.WritePropertyNameAsync("@id");
-            await jsonWriter.WriteValueAsync(graph != null ? (string)graph : "@default");
+            if (graph != null)
+            {
+                await jsonWriter.WritePropertyNameAsync("@id");
+                await jsonWriter.WriteValueAsync(graph != Iri.DefaultGraph ? (string)graph : "@default");
+            }
+
             await jsonWriter.WritePropertyNameAsync("@graph");
             await jsonWriter.WriteStartArrayAsync();
             var subjects = statements.GroupBy(statement => statement.Subject).ToList();

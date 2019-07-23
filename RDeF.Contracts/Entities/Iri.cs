@@ -8,9 +8,13 @@ namespace RDeF.Entities
 {
     /// <summary>Represents an International Resource Identifier.</summary>
     [TypeConverter(typeof(IriTypeConverter))]
-    [DebuggerDisplay("{AsString,nq}")]
+    [DebuggerDisplay("{" + nameof(AsString) + ",nq}")]
     public class Iri
     {
+        /// <summary>Defines an Iri that denotes a default graph.</summary>
+        public static readonly Iri DefaultGraph = new Iri();
+
+        private const string BlankProtocol = "_:";
         private const string BlankSuffix = "_:blank";
         private static long _id;
         private readonly string _iri;
@@ -54,7 +58,7 @@ namespace RDeF.Entities
 
         /// <summary>Gets a value indicating whether this <see cref="Iri" /> is a blank identifier.</summary>
         [SuppressMessage("Microsoft.Globalization", "CA1307:SpecifyStringComparison", MessageId = "System.String.StartsWith(System.String)", Justification = "Text being compared is culture invariant.")]
-        public bool IsBlank { get { return _iri.StartsWith(BlankSuffix); } }
+        public bool IsBlank { get { return _iri.StartsWith(BlankProtocol); } }
 
         internal Uri Uri { get; }
 

@@ -39,7 +39,7 @@ namespace Given_instance_of.DefaultEntityContext_class
         [Test]
         public void Should_search_for_mappings_for_a_statement()
         {
-            MappingsRepository.Verify(instance => instance.FindPropertyMappingFor(It.IsAny<IEntity>(), PredicateIri, null), Times.Once);
+            MappingsRepository.Verify(instance => instance.FindPropertyMappingFor(It.IsAny<IEntity>(), PredicateIri, Iri.DefaultGraph), Times.Once);
         }
 
         [Test]

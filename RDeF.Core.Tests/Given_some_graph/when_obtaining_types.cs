@@ -41,7 +41,7 @@ namespace Given_some_graph
                 return Task.FromResult((IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>>)new List<KeyValuePair<Iri, IEnumerable<Statement>>>()
                 {
                     new KeyValuePair<Iri, IEnumerable<Statement>>(
-                        null,
+                        Iri.DefaultGraph,
                         new[] { new Statement(Subject, rdf.type, TestClass), new Statement(Subject, rdf.type, AnotherTestClass) })
                 });
             }

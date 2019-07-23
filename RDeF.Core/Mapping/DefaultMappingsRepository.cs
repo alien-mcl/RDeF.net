@@ -47,7 +47,7 @@ namespace RDeF.Mapping
 
             return (from entityMapping in _mappings.Values
                     from mappedClass in entityMapping.Classes
-                    where mappedClass.Term == @class && (graph == null || mappedClass.Graph == graph)
+                    where mappedClass.Term == @class && mappedClass.Matches(graph)
                     select entityMapping).FirstOrDefault();
         }
 
@@ -92,11 +92,11 @@ namespace RDeF.Mapping
 
             return (from entityMapping in _mappings.Values
                     from propertyMapping in entityMapping.Properties
-                    where propertyMapping.Term == predicate && (graph == null || propertyMapping.Graph == graph)
+                    where propertyMapping.Term == predicate && propertyMapping.Matches(graph)
                     orderby entity == null ? 0 : (
                         from classMapping in entityMapping.Classes
                         from type in entity.GetTypes()
-                        where classMapping.Term == type && classMapping.Graph == graph
+                        where classMapping.Term == type && classMapping.Matches(graph)
                         select type).Count() descending 
                     select propertyMapping).FirstOrDefault();
         }

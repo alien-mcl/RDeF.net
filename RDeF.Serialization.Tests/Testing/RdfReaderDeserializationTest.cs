@@ -21,7 +21,9 @@ namespace RDeF.Testing
 
         protected override void ScenarioSetup()
         {
-            Stream = GetType().GetEmbeddedResource(EmbeddedResourceExtension, name => name.Replace("Reader_class", "Writer_class").Replace("deserializing", "serializing"));
+            Stream = GetType().GetEmbeddedResource(
+                EmbeddedResourceExtension,
+                name => name.Replace("Reader_class", "Writer_class").Replace("deserializing", "serializing"));
         }
 
         protected void WithSimpleGraph()

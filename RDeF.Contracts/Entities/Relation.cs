@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace RDeF.Entities
 {
     /// <summary>Provides a connection between it's owner being a subject and other resources in relation through unmapped predicates.</summary>
-    [DebuggerDisplay("{AsString,nq}")]
+    [DebuggerDisplay("{" + nameof(AsString) + ",nq}")]
     public class Relation : IEquatable<Relation>
     {
         private const int Salt = 113;
@@ -37,7 +37,7 @@ namespace RDeF.Entities
             Predicate = predicate;
             _object = @object;
             Value = null;
-            Graph = graph;
+            Graph = graph ?? Iri.DefaultGraph;
             unchecked
             {
                 _hashCode = predicate.GetHashCode() ^ @object.Iri.GetHashCode();
@@ -69,7 +69,7 @@ namespace RDeF.Entities
             Predicate = predicate;
             _object = null;
             Value = value;
-            Graph = graph;
+            Graph = graph ?? Iri.DefaultGraph;
             unchecked
             {
                 _hashCode = predicate.GetHashCode() ^ value.GetHashCode();
@@ -112,7 +112,7 @@ namespace RDeF.Entities
                         "{0} {1}{2}",
                         Predicate.AsString,
                         Object?.Iri?.AsString ?? Value,
-                        Graph != null ? $" {Graph.AsString}" : String.Empty));
+                        Graph != Iri.DefaultGraph ? $" {Graph.AsString}" : String.Empty));
             }
         }
 

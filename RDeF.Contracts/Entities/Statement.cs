@@ -33,7 +33,7 @@ namespace RDeF.Entities
                 throw new ArgumentNullException(nameof(@object));
             }
 
-            Graph = graph;
+            Graph = graph ?? Iri.DefaultGraph;
             Subject = subject;
             Predicate = predicate;
             Object = @object;
@@ -62,7 +62,7 @@ namespace RDeF.Entities
                 throw new ArgumentNullException(nameof(value));
             }
 
-            Graph = graph;
+            Graph = graph ?? Iri.DefaultGraph;
             Subject = subject;
             Predicate = predicate;
             Value = value;
@@ -97,7 +97,7 @@ namespace RDeF.Entities
                 throw new ArgumentNullException(nameof(language));
             }
 
-            Graph = graph;
+            Graph = graph ?? Iri.DefaultGraph;
             Subject = subject;
             Predicate = predicate;
             Value = value;
@@ -142,8 +142,8 @@ namespace RDeF.Entities
                         "{0} {1} {2}{3}",
                         Subject.AsString,
                         Predicate.AsString,
-                        Object?.AsString ?? Value + (DataType != null ? $"^^{DataType.AsString}" : !String.IsNullOrEmpty(Language) ? $@"{Language}" : String.Empty),
-                        Graph != null ? $" {Graph.AsString}" : String.Empty));
+                        Object?.AsString ?? Value + (!String.IsNullOrEmpty(Language) ? $@"{Language}" : DataType != null ? $"^^{DataType.AsString}" : String.Empty),
+                        Graph != Iri.DefaultGraph ? $" {Graph.AsString}" : String.Empty));
             }
         }
 

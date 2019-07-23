@@ -130,6 +130,7 @@
     <Compile Include="Mapping\PropertyMapping.cs" />
     <Compile Include="Mapping\StatementMappingEqualityComparer.cs" />
     <Compile Include="Mapping\PropertyMappingEqualityComparer.cs" />
+    <Compile Include="Mapping\StatementMappingExtensions.cs" />
     <Compile Include="Mapping\TermMappingProviderExtensions.cs" />
     <Compile Include="Mapping\Visitors\ConverterConventionVisitor.cs" />
     <Compile Include="Mapping\Visitors\CollectionStorageModelConventionVisitor.cs" />
