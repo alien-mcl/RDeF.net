@@ -62,6 +62,7 @@ namespace RDeF.Entities
         /// <inheritdoc />
         public IEntityContext Create()
         {
+            WithMappings(_ => _.FromAssemblyOf<ITypedEntity>());
             var scope = _container.BeginScope();
             scope.Register<IEntityContext, DefaultEntityContext>();
             scope.Register<Func<DefaultEntityContext>>(() => (DefaultEntityContext)scope.Resolve<IEntityContext>());

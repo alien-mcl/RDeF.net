@@ -27,7 +27,7 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class.when_querying
         {
             base.ScenarioSetup();
             var entity = new Entity(new Iri("test"), Context.Object);
-            EntitySource.Entities[entity] = new HashSet<Statement>();
+            EntitySource.Entities[EntitySource.EntityMap[entity.Iri] = entity] = new HashSet<Statement>();
             entity.ActLike<IProduct>();
         }
     }

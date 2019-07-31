@@ -1,4 +1,6 @@
-﻿using RDeF.Vocabularies;
+﻿using System.Collections.Generic;
+using RDeF.Collections;
+using RDeF.Vocabularies;
 
 namespace RDeF.Entities
 {
@@ -17,6 +19,16 @@ namespace RDeF.Entities
         internal static bool IsTypeAssertion(this Statement statement)
         {
             return statement.Predicate == rdf.type;
+        }
+
+        internal static void EnsureCache(this Statement statement, IDictionary<Iri, ISet<Statement>> subjects)
+        {
+            subjects.EnsureKey(statement.Subject).Add(statement);
+            subjects.EnsureKey(statement.Predicate);
+            if (statement.Object != null)
+            {
+                subjects.EnsureKey(statement.Object);
+            }
         }
     }
 }

@@ -1,92 +1,55 @@
 @ECHO OFF
-ECHO Cleaning up...
-IF EXIST RDeF.Contracts\bin RD /s /q RDeF.Contracts\bin
-IF EXIST RDeF.Contracts\obj RD /s /q RDeF.Contracts\obj
-IF EXIST RDeF.Core\bin RD /s /q RDeF.Core\bin
-IF EXIST RDeF.Core\obj RD /s /q RDeF.Core\obj
-IF EXIST RDeF.Core.Tests\bin RD /s /q RDeF.Core.Tests\bin
-IF EXIST RDeF.Core.Tests\obj RD /s /q RDeF.Core.Tests\obj
-IF EXIST RDeF.Mapping.Attributes\bin RD /s /q RDeF.Mapping.Attributes\bin
-IF EXIST RDeF.Mapping.Attributes\obj RD /s /q RDeF.Mapping.Attributes\obj
-IF EXIST RDeF.Mapping.Attributes.Tests\bin RD /s /q RDeF.Mapping.Attributes.Tests\bin
-IF EXIST RDeF.Mapping.Attributes.Tests\obj RD /s /q RDeF.Mapping.Attributes.Tests\obj
-IF EXIST RDeF.Mapping.Fluent\bin RD /s /q RDeF.Mapping.Fluent\bin
-IF EXIST RDeF.Mapping.Fluent\obj RD /s /q RDeF.Mapping.Fluent\obj
-IF EXIST RDeF.Mapping.Fluent.Tests\bin RD /s /q RDeF.Mapping.Fluent.Tests\bin
-IF EXIST RDeF.Mapping.Fluent.Tests\obj RD /s /q RDeF.Mapping.Fluent.Tests\obj
-IF EXIST RDeF.Serialization\bin RD /s /q RDeF.Serialization\bin
-IF EXIST RDeF.Serialization\obj RD /s /q RDeF.Serialization\obj
-IF EXIST RDeF.Serialization.Tests\bin RD /s /q RDeF.Serialization.Tests\bin
-IF EXIST RDeF.Serialization.Tests\obj RD /s /q RDeF.Serialization.Tests\obj
+SET nobuild=
+SET config=Release
+IF "%1"=="nobuild" (SET nobuild=yes) ELSE (SET config=%1)
+IF "%2"=="nobuild" (SET nobuild=yes)
+IF "%config%"=="" (SET config=Release)
+@ECHO %nobuild%
+IF "%nobuild%"=="" (
+    ECHO Cleaning up...
+    IF EXIST RDeF.Contracts\bin RD /s /q RDeF.Contracts\bin
+    IF EXIST RDeF.Contracts\obj RD /s /q RDeF.Contracts\obj
+    IF EXIST RDeF.Core\bin RD /s /q RDeF.Core\bin
+    IF EXIST RDeF.Core\obj RD /s /q RDeF.Core\obj
+    IF EXIST RDeF.Core.Tests\bin RD /s /q RDeF.Core.Tests\bin
+    IF EXIST RDeF.Core.Tests\obj RD /s /q RDeF.Core.Tests\obj
+    IF EXIST RDeF.Mapping.Attributes\bin RD /s /q RDeF.Mapping.Attributes\bin
+    IF EXIST RDeF.Mapping.Attributes\obj RD /s /q RDeF.Mapping.Attributes\obj
+    IF EXIST RDeF.Mapping.Attributes.Tests\bin RD /s /q RDeF.Mapping.Attributes.Tests\bin
+    IF EXIST RDeF.Mapping.Attributes.Tests\obj RD /s /q RDeF.Mapping.Attributes.Tests\obj
+    IF EXIST RDeF.Mapping.Fluent\bin RD /s /q RDeF.Mapping.Fluent\bin
+    IF EXIST RDeF.Mapping.Fluent\obj RD /s /q RDeF.Mapping.Fluent\obj
+    IF EXIST RDeF.Mapping.Fluent.Tests\bin RD /s /q RDeF.Mapping.Fluent.Tests\bin
+    IF EXIST RDeF.Mapping.Fluent.Tests\obj RD /s /q RDeF.Mapping.Fluent.Tests\obj
+    IF EXIST RDeF.Serialization\bin RD /s /q RDeF.Serialization\bin
+    IF EXIST RDeF.Serialization\obj RD /s /q RDeF.Serialization\obj
+    IF EXIST RDeF.Serialization.Tests\bin RD /s /q RDeF.Serialization.Tests\bin
+    IF EXIST RDeF.Serialization.Tests\obj RD /s /q RDeF.Serialization.Tests\obj
+)
+
 IF EXIST NugetBuild RD /s /q NugetBuild
 MD NugetBuild
 
 ECHO Setting up a version...
 @ECHO OFF
-CALL ".build\Version"
+CALL ".build\version"
 
-ECHO Building .net Framework v4.6.1
-@ECHO OFF
-msbuild RDeF.sln /t:Restore
-msbuild RDeF.sln /p:Configuration=Release
+IF "%nobuild%"=="" (
+    ECHO Building .net Framework v4.6.1
+    @ECHO OFF
+    msbuild RDeF.sln /t:Restore
+    msbuild RDeF.sln /p:Configuration=%config%
 
-ECHO Building NETSTANDARD2.0
-@ECHO OFF
-msbuild RDeF.Core.sln /t:Restore
-msbuild RDeF.Core.sln /p:Configuration=Release
+    ECHO Building NETSTANDARD2.0
+    @ECHO OFF
+    msbuild RDeF.Core.sln /t:Restore
+    msbuild RDeF.Core.sln /p:Configuration=%config%
+)
 
-ECHO "Building up Nuget package for RDeF.Contracts"
-MD NugetBuild\RDeF.Contracts
-MD NugetBuild\RDeF.Contracts\lib
-MD NugetBuild\RDeF.Contracts\lib\net461
-MD NugetBuild\RDeF.Contracts\lib\netstandard20
-COPY RDeF.Contracts\bin\Release\RDeF.Contracts.dll NugetBuild\RDeF.Contracts\lib\net461
-COPY RDeF.Contracts\bin\Release\RDeF.Contracts.xml NugetBuild\RDeF.Contracts\lib\net461
-COPY RDeF.Contracts\bin\Release\netstandard2.0\RDeF.Contracts.dll NugetBuild\RDeF.Contracts\lib\netstandard20
-COPY ".nuget\RDeF.Contracts.nuspec" NugetBuild\RDeF.Contracts
-".build\nuget" pack NugetBuild\RDeF.Contracts\RDeF.Contracts.nuspec -version %tag:~1%.%version%.%release% -outputdirectory NugetBuild
+CALL ".build\pack" RDeF.Contracts %tag% %version% %release%
+CALL ".build\pack" RDeF.Core %tag% %version% %release%
+CALL ".build\pack" RDeF.Mapping.Attributes %tag% %version% %release%
+CALL ".build\pack" RDeF.Mapping.Fluent %tag% %version% %release%
+CALL ".build\pack" RDeF.Serialization %tag% %version% %release%
 
-ECHO "Building up Nuget package for RDeF.Core"
-MD NugetBuild\RDeF.Core
-MD NugetBuild\RDeF.Core\lib
-MD NugetBuild\RDeF.Core\lib\net461
-MD NugetBuild\RDeF.Core\lib\netstandard20
-COPY RDeF.Core\bin\Release\RDeF.Core.dll NugetBuild\RDeF.Core\lib\net461
-COPY RDeF.Core\bin\Release\RDeF.Core.xml NugetBuild\RDeF.Core\lib\net461
-COPY RDeF.Core\bin\Release\netstandard2.0\RDeF.Core.dll NugetBuild\RDeF.Core\lib\netstandard20
-COPY ".nuget\RDeF.Core.nuspec" NugetBuild\RDeF.Core
-".build\nuget" pack NugetBuild\RDeF.Core\RDeF.Core.nuspec -version %tag:~1%.%version%.%release% -outputdirectory NugetBuild
-
-ECHO "Building up Nuget package for RDeF.Mapping.Attributes"
-MD NugetBuild\RDeF.Mapping.Attributes
-MD NugetBuild\RDeF.Mapping.Attributes\lib
-MD NugetBuild\RDeF.Mapping.Attributes\lib\net461
-MD NugetBuild\RDeF.Mapping.Attributes\lib\netstandard20
-COPY RDeF.Mapping.Attributes\bin\Release\RDeF.Mapping.Attributes.dll NugetBuild\RDeF.Mapping.Attributes\lib\net461
-COPY RDeF.Mapping.Attributes\bin\Release\RDeF.Mapping.Attributes.xml NugetBuild\RDeF.Mapping.Attributes\lib\net461
-COPY RDeF.Mapping.Attributes\bin\Release\netstandard2.0\RDeF.Mapping.Attributes.dll NugetBuild\RDeF.Mapping.Attributes\lib\netstandard20
-COPY ".nuget\RDeF.Mapping.Attributes.nuspec" NugetBuild\RDeF.Mapping.Attributes
-".build\nuget" pack NugetBuild\RDeF.Mapping.Attributes\RDeF.Mapping.Attributes.nuspec -version %tag:~1%.%version%.%release% -outputdirectory NugetBuild
-
-ECHO "Building up Nuget package for RDeF.Mapping.Fluent"
-MD NugetBuild\RDeF.Mapping.Fluent
-MD NugetBuild\RDeF.Mapping.Fluent\lib
-MD NugetBuild\RDeF.Mapping.Fluent\lib\net461
-MD NugetBuild\RDeF.Mapping.Fluent\lib\netstandard20
-COPY RDeF.Mapping.Fluent\bin\Release\RDeF.Mapping.Fluent.dll NugetBuild\RDeF.Mapping.Fluent\lib\net461
-COPY RDeF.Mapping.Fluent\bin\Release\RDeF.Mapping.Fluent.xml NugetBuild\RDeF.Mapping.Fluent\lib\net461
-COPY RDeF.Mapping.Fluent\bin\Release\netstandard2.0\RDeF.Mapping.Fluent.dll NugetBuild\RDeF.Mapping.Fluent\lib\netstandard20
-COPY ".nuget\RDeF.Mapping.Fluent.nuspec" NugetBuild\RDeF.Mapping.Fluent
-".build\nuget" pack NugetBuild\RDeF.Mapping.Fluent\RDeF.Mapping.Fluent.nuspec -version %tag:~1%.%version%.%release% -outputdirectory NugetBuild
-
-ECHO "Building up Nuget package for RDeF.Serialization"
-MD NugetBuild\RDeF.Serialization
-MD NugetBuild\RDeF.Serialization\lib
-MD NugetBuild\RDeF.Serialization\lib\net461
-MD NugetBuild\RDeF.Serialization\lib\netstandard20
-COPY RDeF.Serialization\bin\Release\RDeF.Serialization.dll NugetBuild\RDeF.Serialization\lib\net461
-COPY RDeF.Serialization\bin\Release\RDeF.Serialization.xml NugetBuild\RDeF.Serialization\lib\net461
-COPY RDeF.Serialization\bin\Release\netstandard2.0\RDeF.Serialization.dll NugetBuild\RDeF.Serialization\lib\netstandard20
-COPY ".nuget\RDeF.Serialization.nuspec" NugetBuild\RDeF.Serialization
-".build\nuget" pack NugetBuild\RDeF.Serialization\RDeF.Serialization.nuspec -version %tag:~1%.%version%.%release% -outputdirectory NugetBuild
 :COMPLETED

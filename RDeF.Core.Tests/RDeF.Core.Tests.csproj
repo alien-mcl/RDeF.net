@@ -186,6 +186,7 @@
     <Compile Include="Given_instance_of\SimpleInMemoryEntitySource_class\when_querying\for_products.cs" />
     <Compile Include="Given_instance_of\SimpleInMemoryEntitySource_class\when_creating_an_entity.cs" />
     <Compile Include="Given_instance_of\SimpleInMemoryEntitySource_class\when_committing_changes.cs" />
+    <Compile Include="Given_instance_of\StatementEventArgs_class\when_initializing.cs" />
     <Compile Include="Given_instance_of\Statement_class\when_comparing.cs" />
     <Compile Include="Given_instance_of\Statement_class\when_initializing_localized_literal.cs" />
     <Compile Include="Given_instance_of\Statement_class\when_initializing_literal_value.cs" />

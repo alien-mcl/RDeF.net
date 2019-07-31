@@ -12,8 +12,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{D22B90A9-FC81-4D6C-8B2C-2DEE25E678B6}"
 	ProjectSection(SolutionItems) = preProject
 		.build\CommonAssemblyInfo.cs = .build\CommonAssemblyInfo.cs
-		.build\Make.bat = .build\Make.bat
-		.build\Version.bat = .build\Version.bat
+		.build\make.bat = .build\make.bat
+		.build\pack.bat = .build\pack.bat
+		.build\version.bat = .build\version.bat
 		.build\VersionAssemblyInfo.cs = .build\VersionAssemblyInfo.cs
 	EndProjectSection
 EndProject

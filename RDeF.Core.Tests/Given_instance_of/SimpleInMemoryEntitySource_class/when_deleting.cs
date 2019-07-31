@@ -9,11 +9,13 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
     [TestFixture]
     public class when_deleting : SimpleInMemoryEntitySourceTest
     {
+        private static readonly Iri Iri = new Iri("test");
+
         private Entity Entity { get; set; }
 
         public override void TheTest()
         {
-            EntitySource.Delete(new Iri("test"));
+            EntitySource.Delete(Iri);
         }
 
         [Test]
@@ -28,10 +30,16 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
             EntitySource.Entities.Should().NotContainKey(Entity);
         }
 
+        [Test]
+        public void Should_completely_remove_the_entity_from_cache()
+        {
+            EntitySource.EntityMap.Should().NotContainKey(Iri);
+        }
+
         protected override void ScenarioSetup()
         {
             base.ScenarioSetup();
-            EntitySource.Entities[Entity = new Entity(new Iri("test"), Context.Object)] = new HashSet<Statement>();
+            EntitySource.Entities[EntitySource.EntityMap[Iri] = Entity = new Entity(Iri, Context.Object)] = new HashSet<Statement>();
         }
     }
 }

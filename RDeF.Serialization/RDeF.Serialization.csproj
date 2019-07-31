@@ -62,7 +62,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialization\JsonLdReader.cs" />
     <Compile Include="Serialization\JsonLdWriter.cs" />
-    <Compile Include="Serialization\RDFDatasetExtensions.cs" />
+    <Compile Include="Serialization\QuadExtensions.cs" />
     <Compile Include="Serialization\RdfXmlReader.cs" />
     <Compile Include="Serialization\RdfXmlWriter.cs" />
     <Compile Include="Xml\XmlReaderExtensions.cs" />

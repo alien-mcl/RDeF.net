@@ -12,7 +12,7 @@ namespace RDeF.Entities
     public class Iri
     {
         /// <summary>Defines an Iri that denotes a default graph.</summary>
-        public static readonly Iri DefaultGraph = new Iri();
+        public static readonly Iri DefaultGraph = new Iri("_:defaultGraph");
 
         private const string BlankProtocol = "_:";
         private const string BlankSuffix = "_:blank";

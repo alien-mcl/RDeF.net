@@ -14,6 +14,13 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
     public class when_deserializing : SimpleInMemoryEntitySourceTest
     {
         private static readonly Iri ExpectedSubject = new Iri("subject");
+        private static readonly Iri ExpectedPredicate = new Iri("predicate");
+        private static readonly Iri ExpectedProperty = new Iri("assert");
+        private static readonly Iri ExpectedObject = new Iri("object");
+
+        private static readonly Statement ExpectedStatement = new Statement(ExpectedSubject, ExpectedPredicate, ExpectedObject);
+
+        private static readonly Statement ExpectedAdditionalStatement = new Statement(ExpectedSubject, ExpectedProperty, "Test");
 
         private StreamReader StreamReader { get; set; }
 
@@ -59,6 +66,42 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
         }
 
         [Test]
+        public void Should_use_initialize_predicate()
+        {
+            Context.Verify(
+                instance => instance.InitializeInternal(
+                    It.Is<Entity>(entity => entity.Iri == ExpectedPredicate),
+                    It.Is<IEnumerable<Statement>>(set => !set.Any()),
+                    It.IsAny<EntityInitializationContext>(),
+                    It.IsAny<Action<Statement>>()),
+                Times.Once);
+        }
+
+        [Test]
+        public void Should_use_initialize_property()
+        {
+            Context.Verify(
+                instance => instance.InitializeInternal(
+                    It.Is<Entity>(entity => entity.Iri == ExpectedProperty),
+                    It.Is<IEnumerable<Statement>>(set => !set.Any()),
+                    It.IsAny<EntityInitializationContext>(),
+                    It.IsAny<Action<Statement>>()),
+                Times.Once);
+        }
+
+        [Test]
+        public void Should_use_initialize_entity_without_statements()
+        {
+            Context.Verify(
+                instance => instance.InitializeInternal(
+                    It.Is<Entity>(entity => entity.Iri == ExpectedObject),
+                    It.Is<IEnumerable<Statement>>(set => !set.Any()),
+                    It.IsAny<EntityInitializationContext>(),
+                    It.IsAny<Action<Statement>>()),
+                Times.Once);
+        }
+
+        [Test]
         public void Should_gather_all_entity_statements()
         {
             EntitySource.Entities.First().Value.First().Subject.Should().Be(ExpectedSubject);
@@ -75,11 +118,11 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
         protected override void ScenarioSetup()
         {
             base.ScenarioSetup();
-            ExpectedStatements = new[] { new Statement(ExpectedSubject, new Iri("predicate"), String.Empty) };
+            ExpectedStatements = new[] { ExpectedStatement, ExpectedAdditionalStatement };
             StreamReader = new StreamReader(new MemoryStream());
             RdfReader = new Mock<IRdfReader>(MockBehavior.Strict);
             RdfReader.Setup(instance => instance.Read(It.IsAny<StreamReader>()))
-                .ReturnsAsync(new Dictionary<Iri, IEnumerable<Statement>>() { { new Iri("graph"), ExpectedStatements } });
+                .ReturnsAsync(new Dictionary<Iri, IEnumerable<Statement>>() { { new Iri("graph"), new[] { ExpectedStatement } } });
             Context.Setup(instance => instance.Clear());
             Context.Setup(instance => instance.CreateInternal(It.IsAny<Iri>(), It.IsAny<bool>()))
                 .Returns<Iri, bool>((iri, initialize) => (Entity)EntitySource.Create(iri));
@@ -90,6 +133,7 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
                     It.IsAny<Action<Statement>>()))
                 .Callback<Entity, IEnumerable<Statement>, EntityInitializationContext, Action<Statement>>(
                     (entity, statements, context, handler) => statements.ToList().ForEach(handler));
+            EntitySource.StatementAsserted += (sender, e) => e.AdditionalStatementsToAssert.Add(ExpectedAdditionalStatement);
         }
     }
 }

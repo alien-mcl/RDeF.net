@@ -39,9 +39,9 @@ namespace RDeF.Serialization
                 throw new ArgumentNullException(nameof(streamReader));
             }
 
+            var dataset = (RDFDataset)JsonLdProcessor.ToRDF(JSONUtils.FromReader(streamReader), _options);
             var defaultGraph = new TypePrioritizingStatementCollection();
             var graphMap = new Dictionary<Iri, IEnumerable<Statement>>();
-            var dataset = (RDFDataset)JsonLdProcessor.ToRDF(JSONUtils.FromReader(streamReader), _options);
             foreach (var graphName in dataset.GraphNames())
             {
                 var graphIri = (graphName == "@default" ? Iri.DefaultGraph : new Iri(graphName));

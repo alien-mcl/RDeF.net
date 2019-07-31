@@ -54,15 +54,27 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
         }
 
         [Test]
-        public void Should_remove_entity_without_any_statements()
+        public void Should_not_remove_entity_without_any_statements()
         {
-            EntitySource.Entities.Should().NotContainKey(Entity2);
+            EntitySource.Entities.Should().ContainKey(Entity2);
+        }
+
+        [Test]
+        public void Should_not_completely_remove_entity_without_any_statements()
+        {
+            EntitySource.EntityMap.Should().ContainKey(Entity2.Iri);
         }
 
         [Test]
         public void Should_remove_retracted_statements()
         {
             EntitySource.Entities[Entity1].Should().NotContain(TypeAssertion);
+        }
+
+        [Test]
+        public void Should_remove_retracted_statements_without_removing_entity()
+        {
+            EntitySource.EntityMap.Should().ContainKey(Entity1.Iri);
         }
 
         [Test]
@@ -77,15 +89,21 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
             EntitySource.Entities.Should().NotContainKey(Entity3);
         }
 
+        [Test]
+        public void Should_completely_delete_deleted_entities()
+        {
+            EntitySource.EntityMap.Should().NotContainKey(Entity3.Iri);
+        }
+
         protected override void ScenarioSetup()
         {
             base.ScenarioSetup();
             Entity1 = new Entity(Iri1, Context.Object);
-            EntitySource.Entities[Entity1] = new HashSet<Statement>() { new Statement(Iri1, rdf.type, new Iri("class")) };
+            EntitySource.Entities[EntitySource.EntityMap[Entity1.Iri] = Entity1] = new HashSet<Statement>() { new Statement(Iri1, rdf.type, new Iri("class")) };
             Entity2 = new Entity(Iri2, Context.Object);
-            EntitySource.Entities[Entity2] = new HashSet<Statement>() { new Statement(Iri2, rdf.type, new Iri("class")) };
+            EntitySource.Entities[EntitySource.EntityMap[Entity2.Iri] = Entity2] = new HashSet<Statement>() { new Statement(Iri2, rdf.type, new Iri("class")) };
             Entity3 = new Entity(Iri3, Context.Object);
-            EntitySource.Entities[Entity3] = new HashSet<Statement>() { new Statement(Iri3, rdf.type, new Iri("class")) };
+            EntitySource.Entities[EntitySource.EntityMap[Entity3.Iri] = Entity3] = new HashSet<Statement>() { new Statement(Iri3, rdf.type, new Iri("class")) };
             DeletedEntities = new List<Iri>() { Iri3 };
             RetractedStatements = new Dictionary<IEntity, ISet<Statement>>()
             {
