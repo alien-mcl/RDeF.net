@@ -10,8 +10,8 @@ namespace Given_instance_of.DefaultEntityContext_class
         protected override void ScenarioSetup()
         {
             base.ScenarioSetup();
-            MappingsRepository.Setup(instance => instance.FindPropertyMappingFor(It.IsAny<IEntity>(), It.IsAny<Iri>(), It.IsAny<Iri>()))
-                .Returns<IEntity, Iri, Iri>((entity, iri, graph) => PropertyMapping.Object);
+            MappingsRepository.Setup(instance => instance.FindPropertyMappingsFor(It.IsAny<IEntity>(), It.IsAny<Iri>(), It.IsAny<Iri>()))
+                .Returns<IEntity, Iri, Iri>((entity, iri, graph) => new[] { PropertyMapping.Object });
         }
     }
 }

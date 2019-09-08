@@ -38,7 +38,7 @@ namespace RDeF.Entities
         /// <returns><b>true</b> if a given <paramref name="entity" /> is mapped to the <paramref name="class" />; otherwise <b>false</b>.</returns>
         public static bool Is(this IEntity entity, Iri @class)
         {
-            return entity.GetTypes().Contains(@class);
+            return entity.Is(new[] { @class });
         }
 
         /// <summary>Checks whether a given <paramref name="entity" /> is of all of the given <paramref name="classes" />.</summary>
@@ -56,7 +56,9 @@ namespace RDeF.Entities
         /// <returns><b>true</b> if a given <paramref name="entity" /> is mapped to all of the <paramref name="classes" />; otherwise <b>false</b>.</returns>
         public static bool Is(this IEntity entity, IEnumerable<Iri> classes)
         {
-            return (classes != null) && (entity.GetTypes().Join(classes, outer => outer, inner => inner, (outer, inner) => inner).Count() == classes.Count());
+            return classes != null
+                && entity.ActLike<ITypedEntity>().Type.Union(entity.GetTypes())
+                    .Join(classes, _ => _, _ => _, (outer, inner) => inner).Count() == classes.Count();
         }
 
         internal static void SetProperty(this Entity entity, Statement statement, IPropertyMapping propertyMapping, EntityInitializationContext context)
@@ -75,7 +77,7 @@ namespace RDeF.Entities
                 value = propertyMapping.ValueConverter.ConvertFrom(statement);
             }
 
-            entity.SetPropertyInternal(propertyMapping.PropertyInfo, value);
+            entity.SetPropertyInternal(propertyMapping.PropertyInfo, value, null);
         }
 
         internal static void SetList(this Entity entity, Iri head, ICollectionMapping collectionMapping, EntityInitializationContext context)

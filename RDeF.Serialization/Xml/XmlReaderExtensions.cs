@@ -10,7 +10,7 @@ namespace RDeF.Xml
     {
         private const string NoSubjectMessage = "Unable to create a statement without a resource identifier.";
 
-        internal static Iri ReadSubject(this XmlReader reader, IDictionary<string, Iri> blankNodes)
+        internal static Iri ReadSubject(this XmlReader reader)
         {
             if (!reader.HasAttributes)
             {
@@ -19,7 +19,7 @@ namespace RDeF.Xml
 
             while (reader.MoveToNextAttribute())
             {
-                var iri = reader.ReadIri(blankNodes);
+                var iri = reader.ReadIri();
                 if (iri != null)
                 {
                     return iri;
@@ -29,7 +29,7 @@ namespace RDeF.Xml
             throw new InvalidOperationException(NoSubjectMessage);
         }
 
-        internal static Iri ReadIri(this XmlReader reader, IDictionary<string, Iri> blankNodes)
+        internal static Iri ReadIri(this XmlReader reader)
         {
             if (reader.NamespaceURI != rdf.ns)
             {
@@ -43,13 +43,7 @@ namespace RDeF.Xml
                 case "about":
                     return new Iri(reader.Value);
                 case "nodeID":
-                    Iri result;
-                    if (!blankNodes.TryGetValue(reader.Value, out result))
-                    {
-                        return blankNodes[reader.Value] = new Iri();
-                    }
-
-                    return result;
+                    return new Iri($"_:{reader.Value}");
             }
 
             return null;

@@ -8,6 +8,7 @@
                     "@type": [ "some:type1", "some:type2" ],
                     "some:predicate1": [
                         { "@id": "some:object1" },
+                        { "@id": "_:b0" },
                         "value",
                         123
                     ],

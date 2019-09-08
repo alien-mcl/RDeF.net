@@ -89,7 +89,6 @@ namespace Given_instance_of.EntityAwareMappingsRepository_class
 
         internal class TestSetup<TType, TResult> where TType : class
         {
-            private readonly EntityAwareMappingsRepositoryTest _fixture;
             private readonly Mock<TType> _mock;
             private readonly Expression<Func<TType, TResult>> _member;
             private readonly ISetup<TType, TResult> _setup;
@@ -97,16 +96,13 @@ namespace Given_instance_of.EntityAwareMappingsRepository_class
 
             internal TestSetup(EntityAwareMappingsRepositoryTest fixture, Mock<TType> mock, ISetup<TType, TResult> setup, Expression<Func<TType, TResult>> member)
             {
-                _fixture = fixture;
+                And = fixture;
                 _mock = mock;
                 _setup = setup;
                 _member = member;
             }
 
-            internal EntityAwareMappingsRepositoryTest And
-            {
-                get { return _fixture; }
-            }
+            internal EntityAwareMappingsRepositoryTest And { get; }
 
             internal TestSetup<TType, TResult> ToReturn(TResult value)
             {
@@ -116,7 +112,7 @@ namespace Given_instance_of.EntityAwareMappingsRepository_class
 
             internal TestSetup<TType, TResult> Calling(Func<EntityAwareMappingsRepository, TResult> action)
             {
-                _result = action(_fixture.Repository);
+                _result = action(And.Repository);
                 return this;
             }
 
@@ -133,7 +129,7 @@ namespace Given_instance_of.EntityAwareMappingsRepository_class
 
             internal void ResultingWithExpected(TResult result)
             {
-                _result.Should().Be(result);
+                _result.ShouldBeEquivalentTo(result);
             }
         }
     }

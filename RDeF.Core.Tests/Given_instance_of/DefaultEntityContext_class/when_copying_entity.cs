@@ -104,6 +104,7 @@ namespace Given_instance_of.DefaultEntityContext_class
         {
             SourceContext = new DefaultEntityContext(EntitySource.Object, MappingsRepository.Object, ChangeDetector.Object, Array.Empty<ILiteralConverter>());
             Source = SourceContext.Create<IProduct>(new Iri("source"));
+            EntitySource.Setup(instance => instance.Load(It.IsAny<Iri>())).Returns(Array.Empty<Statement>());
             MappingsRepository.Setup(instance => instance.FindPropertyMappingFor(It.IsAny<IEntity>(), It.IsAny<PropertyInfo>()))
                 .Returns<IEntity, PropertyInfo>((entity, propertyInfo) =>
                 {

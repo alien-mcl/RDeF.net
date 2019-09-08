@@ -104,14 +104,6 @@ namespace RDeF.Entities
         }
 
         /// <inheritdoc />
-        public override void SetProperty(PropertyInfo propertyInfo, object value)
-        {
-            EnsureInitialized();
-            IsChanged = true;
-            SetPropertyInternal(GetActualProperty(propertyInfo), value);
-        }
-
-        /// <inheritdoc />
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(this, obj))
@@ -146,9 +138,17 @@ namespace RDeF.Entities
             return Iri.GetHashCode();
         }
 
-        internal void SetPropertyInternal(PropertyInfo propertyInfo, object value)
+        internal void SetPropertyInternal(PropertyInfo propertyInfo, object value, object instance)
         {
-            base.SetProperty(propertyInfo, value);
+            base.SetProperty(propertyInfo, value, instance);
+        }
+
+        /// <inheritdoc />
+        protected override void SetProperty(PropertyInfo propertyInfo, object value, object instance)
+        {
+            EnsureInitialized();
+            IsChanged = true;
+            SetPropertyInternal(GetActualProperty(propertyInfo), value, instance);
         }
 
         /// <inheritdoc />

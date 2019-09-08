@@ -47,19 +47,23 @@ namespace Given_instance_of.Entity_class
         [Test]
         public void Should_obtain_mappings_repository()
         {
-            Context.VerifyGet(instance => instance.Mappings, Times.Exactly(2));
+            Context.VerifyGet(instance => instance.Mappings, Times.AtLeast(2));
         }
 
         [Test]
         public void Should_obtain_name_property_mapping()
         {
-            MappingsRepository.Verify(instance => instance.FindPropertyMappingFor(Product, typeof(IProduct).GetTypeInfo().GetProperty("Name")), Times.Once);
+            MappingsRepository.Verify(
+                instance => instance.FindPropertyMappingFor(Product, typeof(IProduct).GetTypeInfo().GetProperty("Name")),
+                Times.AtLeastOnce);
         }
 
         [Test]
         public void Should_obtain_description_property_mapping()
         {
-            MappingsRepository.Verify(instance => instance.FindPropertyMappingFor(Product, typeof(IProduct).GetTypeInfo().GetProperty("Description")), Times.Once);
+            MappingsRepository.Verify(
+                instance => instance.FindPropertyMappingFor(Product, typeof(IProduct).GetTypeInfo().GetProperty("Description")),
+                Times.AtLeastOnce);
         }
 
         protected override void ScenarioSetup()
@@ -68,8 +72,8 @@ namespace Given_instance_of.Entity_class
             Context.Setup(instance => instance.Initialize(It.IsAny<Entity>()))
                 .Callback<Entity>(entity =>
                 {
-                    entity.SetPropertyInternal(typeof(IProduct).GetTypeInfo().GetProperty("Name"), ExpectedName);
-                    entity.SetPropertyInternal(typeof(IProduct).GetTypeInfo().GetProperty("Description"), ExpectedDescription);
+                    entity.SetPropertyInternal(typeof(IProduct).GetTypeInfo().GetProperty("Name"), ExpectedName, null);
+                    entity.SetPropertyInternal(typeof(IProduct).GetTypeInfo().GetProperty("Description"), ExpectedDescription, null);
                 });
             Product = Entity.ActLike<IProduct>();
         }

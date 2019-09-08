@@ -7,6 +7,6 @@ namespace RDeF.Entities
     {
         /// <summary>Gets the rdf:type statements.</summary>
         /// <remarks>This property provides access to rdf:type statements only in the default graph.</remarks>
-        ICollection<Iri> Type { get; }
+        ISet<Iri> Type { get; }
     }
 }

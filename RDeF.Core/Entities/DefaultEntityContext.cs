@@ -198,7 +198,7 @@ namespace RDeF.Entities
 
                         foreach (var propertyValue in valuesToSet.Concat(entity.Value.OriginalValues))
                         {
-                            entity.Value.SetPropertyInternal(propertyValue.Property, propertyValue.Value);
+                            entity.Value.SetPropertyInternal(propertyValue.Property, propertyValue.Value, null);
                         }
 
                         entity.Value.IsInitialized = true;
@@ -280,34 +280,53 @@ namespace RDeF.Entities
                     }
                 }
 
-                var propertyMapping = Mappings.FindPropertyMappingFor(entity, statement.Predicate, statement.Graph);
-                if ((propertyMapping == null) && (UnmappedPropertyEncountered != null))
+                var propertyMappings = Mappings.FindPropertyMappingsFor(entity, statement.Predicate, statement.Graph);
+                if (!propertyMappings.Any() && UnmappedPropertyEncountered != null)
                 {
                     var e = new UnmappedPropertyEventArgs(this, statement);
                     UnmappedPropertyEncountered(this, e);
-                    propertyMapping = e.PropertyMapping;
+                    if (e.PropertyMapping != null)
+                    {
+                        propertyMappings = new[] { e.PropertyMapping };
+                    }
                 }
 
-                if (propertyMapping == null)
+                if (!propertyMappings.Any())
                 {
                     entity.SetUnmappedProperty(statement, _literalConverters);
                     continue;
                 }
 
-                if (!statement.Matches(propertyMapping.Graph))
+                foreach (var propertyMapping in propertyMappings)
                 {
-                    continue;
-                }
+                    if (!statement.Matches(propertyMapping.Graph))
+                    {
+                        continue;
+                    }
 
-                //// TODO: Develop a dictionary statements handling.
-                var collectionMapping = propertyMapping as ICollectionMapping;
-                if (collectionMapping?.StoreAs == CollectionStorageModel.LinkedList)
-                {
-                    context.LinkedLists.EnsureKey(entity.Iri)[statement.Object] = collectionMapping;
-                    continue;
-                }
+                    //// TODO: Develop a dictionary statements handling.
+                    var collectionMapping = propertyMapping as ICollectionMapping;
+                    if (collectionMapping?.StoreAs == CollectionStorageModel.LinkedList)
+                    {
+                        context.LinkedLists.EnsureKey(entity.Iri)[statement.Object] = collectionMapping;
+                        continue;
+                    }
 
-                entity.SetProperty(statement, propertyMapping, context);
+                    try
+                    {
+                        entity.SetProperty(statement, propertyMapping, context);
+                    }
+                    catch (Exception error)
+                    {
+                        var message = String.Format(
+                            "Unable to set property of '{0}' of object {1} mapped to {2} with value of {3}.",
+                            propertyMapping.Name,
+                            statement.Subject,
+                            statement.Predicate,
+                            statement.Object ?? statement.Value);
+                        throw new InvalidOperationException(message, error);
+                    }
+                }
             }
 
             entity.InitializeLists(context);

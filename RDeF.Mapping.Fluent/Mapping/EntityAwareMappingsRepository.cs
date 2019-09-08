@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Reflection;
 using RDeF.Entities;
 using RDeF.Mapping.Entities;
@@ -59,19 +60,25 @@ namespace RDeF.Mapping
         }
 
         /// <inheritdoc />
-        public IPropertyMapping FindPropertyMappingFor(IEntity entity, Iri predicate, Iri graph = null)
+        public IEnumerable<IPropertyMapping> FindPropertyMappingsFor(IEntity entity, Iri predicate, Iri graph = null)
         {
-            IPropertyMapping result = null;
+            IEnumerable<IPropertyMapping> result = Array.Empty<IPropertyMapping>();
             if (entity != null)
             {
                 var explicitMappings = GetExplicitMappingsFor(_entityContext());
                 if (explicitMappings != null)
                 {
-                    result = explicitMappings.FindPropertyMappingFor(predicate, graph, entity.Iri);
+                    result = explicitMappings.FindPropertyMappingsFor(predicate, graph, entity.Iri);
                 }
             }
 
-            return result ?? _mappingsRepository.FindPropertyMappingFor(entity, predicate, graph);
+            return result.Any() ? result : _mappingsRepository.FindPropertyMappingsFor(entity, predicate, graph);
+        }
+
+        /// <inheritdoc />
+        public IPropertyMapping FindPropertyMappingFor(IEntity entity, Iri predicate, Iri graph = null)
+        {
+            return FindPropertyMappingsFor(entity, predicate, graph).FirstOrDefault();
         }
 
         /// <inheritdoc />

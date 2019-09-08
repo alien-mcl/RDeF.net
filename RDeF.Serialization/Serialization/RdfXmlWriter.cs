@@ -89,7 +89,7 @@ namespace RDeF.Serialization
         private async Task WriteSubject(XmlWriter xmlWriter, Iri subject, ICollection<IGrouping<Iri, Statement>> subjects, Context context)
         {
             await xmlWriter.WriteStartElementAsync("rdf", "Description", context.Namespaces["rdf"]);
-            await xmlWriter.WriteAttributeStringAsync("rdf", (subject.IsBlank ? "nodeID" : "about"), context.Namespaces["rdf"], subject);
+            await WriteIri(xmlWriter, subject, context, "about");
             foreach (var predicate in context.Statements.GroupBy(statement => statement.Predicate))
             {
                 var childContext = new Context(predicate, context.Namespaces, context.Id);
@@ -115,7 +115,7 @@ namespace RDeF.Serialization
                 }
                 else
                 {
-                    await WriteValue(xmlWriter, value, context.Namespaces);
+                    await WriteValue(xmlWriter, value, context);
                 }
 
                 await xmlWriter.WriteEndElementAsync();
@@ -152,7 +152,7 @@ namespace RDeF.Serialization
                 if (value != null)
                 {
                     await xmlWriter.WriteStartElementAsync("rdf", "first", context.Namespaces["rdf"]);
-                    await WriteValue(xmlWriter, value, context.Namespaces);
+                    await WriteValue(xmlWriter, value, context);
                     await xmlWriter.WriteEndElementAsync();
                 }
 
@@ -177,25 +177,34 @@ namespace RDeF.Serialization
             while (item != null);
         }
 
-        private async Task WriteValue(XmlWriter xmlWriter, Statement value, IDictionary<string, string> namespaces)
+        private async Task WriteValue(XmlWriter xmlWriter, Statement value, Context context)
         {
             if (value.Object != null)
             {
-                await xmlWriter.WriteAttributeStringAsync("rdf", (value.Object.IsBlank ? "nodeID" : "resource"), namespaces["rdf"], value.Object);
+                await WriteIri(xmlWriter, value.Object, context, "resource");
                 return;
             }
 
-            await xmlWriter.WriteAttributeStringAsync("rdf", "parseType", namespaces["rdf"], "Literal");
+            await xmlWriter.WriteAttributeStringAsync("rdf", "parseType", context.Namespaces["rdf"], "Literal");
             if (value.Language != null)
             {
                 await xmlWriter.WriteAttributeStringAsync("xml", "lang", String.Empty, value.Language);
             }
             else if (value.DataType != null)
             {
-                await xmlWriter.WriteAttributeStringAsync("rdf", "datatype", namespaces["rdf"], value.DataType);
+                await xmlWriter.WriteAttributeStringAsync("rdf", "datatype", context.Namespaces["rdf"], value.DataType);
             }
 
             await xmlWriter.WriteStringAsync(value.Value);
+        }
+
+        private async Task WriteIri(XmlWriter xmlWriter, Iri iri, Context context, string nonBlankNodeType)
+        {
+            await xmlWriter.WriteAttributeStringAsync(
+                "rdf", 
+                (iri.IsBlank ? "nodeID" : nonBlankNodeType), 
+                context.Namespaces["rdf"], 
+                (iri.IsBlank ? iri.ToString().Substring(2) : iri));
         }
 
         private class Context

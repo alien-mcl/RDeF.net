@@ -70,10 +70,10 @@ namespace RDeF.Mapping.Explicit
         }
 
         /// <inheritdoc />
-        public IPropertyMapping FindPropertyMappingFor(Iri term, Iri graph, Iri owningEntity)
+        public IEnumerable<IPropertyMapping> FindPropertyMappingsFor(Iri term, Iri graph, Iri owningEntity)
         {
             return (term == null || owningEntity == null
-                ? null
+                ? Array.Empty<IPropertyMapping>()
                 : (from entityMappings in ExplicitMappings
                    where entityMappings.Key == owningEntity
                    from entity in entityMappings.Value
@@ -82,7 +82,13 @@ namespace RDeF.Mapping.Explicit
                    where propertyMapping.PropertyInfo is ExplicitlyMappedPropertyInfo
                    let explicitelyMappedPropertyInfo = (ExplicitlyMappedPropertyInfo)propertyMapping.PropertyInfo
                    where explicitelyMappedPropertyInfo.Predicate == term && explicitelyMappedPropertyInfo.Graph == graph
-                   select propertyMapping).FirstOrDefault());
+                   select propertyMapping));
+        }
+
+        /// <inheritdoc />
+        public IPropertyMapping FindPropertyMappingFor(Iri term, Iri graph, Iri owningEntity)
+        {
+            return FindPropertyMappingsFor(term, graph, owningEntity).FirstOrDefault();
         }
 
         /// <inheritdoc />

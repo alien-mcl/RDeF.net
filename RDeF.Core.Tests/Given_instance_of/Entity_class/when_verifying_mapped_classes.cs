@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -16,6 +17,8 @@ namespace Given_instance_of.Entity_class
         private static readonly Iri Class2 = new Iri("class2");
 
         private Mock<IMappingsRepository> Mappings { get; set; }
+
+        private Mock<IPropertyMapping> PropertyMapping { get; set; }
 
         private Mock<IEntityMapping> EntityMapping { get; set; }
 
@@ -37,6 +40,7 @@ namespace Given_instance_of.Entity_class
 
         protected override void ScenarioSetup()
         {
+            PropertyMapping = new Mock<IPropertyMapping>();
             PrimaryClassMapping = new Mock<IStatementMapping>(MockBehavior.Strict);
             PrimaryClassMapping.SetupGet(instance => instance.Term).Returns(Class1);
             SecondaryClassMapping = new Mock<IStatementMapping>(MockBehavior.Strict);
@@ -45,6 +49,8 @@ namespace Given_instance_of.Entity_class
             EntityMapping.SetupGet(instance => instance.Classes).Returns(new[] { PrimaryClassMapping.Object, SecondaryClassMapping.Object });
             Mappings = new Mock<IMappingsRepository>(MockBehavior.Strict);
             Mappings.Setup(instance => instance.FindEntityMappingFor(It.IsAny<IEntity>(), It.IsAny<Type>())).Returns(EntityMapping.Object);
+            Mappings.Setup(instance => instance.FindPropertyMappingFor(It.IsAny<IEntity>(), It.IsAny<PropertyInfo>()))
+                .Returns(PropertyMapping.Object);
             Context.Setup(instance => instance.Initialize(It.IsAny<Entity>()));
             Context.SetupGet(instance => instance.Mappings).Returns(Mappings.Object);
             Entity.ActLike<IProduct>();

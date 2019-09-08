@@ -12,6 +12,7 @@ namespace RDeF.Testing
             {
                 new Statement(new Iri("some:subject1"), new Iri("some:predicate1"), new Iri("some:object1")),
                 new Statement(new Iri("some:subject1"), new Iri("some:predicate2"), new Iri("some:object2")),
+                new Statement(new Iri("some:subject1"), new Iri("some:predicate1"), new Iri("_:b0")),
                 new Statement(new Iri("some:subject1"), new Iri("some:predicate1"), "value"),
                 new Statement(new Iri("some:subject1"), new Iri("some:predicate2"), "value", xsd.@string),
                 new Statement(new Iri("some:subject1"), new Iri("some:predicate1"), "123", xsd.integer),

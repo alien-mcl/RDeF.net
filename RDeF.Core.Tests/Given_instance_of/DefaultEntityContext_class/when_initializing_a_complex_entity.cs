@@ -122,8 +122,8 @@ namespace Given_instance_of.DefaultEntityContext_class
             };
             MappingsRepository.Setup(instance => instance.FindEntityMappingFor(It.IsAny<IEntity>(), It.IsAny<Iri>(), Iri.DefaultGraph))
                 .Returns<IEntity, Iri, Iri>((entity, iri, graph) => entityMapping.Object);
-            MappingsRepository.Setup(instance => instance.FindPropertyMappingFor(It.IsAny<IEntity>(), It.IsAny<Iri>(), Iri.DefaultGraph))
-                .Returns<IEntity, Iri, Iri>((entity, iri, graph) => properties.Where(property => property.Object.Term == iri).Select(property => property.Object).FirstOrDefault());
+            MappingsRepository.Setup(instance => instance.FindPropertyMappingsFor(It.IsAny<IEntity>(), It.IsAny<Iri>(), Iri.DefaultGraph))
+                .Returns<IEntity, Iri, Iri>((entity, iri, graph) => properties.Where(property => property.Object.Term == iri).Select(property => property.Object));
             MappingsRepository.Setup(instance => instance.FindPropertyMappingFor(It.IsAny<IEntity>(), It.IsAny<PropertyInfo>()))
                 .Returns<IEntity, PropertyInfo>((entity, propertyInfo) => properties.Where(property => property.Object.PropertyInfo == propertyInfo).Select(property => property.Object).FirstOrDefault());
         }

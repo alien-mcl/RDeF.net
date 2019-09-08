@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
@@ -48,6 +49,7 @@ namespace RDeF.Mapping
             return (from entityMapping in _mappings.Values
                     from mappedClass in entityMapping.Classes
                     where mappedClass.Term == @class && mappedClass.Matches(graph)
+                    orderby entityMapping.Classes.Count()
                     select entityMapping).FirstOrDefault();
         }
 
@@ -83,7 +85,7 @@ namespace RDeF.Mapping
         }
 
         /// <inheritdoc />
-        public virtual IPropertyMapping FindPropertyMappingFor(IEntity entity, Iri predicate, Iri graph = null)
+        public virtual IEnumerable<IPropertyMapping> FindPropertyMappingsFor(IEntity entity, Iri predicate, Iri graph = null)
         {
             if (predicate == null)
             {
@@ -93,12 +95,13 @@ namespace RDeF.Mapping
             return (from entityMapping in _mappings.Values
                     from propertyMapping in entityMapping.Properties
                     where propertyMapping.Term == predicate && propertyMapping.Matches(graph)
-                    orderby entity == null ? 0 : (
-                        from classMapping in entityMapping.Classes
-                        from type in entity.GetTypes()
-                        where classMapping.Term == type && classMapping.Matches(graph)
-                        select type).Count() descending 
-                    select propertyMapping).FirstOrDefault();
+                    select propertyMapping);
+        }
+
+        /// <inheritdoc />
+        public virtual IPropertyMapping FindPropertyMappingFor(IEntity entity, Iri predicate, Iri graph = null)
+        {
+            return FindPropertyMappingsFor(entity, predicate, graph).FirstOrDefault();
         }
 
         /// <inheritdoc />
@@ -116,7 +119,7 @@ namespace RDeF.Mapping
                 _mappingBuilder.BuildMapping(_mappings, property.DeclaringType, openGenericProviders);
             }
 
-            IPropertyMapping resultCandidate = null;
+            var resultCandidates = new SortedDictionary<int, IPropertyMapping>();
             foreach (var entityMapping in _mappings.Values)
             {
                 foreach (var propertyMapping in entityMapping.Properties)
@@ -126,19 +129,25 @@ namespace RDeF.Mapping
                         continue;
                     }
 
-                    if ((entityMapping.Type == property.DeclaringType) || (property.DeclaringType.IsAssignableFrom(entityMapping.Type)))
+                    if (entityMapping.Type == property.DeclaringType)
                     {
                         return propertyMapping;
                     }
 
-                    if (resultCandidate == null)
+                    if (property.DeclaringType != null && property.DeclaringType.IsAssignableFrom(entityMapping.Type) && !resultCandidates.ContainsKey(-1))
                     {
-                        resultCandidate = propertyMapping;
+                        resultCandidates[-1] = propertyMapping;
+                        continue;
+                    }
+
+                    if (!resultCandidates.ContainsKey(-10))
+                    {
+                        resultCandidates[-10] = propertyMapping;
                     }
                 }
             }
 
-            return resultCandidate;
+            return resultCandidates.Values.FirstOrDefault();
         }
 
         /// <inheritdoc />

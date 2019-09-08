@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using RDeF.Collections;
+using RDeF.Mapping;
 using RDeF.Serialization;
 using RollerCaster;
 
@@ -180,7 +181,31 @@ namespace RDeF.Entities
             Func<IEnumerable<IEntity>, IQueryable> selector;
             if (!StandardQueryableTypes.TryGetValue(typeof(TEntity), out selector))
             {
-                selector = entities => entities.Where(entity => entity.Is<TEntity>()).Select(entity => entity.ActLike<TEntity>()).AsQueryable();
+                var entityMappings = _entityContext().Mappings.FindEntityMappingsFor<TEntity>();
+                if (entityMappings.Any())
+                {
+                    var types = entityMappings.SelectMany(_ => _.Classes).Select(_ => _.Term).Distinct().ToArray();
+                    if (types.Length == 0)
+                    {
+                        selector = entities => entities
+                            .Select(entity => entity.ActLike<TEntity>())
+                            .AsQueryable();
+                    }
+                    else
+                    {
+                        selector = entities => entities
+                            .Where(entity => types.Any(entity.Is))
+                            .Select(entity => entity.ActLike<TEntity>())
+                            .AsQueryable();
+                    }
+                }
+                else
+                {
+                    selector = entities => entities
+                        .Where(entity => entity.Is<TEntity>())
+                        .Select(entity => entity.ActLike<TEntity>())
+                        .AsQueryable();
+                }
             }
 
             return (IQueryable<TEntity>)selector(Entities.Keys);

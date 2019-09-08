@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -51,8 +52,8 @@ namespace Given_instance_of.Entity_class
         protected override void ScenarioSetup()
         {
             base.ScenarioSetup();
-            MappingsRepository.Setup(instance => instance.FindPropertyMappingFor(It.IsAny<IEntity>(), It.IsAny<Iri>(), It.IsAny<Iri>()))
-                .Returns((IPropertyMapping)null);
+            MappingsRepository.Setup(instance => instance.FindPropertyMappingsFor(It.IsAny<IEntity>(), It.IsAny<Iri>(), It.IsAny<Iri>()))
+                .Returns(Array.Empty<IPropertyMapping>());
             EntitySource.Setup(instance => instance.Load(Iri))
                 .Returns<Iri>(iri => new[]
                 {

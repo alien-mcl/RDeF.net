@@ -22,14 +22,13 @@ namespace RDeF.Serialization
             }
 
             var statements = new TypePrioritizingStatementCollection();
-            var blankNodes = new Dictionary<string, Iri>();
             using (var reader = XmlReader.Create(streamReader, new XmlReaderSettings() { Async = true }))
             {
                 while (await reader.ReadAsync())
                 {
                     if ((reader.NodeType == XmlNodeType.Element) && (reader.LocalName == "Description") && (reader.NamespaceURI == rdf.ns))
                     {
-                        await ReadResource(reader, statements, blankNodes);
+                        await ReadResource(reader, statements);
                     }
                 }
             }
@@ -37,15 +36,15 @@ namespace RDeF.Serialization
             return new[] { new KeyValuePair<Iri, IEnumerable<Statement>>(Iri.DefaultGraph, statements) };
         }
 
-        private static async Task ReadResource(XmlReader reader, ICollection<Statement> statements, IDictionary<string, Iri> blankNodes)
+        private static async Task ReadResource(XmlReader reader, ICollection<Statement> statements)
         {
-            Iri subject = reader.ReadSubject(blankNodes);
+            Iri subject = reader.ReadSubject();
             while (await reader.ReadAsync())
             {
                 switch (reader.NodeType)
                 {
                    case XmlNodeType.Element:
-                        await ReadPredicate(reader, subject, statements, blankNodes);
+                        await ReadPredicate(reader, subject, statements);
                         break;
                     case XmlNodeType.EndElement:
                         return;
@@ -53,7 +52,7 @@ namespace RDeF.Serialization
             }
         }
 
-        private static async Task ReadPredicate(XmlReader reader, Iri subject, ICollection<Statement> statements, IDictionary<string, Iri> blankNodes)
+        private static async Task ReadPredicate(XmlReader reader, Iri subject, ICollection<Statement> statements)
         {
             bool isEmptyElement = reader.IsEmptyElement;
             Iri predicate = new Iri(reader.NamespaceURI + reader.LocalName);
@@ -61,7 +60,7 @@ namespace RDeF.Serialization
             string value;
             string language;
             Iri datatype;
-            ReadAttributes(reader, blankNodes, out @object, out value, out datatype, out language);
+            ReadAttributes(reader, out @object, out value, out datatype, out language);
             if (isEmptyElement)
             {
                 statements.Add(CreateStatement(subject, predicate, @object, value, datatype, language));
@@ -82,7 +81,7 @@ namespace RDeF.Serialization
             }
         }
 
-        private static void ReadAttributes(XmlReader reader, IDictionary<string, Iri> blankNodes, out Iri @object, out string value, out Iri datatype, out string language)
+        private static void ReadAttributes(XmlReader reader, out Iri @object, out string value, out Iri datatype, out string language)
         {
             @object = null;
             value = null;
@@ -96,7 +95,7 @@ namespace RDeF.Serialization
                     continue;
                 }
 
-                var iri = reader.ReadIri(blankNodes);
+                var iri = reader.ReadIri();
                 if (iri == null)
                 {
                     continue;

@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using RDeF.Entities;
@@ -28,7 +29,8 @@ namespace Given_instance_of.DefaultEntityContext_class
                     e.PropertyMapping = PropertyMapping.Object;
                 }
             };
-            MappingsRepository.Setup(instance => instance.FindPropertyMappingFor(It.IsAny<IEntity>(), It.IsAny<Iri>(), It.IsAny<Iri>())).Returns((IPropertyMapping)null);
+            MappingsRepository.Setup(instance => instance.FindPropertyMappingsFor(It.IsAny<IEntity>(), It.IsAny<Iri>(), It.IsAny<Iri>()))
+                .Returns(Array.Empty<IPropertyMapping>());
         }
     }
 }

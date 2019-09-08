@@ -61,6 +61,7 @@
     <Compile Include="Mapping\ILiteralConverter.cs" />
     <Compile Include="Mapping\IMappingSourceProvider.cs" />
     <Compile Include="Mapping\IStatementMapping.cs" />
+    <Compile Include="Mapping\MappingRepositoryExtensions.cs" />
     <Compile Include="Mapping\Providers\ICollectionMappingProvider.cs" />
     <Compile Include="Mapping\Providers\IDictionaryMappingProvider.cs" />
     <Compile Include="Mapping\Providers\IEntityMappingProvider.cs" />

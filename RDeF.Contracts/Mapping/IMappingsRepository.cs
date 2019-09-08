@@ -30,6 +30,13 @@ namespace RDeF.Mapping
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "This is a part of a fluent-like API and works as intended.")]
         IEntityMapping FindEntityMappingFor<TEntity>(TEntity entity) where TEntity : IEntity;
 
+        /// <summary>Finds the mappings for a given <paramref name="predicate" />.</summary>
+        /// <param name="entity">Entity used for contextual mappings, if any.</param>
+        /// <param name="predicate">The predicate for which to obtain a mapping.</param>
+        /// <param name="graph">Optional named graph.</param>
+        /// <returns>Matching <see cref="IPropertyMapping" />s.</returns>
+        IEnumerable<IPropertyMapping> FindPropertyMappingsFor(IEntity entity, Iri predicate, Iri graph = null);
+
         /// <summary>Finds the mapping for a given <paramref name="predicate" />.</summary>
         /// <param name="entity">Entity used for contextual mappings, if any.</param>
         /// <param name="predicate">The predicate for which to obtain a mapping.</param>

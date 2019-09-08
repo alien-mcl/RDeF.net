@@ -19,6 +19,13 @@ namespace RDeF.Mapping.Explicit
         /// <returns>Entity mapping matching a given <paramref name="type" /> or <b>null</b>.</returns>
         IEntityMapping FindEntityMappingFor(Type type, Iri owningEntity);
 
+        /// <summary>Gets a explicitely set property mappings.</summary>
+        /// <param name="predicate">Iri of the predicate for which to obtain mapping.</param>
+        /// <param name="graph">Iri of the graph to match in mapping.</param>
+        /// <param name="owningEntity">Owning entity of the mappings.</param>
+        /// <returns>Property mappings matching a given <paramref name="predicate" /> or <b>null</b>.</returns>
+        IEnumerable<IPropertyMapping> FindPropertyMappingsFor(Iri predicate, Iri graph, Iri owningEntity);
+
         /// <summary>Gets a explicitely set property mapping.</summary>
         /// <param name="predicate">Iri of the predicate for which to obtain mapping.</param>
         /// <param name="graph">Iri of the graph to match in mapping.</param>

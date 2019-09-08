@@ -42,7 +42,14 @@ namespace RDeF.Serialization
                 return null;
             }
 
-            return (node is RDFDataset.BlankNode ? new Iri() : new Iri(((RDFDataset.IRI)node).GetValue()));
+            var iri = node as RDFDataset.IRI;
+            if (iri != null)
+            {
+                return new Iri(iri.GetValue());
+            }
+
+            var blank = (RDFDataset.BlankNode)node;
+            return new Iri(blank.GetValue());
         }
     }
 }
