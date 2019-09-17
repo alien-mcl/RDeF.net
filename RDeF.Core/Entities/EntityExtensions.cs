@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading;
 using RDeF.Collections;
 using RDeF.Mapping;
 using RDeF.Vocabularies;
@@ -67,8 +68,8 @@ namespace RDeF.Entities
             if (statement.Object != null && propertyMapping.ValueConverter == null)
             {
                 var otherEntity = (IEntity)((DefaultEntityContext)entity.Context)
-                    .CreateInternal(statement.Object, false)
-                    .ActLike(propertyMapping.ReturnType.GetItemType());
+                    .CreateInternal(statement.Object, false, CancellationToken.None)
+                    .Result.ActLike(propertyMapping.ReturnType.GetItemType());
                 context.EntitiesCreated.Add(otherEntity.UnwrapEntity());
                 value = otherEntity;
             }

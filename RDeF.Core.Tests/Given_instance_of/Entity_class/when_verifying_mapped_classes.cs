@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -51,7 +53,8 @@ namespace Given_instance_of.Entity_class
             Mappings.Setup(instance => instance.FindEntityMappingFor(It.IsAny<IEntity>(), It.IsAny<Type>())).Returns(EntityMapping.Object);
             Mappings.Setup(instance => instance.FindPropertyMappingFor(It.IsAny<IEntity>(), It.IsAny<PropertyInfo>()))
                 .Returns(PropertyMapping.Object);
-            Context.Setup(instance => instance.Initialize(It.IsAny<Entity>()));
+            Context.Setup(instance => instance.Initialize(It.IsAny<Entity>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
             Context.SetupGet(instance => instance.Mappings).Returns(Mappings.Object);
             Entity.ActLike<IProduct>();
         }

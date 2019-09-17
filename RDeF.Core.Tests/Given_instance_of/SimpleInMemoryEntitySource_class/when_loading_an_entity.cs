@@ -13,7 +13,7 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
         [Test]
         public void Should_provide_entity_statements()
         {
-            EntitySource.Load(new Iri("test")).As<object>().Should().Be(ExpectedStatements);
+            EntitySource.Load(new Iri("test")).Result.As<object>().Should().Be(ExpectedStatements);
         }
 
         protected override void ScenarioSetup()

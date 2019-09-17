@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -28,9 +30,9 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
 
         private IEnumerable<Statement> ExpectedStatements { get; set; }
 
-        public override void TheTest()
+        public override async Task TheTest()
         {
-            EntitySource.Read(StreamReader, RdfReader.Object).Wait();
+            await EntitySource.Read(StreamReader, RdfReader.Object);
         }
 
         [Test]
@@ -50,7 +52,7 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
         [Test]
         public void Should_use_RDF_reader()
         {
-            RdfReader.Verify(instance => instance.Read(StreamReader), Times.Once);
+            RdfReader.Verify(instance => instance.Read(StreamReader, It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Test]
@@ -61,7 +63,8 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
                     It.Is<Entity>(entity => entity.Iri == ExpectedSubject),
                     ExpectedStatements,
                     It.IsAny<EntityInitializationContext>(),
-                    It.IsAny<Action<Statement>>()),
+                    It.IsAny<Action<Statement>>(),
+                    It.IsAny<CancellationToken>()),
                 Times.Once);
         }
 
@@ -73,7 +76,8 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
                     It.Is<Entity>(entity => entity.Iri == ExpectedPredicate),
                     It.Is<IEnumerable<Statement>>(set => !set.Any()),
                     It.IsAny<EntityInitializationContext>(),
-                    It.IsAny<Action<Statement>>()),
+                    It.IsAny<Action<Statement>>(),
+                    It.IsAny<CancellationToken>()),
                 Times.Once);
         }
 
@@ -85,7 +89,8 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
                     It.Is<Entity>(entity => entity.Iri == ExpectedProperty),
                     It.Is<IEnumerable<Statement>>(set => !set.Any()),
                     It.IsAny<EntityInitializationContext>(),
-                    It.IsAny<Action<Statement>>()),
+                    It.IsAny<Action<Statement>>(),
+                    It.IsAny<CancellationToken>()),
                 Times.Once);
         }
 
@@ -97,7 +102,8 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
                     It.Is<Entity>(entity => entity.Iri == ExpectedObject),
                     It.Is<IEnumerable<Statement>>(set => !set.Any()),
                     It.IsAny<EntityInitializationContext>(),
-                    It.IsAny<Action<Statement>>()),
+                    It.IsAny<Action<Statement>>(),
+                    It.IsAny<CancellationToken>()),
                 Times.Once);
         }
 
@@ -111,7 +117,7 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
         public void Should_create_new_entity()
         {
             Context.Verify(
-                instance => instance.CreateInternal(ExpectedSubject, true),
+                instance => instance.CreateInternal(ExpectedSubject, true, It.IsAny<CancellationToken>()),
                 Times.Once);
         }
 
@@ -121,18 +127,21 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
             ExpectedStatements = new[] { ExpectedStatement, ExpectedAdditionalStatement };
             StreamReader = new StreamReader(new MemoryStream());
             RdfReader = new Mock<IRdfReader>(MockBehavior.Strict);
-            RdfReader.Setup(instance => instance.Read(It.IsAny<StreamReader>()))
+            RdfReader.Setup(instance => instance.Read(It.IsAny<StreamReader>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new Dictionary<Iri, IEnumerable<Statement>>() { { new Iri("graph"), new[] { ExpectedStatement } } });
             Context.Setup(instance => instance.Clear());
-            Context.Setup(instance => instance.CreateInternal(It.IsAny<Iri>(), It.IsAny<bool>()))
-                .Returns<Iri, bool>((iri, initialize) => (Entity)EntitySource.Create(iri));
+            Context.Setup(instance => instance.CreateInternal(It.IsAny<Iri>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
+                .Returns<Iri, bool, CancellationToken>(
+                    (iri, initialize, token) => Task.FromResult((Entity)EntitySource.Create(iri, token).Result));
             Context.Setup(instance => instance.InitializeInternal(
                     It.IsAny<Entity>(),
                     It.IsAny<IEnumerable<Statement>>(),
                     It.IsAny<EntityInitializationContext>(),
-                    It.IsAny<Action<Statement>>()))
-                .Callback<Entity, IEnumerable<Statement>, EntityInitializationContext, Action<Statement>>(
-                    (entity, statements, context, handler) => statements.ToList().ForEach(handler));
+                    It.IsAny<Action<Statement>>(),
+                    It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask)
+                .Callback<Entity, IEnumerable<Statement>, EntityInitializationContext, Action<Statement>, CancellationToken>(
+                    (entity, statements, context, handler, token) => statements.ToList().ForEach(handler));
             EntitySource.StatementAsserted += (sender, e) => e.AdditionalStatementsToAssert.Add(ExpectedAdditionalStatement);
         }
     }

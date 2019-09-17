@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
@@ -25,18 +26,23 @@ namespace Given_some_graph
         }
 
         [SetUp]
-        public void Setup()
+        public async Task Setup()
         {
             var context = new DefaultEntityContextFactory()
                 .WithMappings(_ => _.FromAssemblyOf<ITypedEntity>())
                 .Create();
-            ((ISerializableEntitySource)context.EntitySource).Read(new StreamReader(new MemoryStream()), new TestRdfReader());
-            Entity = context.Load<ITypedEntity>(Subject);
+            await ((ISerializableEntitySource)context.EntitySource).Read(new StreamReader(new MemoryStream()), new TestRdfReader());
+            Entity = await context.Load<ITypedEntity>(Subject, CancellationToken.None);
         }
 
         private class TestRdfReader : IRdfReader
         {
             public Task<IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>>> Read(StreamReader streamReader)
+            {
+                return Read(streamReader, CancellationToken.None);
+            }
+
+            public Task<IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>>> Read(StreamReader streamReader, CancellationToken cancellationToken)
             {
                 return Task.FromResult((IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>>)new List<KeyValuePair<Iri, IEnumerable<Statement>>>()
                 {

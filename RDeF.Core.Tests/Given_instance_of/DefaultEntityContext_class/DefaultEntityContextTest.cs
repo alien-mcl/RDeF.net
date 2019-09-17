@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using System.Threading.Tasks;
+using Moq;
 using NUnit.Framework;
 using RDeF.Entities;
 using RDeF.Mapping;
@@ -17,12 +18,13 @@ namespace Given_instance_of.DefaultEntityContext_class
 
         protected DefaultEntityContext Context { get; set; }
 
-        public virtual void TheTest()
+        public virtual Task TheTest()
         {
+            return Task.CompletedTask;
         }
 
         [SetUp]
-        public void Setup()
+        public async Task Setup()
         {
             EntitySource = new Mock<IEntitySource>(MockBehavior.Strict);
             MappingsRepository = new Mock<IMappingsRepository>(MockBehavior.Strict);
@@ -34,7 +36,7 @@ namespace Given_instance_of.DefaultEntityContext_class
                 ChangeDetector.Object,
                 new[] { LiteralConverter.Object });
             ScenarioSetup();
-            TheTest();
+            await TheTest();
         }
 
         protected virtual void ScenarioSetup()

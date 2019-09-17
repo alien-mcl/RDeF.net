@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Threading.Tasks;
+using FluentAssertions;
 using NUnit.Framework;
 using RDeF.Entities;
 using RDeF.Mapping.Entities;
@@ -8,9 +9,10 @@ namespace Given_a_context.with_explicitly_mapped_entity
     [TestFixture]
     public class when_disposing : ExplicitMappingsTest
     {
-        public override void TheTest()
+        public override Task TheTest()
         {
             Context.Dispose();
+            return Task.CompletedTask;
         }
 
         [Test]

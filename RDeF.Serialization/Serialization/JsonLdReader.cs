@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using JsonLD.Core;
 using JsonLD.Util;
@@ -33,6 +34,16 @@ namespace RDeF.Serialization
         /// <returns>Map of resources and their statements.</returns>
         [SuppressMessage("Microsoft.Globalization", "CA1307:SpecifyStringComparison", Justification = "Searched string is culture invariant.")]
         public Task<IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>>> Read(StreamReader streamReader)
+        {
+            return Read(streamReader, CancellationToken.None);
+        }
+
+        /// <summary>Reads an RDF graph from a given <paramref name="streamReader" />.</summary>
+        /// <param name="streamReader">Stream reader from which RDF data should be read.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>Map of resources and their statements.</returns>
+        [SuppressMessage("Microsoft.Globalization", "CA1307:SpecifyStringComparison", Justification = "Searched string is culture invariant.")]
+        public Task<IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>>> Read(StreamReader streamReader, CancellationToken cancellationToken)
         {
             if (streamReader == null)
             {

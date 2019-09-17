@@ -51,7 +51,13 @@ namespace RDeF.Entities
         internal IDictionary<Iri, IEntity> EntityMap { get; }
 
         /// <inheritdoc />
-        public IEnumerable<Statement> Load(Iri iri)
+        public Task<IEnumerable<Statement>> Load(Iri iri)
+        {
+            return Load(iri, CancellationToken.None);
+        }
+
+        /// <inheritdoc />
+        public Task<IEnumerable<Statement>> Load(Iri iri, CancellationToken cancellationToken)
         {
             try
             {
@@ -61,7 +67,7 @@ namespace RDeF.Entities
                 ISet<Statement> result;
                 if (iri != null && EntityMap.TryGetValue(iri, out entity) && Entities.TryGetValue(entity, out result))
                 {
-                    return result;
+                    return Task.FromResult<IEnumerable<Statement>>(result);
                 }
             }
             finally
@@ -69,14 +75,24 @@ namespace RDeF.Entities
                 _sync.Set();
             }
 
-            return Array.Empty<Statement>();
+            return Task.FromResult<IEnumerable<Statement>>(Array.Empty<Statement>());
         }
 
         /// <inheritdoc />
-        public void Commit(
+        public Task Commit(
             IEnumerable<Iri> deletedEntities,
             IEnumerable<KeyValuePair<IEntity, ISet<Statement>>> retractedStatements,
             IEnumerable<KeyValuePair<IEntity, ISet<Statement>>> addedStatements)
+        {
+            return Commit(deletedEntities, retractedStatements, addedStatements, CancellationToken.None);
+        }
+
+        /// <inheritdoc />
+        public Task Commit(
+            IEnumerable<Iri> deletedEntities,
+            IEnumerable<KeyValuePair<IEntity, ISet<Statement>>> retractedStatements,
+            IEnumerable<KeyValuePair<IEntity, ISet<Statement>>> addedStatements,
+            CancellationToken cancellationToken)
         {
             if (deletedEntities == null)
             {
@@ -109,10 +125,12 @@ namespace RDeF.Entities
             {
                 _sync.Set();
             }
+
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
-        public IEntity Create(Iri iri)
+        IEntity IInMemoryEntitySource.Create(Iri iri)
         {
             if (iri == null)
             {
@@ -146,33 +164,33 @@ namespace RDeF.Entities
         }
 
         /// <inheritdoc />
-        public TEntity Create<TEntity>(Iri iri) where TEntity : IEntity
+        TEntity IInMemoryEntitySource.Create<TEntity>(Iri iri)
         {
-            return Create(iri).ActLike<TEntity>();
+            return ((IInMemoryEntitySource)this).Create(iri).ActLike<TEntity>();
         }
 
         /// <inheritdoc />
-        public void Delete(Iri iri)
+        public Task<IEntity> Create(Iri iri)
         {
-            if (iri == null)
-            {
-                throw new ArgumentNullException(nameof(iri));
-            }
+            return Create(iri, CancellationToken.None);
+        }
 
-            try
-            {
-                _sync.WaitOne();
-                _sync.Reset();
-                IEntity existingEntity;
-                if (EntityMap.TryGetValue(iri, out existingEntity))
-                {
-                    DeleteInternal(existingEntity);
-                }
-            }
-            finally
-            {
-                _sync.Set();
-            }
+        /// <inheritdoc />
+        public Task<IEntity> Create(Iri iri, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(((IInMemoryEntitySource)this).Create(iri));
+        }
+
+        /// <inheritdoc />
+        public Task<TEntity> Create<TEntity>(Iri iri) where TEntity : IEntity
+        {
+            return Create<TEntity>(iri, CancellationToken.None);
+        }
+
+        /// <inheritdoc />
+        public async Task<TEntity> Create<TEntity>(Iri iri, CancellationToken cancellationToken) where TEntity : IEntity
+        {
+            return (await Create(iri, cancellationToken)).ActLike<TEntity>();
         }
 
         /// <inheritdoc />
@@ -212,7 +230,13 @@ namespace RDeF.Entities
         }
 
         /// <inheritdoc />
-        public async Task Write(StreamWriter streamWriter, IRdfWriter rdfWriter)
+        public Task Write(StreamWriter streamWriter, IRdfWriter rdfWriter)
+        {
+            return Write(streamWriter, rdfWriter, CancellationToken.None);
+        }
+
+        /// <inheritdoc />
+        public async Task Write(StreamWriter streamWriter, IRdfWriter rdfWriter, CancellationToken cancellationToken)
         {
             if (streamWriter == null)
             {
@@ -233,7 +257,7 @@ namespace RDeF.Entities
                              group statement by statement.Graph
                              into graph
                              select new KeyValuePair<Iri, IEnumerable<Statement>>(graph.Key, graph);
-                await rdfWriter.Write(streamWriter, graphs);
+                await rdfWriter.Write(streamWriter, graphs, cancellationToken);
             }
             finally
             {
@@ -242,7 +266,13 @@ namespace RDeF.Entities
         }
 
         /// <inheritdoc />
-        public async Task Read(StreamReader streamReader, IRdfReader rdfReader)
+        public Task Read(StreamReader streamReader, IRdfReader rdfReader)
+        {
+            return Read(streamReader, rdfReader, CancellationToken.None);
+        }
+
+        /// <inheritdoc />
+        public async Task Read(StreamReader streamReader, IRdfReader rdfReader, CancellationToken cancellationToken)
         {
             if (streamReader == null)
             {
@@ -266,7 +296,7 @@ namespace RDeF.Entities
                 var subjects = new Dictionary<Iri, ISet<Statement>>();
                 Action<IDictionary<Iri, ISet<Statement>>, Statement> additionalStatements =
                     StatementAsserted != null ? AssertAdditionalStatements : (Action<IDictionary<Iri, ISet<Statement>>, Statement>)null;
-                foreach (var graph in await rdfReader.Read(streamReader))
+                foreach (var graph in await rdfReader.Read(streamReader, cancellationToken))
                 {
                     foreach (var statement in graph.Value)
                     {
@@ -277,12 +307,13 @@ namespace RDeF.Entities
 
                 foreach (var subject in subjects)
                 {
-                    var entity = entityContext.CreateInternal(subject.Key);
-                    entityContext.InitializeInternal(
+                    var entity = await entityContext.CreateInternal(subject.Key, true, cancellationToken);
+                    await entityContext.InitializeInternal(
                         entity,
                         subject.Value,
                         new EntityInitializationContext(),
-                        statement => Entities[EntityMap[entity.Iri] = entity].Add(statement));
+                        statement => Entities[EntityMap[entity.Iri] = entity].Add(statement),
+                        cancellationToken);
                 }
             }
             finally

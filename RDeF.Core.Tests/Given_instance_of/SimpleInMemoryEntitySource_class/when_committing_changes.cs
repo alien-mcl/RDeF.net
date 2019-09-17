@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using RDeF.Entities;
@@ -29,9 +30,9 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
 
         private IEntity Entity3 { get; set; }
 
-        public override void TheTest()
+        public override Task TheTest()
         {
-            EntitySource.Commit(DeletedEntities, RetractedStatements, AddedStatements);
+            return EntitySource.Commit(DeletedEntities, RetractedStatements, AddedStatements);
         }
 
         [Test]

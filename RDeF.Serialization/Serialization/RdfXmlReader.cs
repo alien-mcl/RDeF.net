@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using RDeF.Collections;
@@ -14,7 +15,13 @@ namespace RDeF.Serialization
     public class RdfXmlReader : IRdfReader
     {
         /// <inheritdoc />
-        public async Task<IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>>> Read(StreamReader streamReader)
+        public Task<IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>>> Read(StreamReader streamReader)
+        {
+            return Read(streamReader, CancellationToken.None);
+        }
+
+        /// <inheritdoc />
+        public async Task<IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>>> Read(StreamReader streamReader, CancellationToken cancellationToken)
         {
             if (streamReader == null)
             {

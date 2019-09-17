@@ -69,7 +69,7 @@ namespace Given_instance_of.LazyLoadedEntity_class
             realEntity.SetProperty(typeof(IEntity).GetProperty(nameof(IEntity.UnmappedRelations)), new[] { Relation });
             realEntity.SetProperty(typeof(IEntity).GetProperty(nameof(IEntity.Context)), Context.Object);
             RealEntity = realEntity.ActLike<IEntity>();
-            Context.Setup(_ => _.Load<IEntity>(It.IsAny<Iri>())).Returns(RealEntity);
+            Context.Setup(_ => _.Load<IEntity>(It.IsAny<Iri>())).ReturnsAsync(RealEntity);
             TheTest();
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using RDeF.Data;
@@ -13,9 +14,10 @@ namespace Given_instance_of.DefaultEntityContext_class
 
         private IProduct Product { get; set; }
 
-        public override void TheTest()
+        public override Task TheTest()
         {
             Product = Context.Create<IProduct>(Iri);
+            return Task.CompletedTask;
         }
 
         [Test]

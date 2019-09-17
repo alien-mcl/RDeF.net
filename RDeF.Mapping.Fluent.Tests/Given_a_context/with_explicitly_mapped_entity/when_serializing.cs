@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -27,9 +28,9 @@ namespace Given_a_context.with_explicitly_mapped_entity
             get { return Result ?? (Result = (JObject)JsonConvert.DeserializeObject(Encoding.UTF8.GetString(Buffer.ToArray()))); }
         }
 
-        public override void TheTest()
+        public override Task TheTest()
         {
-            ((ISerializableEntitySource)Context.EntitySource).Write(new StreamWriter(Buffer), new JsonLdWriter());
+            return ((ISerializableEntitySource)Context.EntitySource).Write(new StreamWriter(Buffer), new JsonLdWriter());
         }
 
         [Test]
@@ -49,7 +50,7 @@ namespace Given_a_context.with_explicitly_mapped_entity
             secondaryProduct.Name = "Another product name";
             secondaryProduct.Description = "Product description";
             secondaryProduct.Categories.Add("category 1");
-            secondaryProduct = Context.Load<IUnmappedProduct>(new Iri("another"), AlternativeMapSecondaryEntity);
+            secondaryProduct = Context.Load<IUnmappedProduct>(new Iri("another"), AlternativeMapSecondaryEntity).Result;
             secondaryProduct.Name = "Alternative product name";
             Context.Commit();
             Buffer = new MemoryStream();

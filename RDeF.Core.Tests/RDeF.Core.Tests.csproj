@@ -90,6 +90,10 @@
     <Compile Include="Given_complex_mappings\DefaultMappingBuilder_class\when_building_mappings.cs" />
     <Compile Include="Given_complex_mappings\DefaultMappingRepository_class\when_obtaining_a_generic_type_mappings.cs" />
     <Compile Include="Given_instance_of\AmbiguousMappingException_class\when_initializing.cs" />
+    <Compile Include="Given_instance_of\DefaultEntityContext_class\when_committing_changes\for_selected_entities.cs" />
+    <Compile Include="Given_instance_of\DefaultEntityContext_class\when_committing_changes\ScenarioTest.cs" />
+    <Compile Include="Given_instance_of\DefaultEntityContext_class\when_rolling_back_changes\for_selected_entities.cs" />
+    <Compile Include="Given_instance_of\DefaultEntityContext_class\when_rolling_back_changes\ScenarioTest.cs" />
     <Compile Include="Given_instance_of\Entity_class\when_encountering_an_unmapped_predicate.cs" />
     <Compile Include="Given_instance_of\InternalMappingSource_class\InternalMappingSourceTest.cs" />
     <Compile Include="Given_instance_of\InternalMappingSource_class\when_gathering_entity_mappings.cs" />
@@ -142,8 +146,8 @@
     <Compile Include="Given_instance_of\DefaultEntityContext_class\when_initializing_an_entity\and_all_properties_are_mapped.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContext_class\when_loading_an_entity.cs" />
     <Compile Include="Given_instance_of\DefaultEntityContext_class\when_creating_an_entity.cs" />
-    <Compile Include="Given_instance_of\DefaultEntityContext_class\when_committing_changes.cs" />
-    <Compile Include="Given_instance_of\DefaultEntityContext_class\when_rolling_back_changes.cs" />
+    <Compile Include="Given_instance_of\DefaultEntityContext_class\when_committing_changes\for_all_entities.cs" />
+    <Compile Include="Given_instance_of\DefaultEntityContext_class\when_rolling_back_changes\for_all_entities.cs" />
     <Compile Include="Given_instance_of\DefaultMappingBuilder_class\when_building_mapping.cs" />
     <Compile Include="Given_instance_of\DefaultMappingsRepository_class\DefaultMappingsRepositoryTest.cs" />
     <Compile Include="Given_instance_of\DefaultMappingBuilder_class\when_building_mappings.cs" />
@@ -178,7 +182,6 @@
     <Compile Include="Given_instance_of\SimpleInMemoryEntitySource_class\SimpleInMemoryEntitySourceTest.cs" />
     <Compile Include="Given_instance_of\SimpleInMemoryEntitySource_class\when_deserializing.cs" />
     <Compile Include="Given_instance_of\SimpleInMemoryEntitySource_class\when_loading_an_entity.cs" />
-    <Compile Include="Given_instance_of\SimpleInMemoryEntitySource_class\when_deleting.cs" />
     <Compile Include="Given_instance_of\SimpleInMemoryEntitySource_class\when_querying\for_entities.cs" />
     <Compile Include="Given_instance_of\SimpleInMemoryEntitySource_class\when_querying\for_typed_entities.cs" />
     <Compile Include="Given_instance_of\SimpleInMemoryEntitySource_class\when_querying\ScenarioTest.cs" />

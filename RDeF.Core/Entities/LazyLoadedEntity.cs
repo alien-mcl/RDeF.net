@@ -65,7 +65,7 @@ namespace RDeF.Entities
             if (!_isInitialized)
             {
                 _isInitialized = true;
-                var entity = _context.Load<IEntity>(Iri);
+                var entity = _context.Load<IEntity>(Iri).Result;
                 Relation.Initialize(entity);
             }
         }

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -54,14 +56,15 @@ namespace Given_instance_of.Entity_class
             base.ScenarioSetup();
             MappingsRepository.Setup(instance => instance.FindPropertyMappingsFor(It.IsAny<IEntity>(), It.IsAny<Iri>(), It.IsAny<Iri>()))
                 .Returns(Array.Empty<IPropertyMapping>());
-            EntitySource.Setup(instance => instance.Load(Iri))
-                .Returns<Iri>(iri => new[]
+            EntitySource.Setup(instance => instance.Load(Iri, It.IsAny<CancellationToken>()))
+                .Returns<Iri, CancellationToken>((iri, token) => Task.FromResult<IEnumerable<Statement>>(new[]
                 {
                     new Statement(iri, SomePredicate, "Test", xsd.@string),
                     new Statement(iri, SomeAnotherPredicate, AnotherIri),
                     new Statement(iri, YetAnotherPredicate, "Raw data")
-                });
-            EntitySource.Setup(instance => instance.Load(AnotherIri)).Returns<Iri>(iri => new Statement[0]);
+                }));
+            EntitySource.Setup(instance => instance.Load(AnotherIri, It.IsAny<CancellationToken>()))
+                .Returns<Iri, CancellationToken>((iri, token) => Task.FromResult<IEnumerable<Statement>>(Array.Empty<Statement>()));
             LiteralConverter.SetupGet(instance => instance.SupportedDataTypes).Returns(new[] { xsd.@string });
             LiteralConverter.Setup(instance => instance.ConvertFrom(It.IsAny<Statement>()))
                 .Returns<Statement>(statement => statement.Value);

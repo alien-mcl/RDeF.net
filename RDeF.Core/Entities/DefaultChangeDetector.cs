@@ -93,22 +93,27 @@ namespace RDeF.Entities
             IDictionary<IEntity, ISet<Statement>> retractedStatements,
             IDictionary<IEntity, ISet<Statement>> addedStatements)
         {
+            var actualValuesToReview = values;
             var matched = new HashSet<T>();
+            var unmatched = new HashSet<T>();
             foreach (var originalValue in originalValues)
             {
                 bool isMatch = false;
-                foreach (var value in values)
+                foreach (var value in actualValuesToReview)
                 {
-                    if ((value.GetHashCode() != originalValue.GetHashCode()) || (!value.Equals(originalValue)))
+                    unmatched.Add(value);
+                    if (isMatch || (value.GetHashCode() != originalValue.GetHashCode()) || (!value.Equals(originalValue)))
                     {
                         continue;
                     }
 
                     matched.Add(value);
+                    unmatched.Remove(value);
                     isMatch = true;
-                    break;
                 }
 
+                actualValuesToReview = unmatched;
+                unmatched = new HashSet<T>();
                 if (isMatch)
                 {
                     continue;
@@ -117,7 +122,7 @@ namespace RDeF.Entities
                 AddStatements(retractedStatements, entity, originalValue);
             }
 
-            foreach (var value in values.Except(matched))
+            foreach (var value in actualValuesToReview)
             {
                 AddStatements(addedStatements, entity, value);
             }

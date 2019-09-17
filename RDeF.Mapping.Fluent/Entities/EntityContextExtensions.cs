@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using RDeF.Entities;
 using RDeF.Mapping.Explicit;
 using RDeF.Mapping.Providers;
@@ -25,7 +27,11 @@ namespace RDeF.Mapping.Entities
         /// <param name="iri">The identifier of the entity to be loaded.</param>
         /// <param name="mappingsBuilder">Explicit mapping builder.</param>
         /// <returns>Instance of the entity of a given <paramref name="iri" />.</returns>
-        public static TEntity Create<TEntity>(this IEntityContext entityContext, Iri iri, Action<IExplicitMappingsBuilder<TEntity>> mappingsBuilder) where TEntity : IEntity
+        public static TEntity Create<TEntity>(
+            this IEntityContext entityContext,
+            Iri iri,
+            Action<IExplicitMappingsBuilder<TEntity>> mappingsBuilder)
+            where TEntity : IEntity
         {
             if (entityContext == null)
             {
@@ -47,14 +53,35 @@ namespace RDeF.Mapping.Entities
         /// <param name="iri">The identifier of the entity to be loaded.</param>
         /// <param name="mappingsBuilder">Explicit mapping builder.</param>
         /// <returns>Instance of the entity of a given <paramref name="iri" />.</returns>
-        public static TEntity Load<TEntity>(this IEntityContext entityContext, Iri iri, Action<IExplicitMappingsBuilder<TEntity>> mappingsBuilder) where TEntity : IEntity
+        public static Task<TEntity> Load<TEntity>(
+            this IEntityContext entityContext,
+            Iri iri,
+            Action<IExplicitMappingsBuilder<TEntity>> mappingsBuilder)
+            where TEntity : IEntity
+        {
+            return entityContext.Load(iri, mappingsBuilder, CancellationToken.None);
+        }
+
+        /// <summary>Loads a specified entity.</summary>
+        /// <typeparam name="TEntity">The type of the entity.</typeparam>
+        /// <param name="entityContext">Entity context to work with.</param>
+        /// <param name="iri">The identifier of the entity to be loaded.</param>
+        /// <param name="mappingsBuilder">Explicit mapping builder.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>Instance of the entity of a given <paramref name="iri" />.</returns>
+        public static async Task<TEntity> Load<TEntity>(
+            this IEntityContext entityContext,
+            Iri iri,
+            Action<IExplicitMappingsBuilder<TEntity>> mappingsBuilder,
+            CancellationToken cancellationToken)
+            where TEntity : IEntity
         {
             if (entityContext == null)
             {
                 throw new ArgumentNullException(nameof(entityContext));
             }
 
-            var entity = entityContext.Load<TEntity>(iri);
+            var entity = await entityContext.Load<TEntity>(iri, cancellationToken);
             if ((mappingsBuilder != null) && (ExplicitMappings.ContainsKey(entityContext)))
             {
                 entityContext.BuildExplicitMappings(mappingsBuilder, iri);

@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using RollerCaster;
 using RollerCaster.Collections;
 
@@ -168,7 +169,7 @@ namespace RDeF.Entities
                 }
 
                 IsInitialized = true;
-                _context.Initialize(this);
+                _context.Initialize(this, CancellationToken.None).GetAwaiter().GetResult();
             }
         }
 

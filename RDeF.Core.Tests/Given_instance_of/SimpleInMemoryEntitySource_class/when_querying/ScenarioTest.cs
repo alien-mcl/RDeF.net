@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -17,9 +19,10 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class.when_querying
 
         private IQueryable<T> Result { get; set; }
 
-        public override void TheTest()
+        public override Task TheTest()
         {
             Result = EntitySource.AsQueryable<T>();
+            return Task.CompletedTask;
         }
 
         [Test]
@@ -40,8 +43,10 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class.when_querying
                 It.IsAny<Entity>(),
                 It.IsAny<IEnumerable<Statement>>(),
                 It.IsAny<EntityInitializationContext>(),
-                It.IsAny<Action<Statement>>()));
-            Context.Setup(_ => _.Initialize(It.IsAny<Entity>()));
+                It.IsAny<Action<Statement>>(),
+                It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
+            Context.Setup(_ => _.Initialize(It.IsAny<Entity>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
             entity.ActLike<IProduct>();
         }
     }

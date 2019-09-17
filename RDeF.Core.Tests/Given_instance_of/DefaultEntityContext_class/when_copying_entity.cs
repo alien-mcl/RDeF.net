@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -21,9 +24,10 @@ namespace Given_instance_of.DefaultEntityContext_class
 
         private IProduct Result { get; set; }
 
-        public override void TheTest()
+        public override Task TheTest()
         {
             Result = Context.Copy(Source, ExpectedIri);
+            return Task.CompletedTask;
         }
 
         [Test]
@@ -104,7 +108,8 @@ namespace Given_instance_of.DefaultEntityContext_class
         {
             SourceContext = new DefaultEntityContext(EntitySource.Object, MappingsRepository.Object, ChangeDetector.Object, Array.Empty<ILiteralConverter>());
             Source = SourceContext.Create<IProduct>(new Iri("source"));
-            EntitySource.Setup(instance => instance.Load(It.IsAny<Iri>())).Returns(Array.Empty<Statement>());
+            EntitySource.Setup(instance => instance.Load(It.IsAny<Iri>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.FromResult<IEnumerable<Statement>>(Array.Empty<Statement>()));
             MappingsRepository.Setup(instance => instance.FindPropertyMappingFor(It.IsAny<IEntity>(), It.IsAny<PropertyInfo>()))
                 .Returns<IEntity, PropertyInfo>((entity, propertyInfo) =>
                 {

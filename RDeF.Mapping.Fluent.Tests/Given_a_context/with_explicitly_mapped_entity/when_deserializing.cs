@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using RDeF.Data;
@@ -15,10 +16,10 @@ namespace Given_a_context.with_explicitly_mapped_entity
 
         private IUnmappedProduct SecondaryEntity { get; set; }
 
-        public override void TheTest()
+        public override async Task TheTest()
         {
-            PrimaryEntity = Context.Load<IUnmappedProduct>(new Iri("temp:test"));
-            SecondaryEntity = Context.Load<IUnmappedProduct>(new Iri("another:test"));
+            PrimaryEntity = await Context.Load<IUnmappedProduct>(new Iri("temp:test"));
+            SecondaryEntity = await Context.Load<IUnmappedProduct>(new Iri("another:test"));
         }
 
         [Test]

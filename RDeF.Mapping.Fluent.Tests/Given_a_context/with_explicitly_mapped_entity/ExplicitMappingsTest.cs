@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Threading.Tasks;
+using NUnit.Framework;
 using RDeF.Data;
 using RDeF.Entities;
 using RDeF.Mapping;
@@ -11,15 +12,16 @@ namespace Given_a_context.with_explicitly_mapped_entity
     {
         protected IEntityContext Context { get; set; }
 
-        public virtual void TheTest()
+        public virtual Task TheTest()
         {
+            return Task.CompletedTask;
         }
 
         [SetUp]
-        public void Setup()
+        public async Task Setup()
         {
             ScenarioSetup();
-            TheTest();
+            await TheTest();
         }
 
         [TearDown]

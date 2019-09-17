@@ -1,4 +1,6 @@
 ﻿using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -29,7 +31,7 @@ namespace Given_instance_of.Entity_class
         [Test]
         public void Should_initialize_the_entity_only_once()
         {
-            Context.Verify(instance => instance.Initialize(Entity), Times.Once);
+            Context.Verify(instance => instance.Initialize(Entity, It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Test]
@@ -69,8 +71,9 @@ namespace Given_instance_of.Entity_class
         protected override void ScenarioSetup()
         {
             base.ScenarioSetup();
-            Context.Setup(instance => instance.Initialize(It.IsAny<Entity>()))
-                .Callback<Entity>(entity =>
+            Context.Setup(instance => instance.Initialize(It.IsAny<Entity>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask)
+                .Callback<Entity, CancellationToken>((entity, token) =>
                 {
                     entity.SetPropertyInternal(typeof(IProduct).GetTypeInfo().GetProperty("Name"), ExpectedName, null);
                     entity.SetPropertyInternal(typeof(IProduct).GetTypeInfo().GetProperty("Description"), ExpectedDescription, null);

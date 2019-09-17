@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using RDeF.Data;
@@ -12,15 +13,15 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
     {
         private IProduct Result { get; set; }
 
-        public override void TheTest()
+        public override async Task TheTest()
         {
-            Result = EntitySource.Create<IProduct>(new Iri("test"));
+            Result = await EntitySource.Create<IProduct>(new Iri("test"));
         }
 
         [Test]
         public void Should_throw_when_no_iri_is_given()
         {
-            EntitySource.Invoking(instance => instance.Create<IProduct>(null)).ShouldThrow<ArgumentNullException>().Which.ParamName.Should().Be("iri");
+            EntitySource.Awaiting(instance => instance.Create<IProduct>(null)).ShouldThrow<ArgumentNullException>().Which.ParamName.Should().Be("iri");
         }
 
         [Test]
@@ -32,7 +33,7 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
         [Test]
         public void Should_create_new_entity_only_once()
         {
-            EntitySource.Create<IProduct>(new Iri("test")).Should().Be(Result);
+            EntitySource.Create<IProduct>(new Iri("test")).Result.Should().Be(Result);
         }
     }
 }

@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -25,15 +28,15 @@ namespace Given_instance_of.DefaultEntityContext_class
 
         private Mock<IConverter> Converter { get; set; }
 
-        public override void TheTest()
+        public override Task TheTest()
         {
-            Context.Initialize(Entity);
+            return Context.Initialize(Entity, CancellationToken.None);
         }
 
         [Test]
         public void Should_load_statements_from_the_entity_source()
         {
-            EntitySource.Verify(instance => instance.Load(Iri), Times.Once);
+            EntitySource.Verify(instance => instance.Load(Iri, It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Test]
@@ -71,8 +74,9 @@ namespace Given_instance_of.DefaultEntityContext_class
             MappingsRepository.Setup(instance => instance.FindPropertyMappingFor(It.IsAny<IEntity>(), It.IsAny<PropertyInfo>()))
                 .Returns<IEntity, PropertyInfo>((entity, propertyInfo) => PropertyMapping.Object);
             Entity = new Entity(Iri, Context);
-            EntitySource.Setup(instance => instance.Load(It.IsAny<Iri>()))
-                .Returns<Iri>(iri => new[] { new Statement(iri, PredicateIri, ExpectedName) });
+            EntitySource.Setup(instance => instance.Load(It.IsAny<Iri>(), It.IsAny<CancellationToken>()))
+                .Returns<Iri, CancellationToken>(
+                    (iri, token) => Task.FromResult<IEnumerable<Statement>>(new[] { new Statement(iri, PredicateIri, ExpectedName) }));
             EntityMapping = new Mock<IEntityMapping>(MockBehavior.Strict);
             EntityMapping.SetupGet(instance => instance.Type).Returns(typeof(IProduct));
             Converter = new Mock<IConverter>(MockBehavior.Strict);

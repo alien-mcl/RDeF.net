@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace RDeF.Entities
 {
@@ -13,7 +15,13 @@ namespace RDeF.Entities
         /// <summary>Loads data related to a given resource identified with <paramref name="iri" />.</summary>
         /// <param name="iri">The identifier of the resource to load data for.</param>
         /// <returns>Set of statements related to resource identified with <paramref name="iri" />.</returns>
-        IEnumerable<Statement> Load(Iri iri);
+        Task<IEnumerable<Statement>> Load(Iri iri);
+
+        /// <summary>Loads data related to a given resource identified with <paramref name="iri" />.</summary>
+        /// <param name="iri">The identifier of the resource to load data for.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>Set of statements related to resource identified with <paramref name="iri" />.</returns>
+        Task<IEnumerable<Statement>> Load(Iri iri, CancellationToken cancellationToken);
 
         /// <summary>Converts a given entity source into a queryable collection of types <typeparamref name="TEntity" />.</summary>
         /// <typeparam name="TEntity">Type of entities to search for.</typeparam>

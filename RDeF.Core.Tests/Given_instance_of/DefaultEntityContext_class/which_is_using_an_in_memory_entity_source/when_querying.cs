@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -11,9 +12,10 @@ namespace Given_instance_of.DefaultEntityContext_class.which_is_using_an_in_memo
     [TestFixture]
     public class when_querying : ScenarioTest
     {
-        public override void TheTest()
+        public override Task TheTest()
         {
             Context.AsQueryable<IProduct>();
+            return Task.CompletedTask;
         }
 
         [Test]

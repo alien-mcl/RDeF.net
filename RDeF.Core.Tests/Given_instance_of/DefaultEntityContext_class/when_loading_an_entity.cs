@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using RDeF.Data;
@@ -13,21 +14,22 @@ namespace Given_instance_of.DefaultEntityContext_class
 
         private IProduct Product { get; set; }
 
-        public override void TheTest()
+        public override Task TheTest()
         {
             Product = Context.Create<IProduct>(Iri);
+            return Task.CompletedTask;
         }
 
         [Test]
         public void Should_throw_when_no_Iri_is_given()
         {
-            Context.Invoking(context => context.Load<IProduct>(null)).ShouldThrow<ArgumentNullException>();
+            Context.Awaiting(context => context.Load<IProduct>(null)).ShouldThrow<ArgumentNullException>();
         }
 
         [Test]
         public void Should_load_the_entity_only_once()
         {
-            Context.Load<IProduct>(Iri).Unwrap().Should().Be(Product.Unwrap());
+            Context.Load<IProduct>(Iri).Result.Unwrap().Should().Be(Product.Unwrap());
         }
     }
 }

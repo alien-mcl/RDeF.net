@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using RDeF.Entities;
@@ -12,16 +13,17 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
 
         protected SimpleInMemoryEntitySource EntitySource { get; private set; }
 
-        public virtual void TheTest()
+        public virtual Task TheTest()
         {
+            return Task.CompletedTask;
         }
 
         [SetUp]
-        public void Setup()
+        public async Task Setup()
         {
             EntitySource = new SimpleInMemoryEntitySource(() => Context.Object);
             ScenarioSetup();
-            TheTest();
+            await TheTest();
         }
 
         protected virtual void ScenarioSetup()

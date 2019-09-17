@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -24,9 +26,9 @@ namespace Given_instance_of.DefaultEntityContext_class
 
         private IDictionary<Iri, int> CallCounter { get; set; }
 
-        public override void TheTest()
+        public override Task TheTest()
         {
-            Context.Initialize(Entity);
+            return Context.Initialize(Entity, CancellationToken.None);
         }
 
         [Test]
@@ -109,7 +111,8 @@ namespace Given_instance_of.DefaultEntityContext_class
         {
             CallCounter = new Dictionary<Iri, int>();
             Entity = new Entity(Iri, Context);
-            EntitySource.Setup(instance => instance.Load(It.IsAny<Iri>())).Returns<Iri>(SetupStatements);
+            EntitySource.Setup(instance => instance.Load(It.IsAny<Iri>(), It.IsAny<CancellationToken>()))
+                .Returns<Iri, CancellationToken>((iri, token) => Task.FromResult(SetupStatements(iri)));
             var entityMapping = new Mock<IEntityMapping>(MockBehavior.Strict);
             entityMapping.SetupGet(instance => instance.Type).Returns(typeof(IComplexEntity));
             Mock<ICollectionMapping>[] properties =
@@ -207,7 +210,8 @@ namespace Given_instance_of.DefaultEntityContext_class
                         return Int32.Parse(statement.Value);
                     }
 
-                    return Context.CreateInternal(statement.Object, false).ActLike(propertyInfo.PropertyType.GetGenericArguments()[0]);
+                    return Context.CreateInternal(statement.Object, false, CancellationToken.None)
+                        .Result.ActLike(propertyInfo.PropertyType.GetGenericArguments()[0]);
                 });
 
             return result;

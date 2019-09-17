@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
 using RDeF.Data;
@@ -12,9 +13,10 @@ namespace Given_instance_of.DefaultEntityContext_class
     {
         private static readonly Iri Iri = new Iri(new Uri("http://test.com/"));
 
-        public override void TheTest()
+        public override Task TheTest()
         {
             Context.Delete(Iri);
+            return Task.CompletedTask;
         }
 
         [Test]

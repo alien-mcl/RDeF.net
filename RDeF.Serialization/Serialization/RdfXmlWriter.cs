@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using RDeF.Entities;
@@ -14,7 +15,13 @@ namespace RDeF.Serialization
     public class RdfXmlWriter : IRdfWriter
     {
         /// <inheritdoc />
-        public async Task Write(StreamWriter streamWriter, IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>> graphs)
+        public Task Write(StreamWriter streamWriter, IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>> graphs)
+        {
+            return Write(streamWriter, graphs, CancellationToken.None);
+        }
+
+        /// <inheritdoc />
+        public async Task Write(StreamWriter streamWriter, IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>> graphs, CancellationToken cancellationToken)
         {
             if (streamWriter == null)
             {
