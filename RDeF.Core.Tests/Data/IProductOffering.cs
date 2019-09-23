@@ -3,13 +3,13 @@ using RDeF.Mapping.Attributes;
 
 namespace RDeF.Data
 {
-    [Class(Iri = "Offering")]
+    [Class(Iri = "some:Offering")]
     public interface IProductOffering<T> : IService where T : IProduct
     {
-        [Property(Iri = "oferredProduct")]
+        [Property(Iri = "some:oferredProduct")]
         T OfferedProduct { get; set; }
 
-        [Collection(Iri = "texts")]
+        [Collection(Iri = "some:texts")]
         ICollection<string> Texts { get; }
     }
 }

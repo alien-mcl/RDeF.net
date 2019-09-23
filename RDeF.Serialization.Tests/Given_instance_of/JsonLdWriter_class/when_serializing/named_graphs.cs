@@ -1,7 +1,8 @@
-﻿using System.Text;
+﻿using System.IO;
+using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
-using RDeF;
+using RDeF.FluentAssertions;
 using RDeF.Serialization;
 using RDeF.Testing;
 
@@ -11,15 +12,15 @@ namespace Given_instance_of.JsonLdWriter_class.when_serializing
     public class named_graphs : RdfWriterSerializationTest<JsonLdWriter>
     {
         [Test]
-        public void Should_serialize_to_Json_Ld_correctly()
+        public async Task Should_serialize_to_Json_Ld_correctly()
         {
-            Encoding.UTF8.GetString(Stream.ToArray()).Cleaned().Should().Be(Expected);
+            (await new JsonLdReader().Read(new StreamReader(Stream))).Should().MatchStatements(Graphs);
         }
 
         protected override void ScenarioSetup()
         {
-            base.ScenarioSetup();
             WithSimpleGraph();
+            base.ScenarioSetup();
         }
     }
 }

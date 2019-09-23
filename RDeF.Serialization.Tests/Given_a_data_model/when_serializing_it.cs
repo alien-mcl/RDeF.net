@@ -1,10 +1,12 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using FluentAssertions;
 using NUnit.Framework;
-using RDeF;
 using RDeF.Data;
 using RDeF.Entities;
+using RDeF.FluentAssertions;
 using RDeF.Reflection;
 using RDeF.Serialization;
 
@@ -13,7 +15,8 @@ namespace Given_a_data_model
     [TestFixture]
     public class when_serializing_it
     {
-        private static readonly string Expected = new StreamReader(typeof(when_serializing_it).GetEmbeddedResource(".json")).ReadToEnd().Cleaned();
+        private static readonly IEnumerable<IGraph> Expected =
+            new JsonLdReader().Read(new StreamReader(typeof(when_serializing_it).GetEmbeddedResource(".json"))).Result;
 
         private MemoryStream Buffer { get; set; }
 
@@ -23,16 +26,18 @@ namespace Given_a_data_model
 
         public void TheTest()
         {
-            using (var streamWriter = new StreamWriter(Buffer))
+            using (var streamWriter = new StreamWriter(Buffer, Encoding.UTF8, 1024, true))
             {
                 (Context.EntitySource as ISerializableEntitySource).Write(streamWriter, RdfWriter);
             }
+
+            Buffer.Seek(0, SeekOrigin.Begin);
         }
 
         [Test]
-        public void Should_create_a_correct_JsonLd()
+        public async Task Should_create_a_correct_JsonLd()
         {
-            Encoding.UTF8.GetString(Buffer.ToArray()).Cleaned().Should().Be(Expected);
+            (await new JsonLdReader().Read(new StreamReader(Buffer))).Should().BeSimilarTo(Expected);
         }
 
         [SetUp]

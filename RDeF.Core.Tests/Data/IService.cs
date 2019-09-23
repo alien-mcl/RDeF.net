@@ -3,10 +3,10 @@ using RDeF.Mapping.Attributes;
 
 namespace RDeF.Data
 {
-    [Class(Iri = "Service")]
+    [Class(Iri = "some:Service")]
     public interface IService : IEntity
     {
-        [Property(Iri = "image")]
+        [Property(Iri = "some:image")]
         string Image { get; set; }
     }
 }

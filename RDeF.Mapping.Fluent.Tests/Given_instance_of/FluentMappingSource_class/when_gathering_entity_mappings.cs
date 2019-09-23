@@ -33,7 +33,8 @@ namespace Given_instance_of.FluentMappingSource_class
         [Test]
         public void Should_gather_all_class_mappings_for_an_entity()
         {
-            Result.OfType<IEntityMappingProvider>().Should().HaveCount(3).And.Subject.Last().GetTerm(new[] { QIriMapping }).ToString().Should().Be("test_term");
+            Result.OfType<IEntityMappingProvider>().Should().HaveCount(3)
+                .And.Subject.Last().GetTerm(new[] { QIriMapping }).ToString().Should().Be("test:term");
         }
 
         [Test]
@@ -46,7 +47,8 @@ namespace Given_instance_of.FluentMappingSource_class
         public void Should_setup_all_properties_according_to_their_mappings()
         {
             Result.OfType<IPropertyMappingProvider>()
-                .All(property => property.Property.Name.ToLower() == property.GetTerm(new[] { QIriMapping }).ToString().Replace("test_", String.Empty))
+                .All(property => property.Property.Name.ToLower() ==
+                    property.GetTerm(new[] { QIriMapping }).ToString().Replace("test:", String.Empty).Replace("some:", String.Empty))
                 .Should().BeTrue();
         }
     }

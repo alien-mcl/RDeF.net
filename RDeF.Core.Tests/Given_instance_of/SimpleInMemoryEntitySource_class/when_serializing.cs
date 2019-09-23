@@ -35,7 +35,7 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
             RdfWriter.Verify(
                 instance => instance.Write(
                     It.IsAny<StreamWriter>(),
-                    It.Is<IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>>>(collection => Match(collection)),
+                    It.Is<IEnumerable<IGraph>>(collection => Match(collection)),
                     It.IsAny<CancellationToken>()),
                 Times.Once);
         }
@@ -44,7 +44,7 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
         public void Should_serialize_into_a_given_stream()
         {
             RdfWriter.Verify(
-                instance => instance.Write(Buffer, It.IsAny<IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>>>(), It.IsAny<CancellationToken>()),
+                instance => instance.Write(Buffer, It.IsAny<IEnumerable<IGraph>>(), It.IsAny<CancellationToken>()),
                 Times.Once);
         }
 
@@ -74,7 +74,7 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
             RdfWriter
                 .Setup(instance => instance.Write(
                     It.IsAny<StreamWriter>(),
-                    It.IsAny<IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>>>(),
+                    It.IsAny<IEnumerable<IGraph>>(),
                     It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);
             var entity = new Entity(new Iri("test"), Context.Object);
@@ -85,10 +85,10 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
             };
         }
 
-        private bool Match(IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>> collection)
+        private bool Match(IEnumerable<IGraph> collection)
         {
             return (from graph in collection
-                    join graphIri in new[] { PrimaryGraph, SecondaryGraph } on graph.Key equals graphIri into matched
+                    join graphIri in new[] { PrimaryGraph, SecondaryGraph } on graph.Iri equals graphIri into matched
                     select matched).Count() == 2;
         }
     }

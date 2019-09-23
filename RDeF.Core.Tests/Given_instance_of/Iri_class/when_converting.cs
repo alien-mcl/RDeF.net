@@ -31,7 +31,7 @@ namespace Given_instance_of.Iri_class
         [Test]
         public void Should_return_a_Uri()
         {
-            ((Uri)new Iri("test")).ToString().Should().Be("test");
+            ((Uri)new Iri("some:test")).ToString().Should().Be("some:test");
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace Given_instance_of.Iri_class
         [Test]
         public void Should_return_an_original_string_passed_to_Iri()
         {
-            ((string)new Iri("test")).Should().Be("test");
+            ((string)new Iri("some:test")).Should().Be("some:test");
         }
     }
 }

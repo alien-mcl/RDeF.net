@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -37,16 +38,21 @@ namespace Given_some_graph
 
         private class TestRdfReader : IRdfReader
         {
-            public Task<IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>>> Read(StreamReader streamReader)
+            public Task<IEnumerable<IGraph>> Read(StreamReader streamReader, Uri baseUri = null)
             {
                 return Read(streamReader, CancellationToken.None);
             }
 
-            public Task<IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>>> Read(StreamReader streamReader, CancellationToken cancellationToken)
+            public Task<IEnumerable<IGraph>> Read(StreamReader streamReader, CancellationToken cancellationToken)
             {
-                return Task.FromResult((IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>>)new List<KeyValuePair<Iri, IEnumerable<Statement>>>()
+                return Read(streamReader, null, CancellationToken.None);
+            }
+
+            public Task<IEnumerable<IGraph>> Read(StreamReader streamReader, Uri baseUri, CancellationToken cancellationToken)
+            {
+                return Task.FromResult<IEnumerable<IGraph>>(new List<IGraph>()
                 {
-                    new KeyValuePair<Iri, IEnumerable<Statement>>(
+                    new Graph(
                         Iri.DefaultGraph,
                         new[] { new Statement(Subject, rdf.type, TestClass), new Statement(Subject, rdf.type, AnotherTestClass) })
                 });

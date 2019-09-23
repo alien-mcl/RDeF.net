@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
 using RDeF.Data;
@@ -25,55 +26,73 @@ namespace Given_instance_of.DefaultChangeDetector_class.when_processing
         [Test]
         public void Should_detect_added_Description_statement()
         {
-            AddedStatements.Should().ContainKey(Entity).WhichValue.First(statement => statement.Predicate.ToString() == "description").Value.Should().Be("New description");
+            AddedStatements.Should().ContainKey(Entity)
+                .WhichValue.First(statement => statement.Predicate.ToString().EndsWith("description", StringComparison.Ordinal))
+                .Value.Should().Be("New description");
         }
 
         [Test]
         public void Should_detect_retracted_Name_statement()
         {
-            RetractedStatements.Should().ContainKey(Entity).WhichValue.First(statement => statement.Predicate.ToString() == "name").Value.Should().Be("Old name");
+            RetractedStatements.Should().ContainKey(Entity)
+                .WhichValue.First(statement => statement.Predicate.ToString().EndsWith("name", StringComparison.Ordinal))
+                .Value.Should().Be("Old name");
         }
 
         [Test]
         public void Should_not_detect_added_Name_statement()
         {
-            AddedStatements.Should().ContainKey(Entity).WhichValue.FirstOrDefault(statement => statement.Predicate.ToString() == "Name").Should().BeNull();
+            AddedStatements.Should().ContainKey(Entity)
+                .WhichValue.FirstOrDefault(statement => statement.Predicate.ToString().EndsWith("Name", StringComparison.Ordinal))
+                .Should().BeNull();
         }
 
         [Test]
         public void Should_detect_added_Price_statement()
         {
-            AddedStatements.Should().ContainKey(Entity).WhichValue.First(statement => statement.Predicate.ToString() == "price").Value.Should().Be("2.71828");
+            AddedStatements.Should().ContainKey(Entity)
+                .WhichValue.First(statement => statement.Predicate.ToString().EndsWith("price", StringComparison.Ordinal))
+                .Value.Should().Be("2.71828");
         }
 
         [Test]
         public void Should_detect_retracted_Price_statement()
         {
-            RetractedStatements.Should().ContainKey(Entity).WhichValue.First(statement => statement.Predicate.ToString() == "price").Value.Should().Be("3.14159");
+            RetractedStatements.Should().ContainKey(Entity)
+                .WhichValue.First(statement => statement.Predicate.ToString().EndsWith("price", StringComparison.Ordinal))
+                .Value.Should().Be("3.14159");
         }
 
         [Test]
         public void Should_detect_added_Ordinal_statement()
         {
-            AddedStatements.Should().ContainKey(Entity).WhichValue.First(statement => statement.Predicate.ToString() == "ordinal").Value.Should().Be("7");
+            AddedStatements.Should().ContainKey(Entity)
+                .WhichValue.First(statement => statement.Predicate.ToString().EndsWith("ordinal", StringComparison.Ordinal))
+                .Value.Should().Be("7");
         }
 
         [Test]
         public void Should_detect_retracted_Ordinal_statement()
         {
-            RetractedStatements.Should().ContainKey(Entity).WhichValue.First(statement => statement.Predicate.ToString() == "ordinal").Value.Should().Be("2");
+            RetractedStatements.Should().ContainKey(Entity)
+                .WhichValue.First(statement => statement.Predicate.ToString().EndsWith("ordinal", StringComparison.Ordinal))
+                .Value.Should().Be("2");
         }
 
         [Test]
         public void Should_detect_retracted_type_statement()
         {
-            RetractedStatements.Should().ContainKey(Entity).WhichValue.First(statement => statement.Predicate == rdf.type).Object.ToString().Should().Be("Service");
+            RetractedStatements.Should().ContainKey(Entity)
+                .WhichValue.First(statement => statement.Predicate == rdf.type)
+                .Object.ToString().Should().Be("some:Service");
         }
 
         [Test]
         public void Should_detect_added_type_statement()
         {
-            AddedStatements.Should().ContainKey(Entity).WhichValue.First(statement => statement.Predicate == rdf.type).Object.ToString().Should().Be("Thing");
+            AddedStatements.Should().ContainKey(Entity)
+                .WhichValue.First(statement => statement.Predicate == rdf.type)
+                .Object.ToString().Should().Be("some:Thing");
         }
 
         protected override void ScenarioSetup()

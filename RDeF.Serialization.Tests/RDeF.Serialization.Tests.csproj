@@ -48,8 +48,8 @@
     <Reference Include="Moq, Version=4.7.99.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\packages\Moq.4.7.99\lib\net45\Moq.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework, Version=3.7.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.3.7.1\lib\net45\nunit.framework.dll</HintPath>
@@ -74,9 +74,11 @@
     <Compile Include="Given_a_data_model\when_serializing_it.cs" />
     <Compile Include="Given_instance_of\JsonLdReader_class\when_deserializing\named_graphs.cs" />
     <Compile Include="Given_instance_of\JsonLdReader_class\when_deserializing\named_graphs_with_lists_and_collections.cs" />
+    <Compile Include="Given_instance_of\JsonLdReader_class\when_deserializing\ScenarioTest.cs" />
     <Compile Include="Given_instance_of\JsonLdReader_class\when_reading.cs" />
     <Compile Include="Given_instance_of\RdfXmlReader_class\when_deserializing\named_graphs.cs" />
     <Compile Include="Given_instance_of\RdfXmlReader_class\when_deserializing\named_graphs_with_lists_and_collections.cs" />
+    <Compile Include="Given_instance_of\RdfXmlReader_class\when_deserializing\ScenarioTest.cs" />
     <Compile Include="Given_instance_of\RdfXmlReader_class\when_reading.cs" />
     <Compile Include="Given_instance_of\RdfXmlWriter_class\when_initializing.cs" />
     <Compile Include="Given_instance_of\RdfXmlWriter_class\when_serializing\named_graphs.cs" />
@@ -84,7 +86,6 @@
     <Compile Include="Given_instance_of\JsonLdWriter_class\when_writing.cs" />
     <Compile Include="Given_instance_of\JsonLdWriter_class\when_serializing\named_graphs_with_lists_and_collections.cs" />
     <Compile Include="Given_instance_of\JsonLdWriter_class\when_serializing\named_graphs.cs" />
-    <Compile Include="Given_instance_of\RdfXmlWriter_class\when_writing_predicate.cs" />
     <Compile Include="Given_instance_of\TypePrioritizingStatementCollection_class\when_operating.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringExtensions.cs" />
@@ -101,17 +102,9 @@
     </CodeAnalysisDictionary>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Given_instance_of\JsonLdWriter_class\when_serializing\\named_graphs.json">
-      <DependentUpon>named_graphs.cs</DependentUpon>
-      <LogicalName>Given_instance_of\JsonLdWriter_class\when_serializing\named_graphs.json</LogicalName>
-    </EmbeddedResource>
     <EmbeddedResource Include="Given_a_data_model\when_serializing_it.json">
       <DependentUpon>when_serializing_it.cs</DependentUpon>
       <LogicalName>Given_a_data_model\when_serializing_it.json</LogicalName>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Given_instance_of\JsonLdWriter_class\when_serializing\\named_graphs_with_lists_and_collections.json">
-      <DependentUpon>named_graphs_with_lists_and_collections.cs</DependentUpon>
-      <LogicalName>Given_instance_of\JsonLdWriter_class\when_serializing\named_graphs_with_lists_and_collections.json</LogicalName>
     </EmbeddedResource>
     <EmbeddedResource Include="Given_instance_of\RdfXmlWriter_class\when_serializing\named_graphs.rdf">
       <DependentUpon>named_graphs.cs</DependentUpon>

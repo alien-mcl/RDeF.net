@@ -1,16 +1,26 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using RDeF.Vocabularies;
+﻿using System;
+using VDS.RDF;
 
 namespace RDeF.Entities
 {
     internal static class StatementExtensions
     {
-        internal static bool IsLinkedList(this Statement value, ICollection<IGrouping<Iri, Statement>> subjects)
+        internal static Triple ToTriple(this Statement statement, INodeFactory nodeFactory)
         {
-            return (value.Object == rdf.nil) ||
-                   ((value.Object != null) && (value.Object.IsBlank) &&
-                    (subjects.Any(subject => subject.Key == value.Object && subject.Any(statement => statement.Predicate == rdf.first))));
+            var subject = statement.Subject.ToNode(nodeFactory);
+            var predicate = statement.Predicate.ToNode(nodeFactory);
+            var graphIri = statement.Graph == Iri.DefaultGraph ? null : (Uri)statement.Graph;
+            if (statement.Object != null)
+            {
+                return new Triple(subject, predicate, statement.Object.ToNode(nodeFactory), graphIri);
+            }
+
+            if (!String.IsNullOrEmpty(statement.Language))
+            {
+                return new Triple(subject, predicate, nodeFactory.CreateLiteralNode(statement.Value, statement.Language), graphIri);
+            }
+
+            return new Triple(subject, predicate, nodeFactory.CreateLiteralNode(statement.Value, (Uri)statement.DataType), graphIri);
         }
     }
 }

@@ -32,7 +32,7 @@ namespace Given_instance_of.DefaultChangeDetector_class.when_processing
                     var entityMapping = new Mock<IEntityMapping>(MockBehavior.Strict);
                     var classMapping = new Mock<IStatementMapping>(MockBehavior.Strict);
                     classMapping.SetupGet(instance => instance.Graph).Returns((Iri)null);
-                    classMapping.SetupGet(instance => instance.Term).Returns(new Iri(type.Name.Substring(1)));
+                    classMapping.SetupGet(instance => instance.Term).Returns(new Iri($"some:{type.Name.Substring(1)}"));
                     entityMapping.SetupGet(instance => instance.Classes).Returns(new[] { classMapping.Object });
                     return entityMapping.Object;
                 });
@@ -41,7 +41,7 @@ namespace Given_instance_of.DefaultChangeDetector_class.when_processing
                 {
                     var propertyMapping = new Mock<IPropertyMapping>(MockBehavior.Strict);
                     propertyMapping.SetupGet(instance => instance.ValueConverter).Returns(Converter.Object);
-                    propertyMapping.SetupGet(instance => instance.Term).Returns(new Iri(property.Name.ToLower()));
+                    propertyMapping.SetupGet(instance => instance.Term).Returns(new Iri($"some:{property.Name.ToLower()}"));
                     propertyMapping.SetupGet(instance => instance.Graph).Returns((Iri)null);
                     propertyMapping.SetupGet(instance => instance.PropertyInfo).Returns(property);
                     if (property.PropertyType.IsAnEnumerable())

@@ -1,24 +1,17 @@
-﻿{
-    "@graph": [
-        {
-            "@id": "@default",
-            "@graph": [
-                {
-                    "@id": "test",
-                    "categories": [ "category1" ],
-                    "description": [ "Product description" ],
-                    "@type": [ "class1", "class2" ],
-                    "name": [ "Product name" ]
-                },
-                {
-                    "@id": "another",
-                    "categories": [ "category1" ],
-                    "description": [ "Product description" ],
-                    "display-name": [ "Alternative product name" ],
-                    "@type": [ "class1", "class2" ],
-                    "label": [ "Another product name" ]
-                }
-            ]
-        }
-    ] 
-}
+﻿[
+    {
+        "@id": "some:another",
+        "@type": ["some:class1", "some:class2"],
+        "some:label": [{  "@value": "Another product name" }],
+        "some:description": [{ "@value": "Product description" }],
+        "some:categories": [{ "@value": "category 1" }],
+        "some:display-name": [{ "@value": "Alternative product name" }]
+    },
+    {
+        "@id": "some:test",
+        "@type": ["some:class1", "some:class2"],
+        "some:name": [{ "@value": "Product name" }],
+        "some:description": [{ "@value": "Product description" }],
+        "some:categories": [{ "@value": "category 1" }]
+    }
+]

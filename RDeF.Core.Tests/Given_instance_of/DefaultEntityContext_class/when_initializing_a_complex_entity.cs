@@ -41,7 +41,7 @@ namespace Given_instance_of.DefaultEntityContext_class
         public void Should_build_related_collection_correctly()
         {
             Entity.ActLike<IComplexEntity>().Related.Should().AllBeAssignableTo<IComplexEntity>().And
-                .Subject.Where((related, index) => related.Iri.ToString() == "related" + (index + 1)).Count().Should().Be(2);
+                .Subject.Where((related, index) => related.Iri.ToString() == "some:related" + (index + 1)).Count().Should().Be(2);
         }
 
         [Test]
@@ -60,7 +60,7 @@ namespace Given_instance_of.DefaultEntityContext_class
         public void Should_build_others_list_correctly()
         {
             Entity.ActLike<IComplexEntity>().Other.Should().AllBeAssignableTo<IComplexEntity>().And
-                .Subject.Where((other, index) => other.Iri.ToString() == "other" + (index + 1)).Count().Should().Be(2);
+                .Subject.Where((other, index) => other.Iri.ToString() == "some:other" + (index + 1)).Count().Should().Be(2);
         }
 
         [Test]
@@ -158,28 +158,28 @@ namespace Given_instance_of.DefaultEntityContext_class
                 CallCounter[subject] = calls = (CallCounter.Count > 0 ? CallCounter.Values.Max() + 1 : 1);
             }
 
-            yield return new Statement(subject, rdf.type, new Iri("class1"));
-            yield return new Statement(subject, rdf.type, new Iri("class2"));
-            yield return new Statement(subject, new Iri("ordinals"), (1 * calls).ToString(), xsd.@int);
-            yield return new Statement(subject, new Iri("ordinals"), (2 * calls).ToString(), xsd.@int);
-            yield return new Statement(subject, new Iri("floats"), new Iri("_:blank001"));
+            yield return new Statement(subject, rdf.type, new Iri("some:class1"));
+            yield return new Statement(subject, rdf.type, new Iri("some:class2"));
+            yield return new Statement(subject, new Iri("some:ordinals"), (1 * calls).ToString(), xsd.@int);
+            yield return new Statement(subject, new Iri("some:ordinals"), (2 * calls).ToString(), xsd.@int);
+            yield return new Statement(subject, new Iri("some:floats"), new Iri("_:blank001"));
             yield return new Statement(new Iri("_:blank001"), rdf.first, (1 * calls).ToString(), xsd.@float);
             yield return new Statement(new Iri("_:blank001"), rdf.rest, new Iri("_:blank002"));
             yield return new Statement(new Iri("_:blank002"), rdf.first, (2 * calls).ToString(), xsd.@float);
             yield return new Statement(new Iri("_:blank002"), rdf.rest, rdf.nil);
-            yield return new Statement(subject, new Iri("doubles"), new Iri("_:blank011"));
+            yield return new Statement(subject, new Iri("some:doubles"), new Iri("_:blank011"));
             yield return new Statement(new Iri("_:blank011"), rdf.first, (1 * calls).ToString(), xsd.@double);
             yield return new Statement(new Iri("_:blank011"), rdf.rest, new Iri("_:blank012"));
             yield return new Statement(new Iri("_:blank012"), rdf.first, (2 * calls).ToString(), xsd.@double);
             yield return new Statement(new Iri("_:blank012"), rdf.rest, rdf.nil);
             if (subject == Iri)
             {
-                yield return new Statement(subject, new Iri("related"), new Iri("related1"));
-                yield return new Statement(subject, new Iri("related"), new Iri("related2"));
-                yield return new Statement(subject, new Iri("other"), new Iri("_:blank021"));
-                yield return new Statement(new Iri("_:blank021"), rdf.first, new Iri("other1"));
+                yield return new Statement(subject, new Iri("some:related"), new Iri("some:related1"));
+                yield return new Statement(subject, new Iri("some:related"), new Iri("some:related2"));
+                yield return new Statement(subject, new Iri("some:other"), new Iri("_:blank021"));
+                yield return new Statement(new Iri("_:blank021"), rdf.first, new Iri("some:other1"));
                 yield return new Statement(new Iri("_:blank021"), rdf.rest, new Iri("_:blank022"));
-                yield return new Statement(new Iri("_:blank022"), rdf.first, new Iri("other2"));
+                yield return new Statement(new Iri("_:blank022"), rdf.first, new Iri("some:other2"));
                 yield return new Statement(new Iri("_:blank022"), rdf.rest, rdf.nil);
             }
         }

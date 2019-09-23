@@ -8,8 +8,8 @@ namespace Given_instance_of.Iri_class
     [TestFixture]
     public class when_concatenating
     {
-        private static readonly Iri OperandA = new Iri("operandA");
-        private static readonly Iri OperandB = new Iri("operandB");
+        private static readonly Iri OperandA = new Iri("some:operandA");
+        private static readonly Iri OperandB = new Iri(new Uri("operandB", UriKind.Relative));
         private static readonly Iri UriA = new Iri(new Uri("http://test.com/", UriKind.Absolute));
         private static readonly Iri UriB = new Iri(new Uri("test", UriKind.Relative));
 

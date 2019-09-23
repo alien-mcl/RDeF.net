@@ -128,7 +128,7 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
             StreamReader = new StreamReader(new MemoryStream());
             RdfReader = new Mock<IRdfReader>(MockBehavior.Strict);
             RdfReader.Setup(instance => instance.Read(It.IsAny<StreamReader>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new Dictionary<Iri, IEnumerable<Statement>>() { { new Iri("graph"), new[] { ExpectedStatement } } });
+                .ReturnsAsync(new[] { new Graph(new Iri("graph"), new[] { ExpectedStatement }) });
             Context.Setup(instance => instance.Clear());
             Context.Setup(instance => instance.CreateInternal(It.IsAny<Iri>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
                 .Returns<Iri, bool, CancellationToken>(

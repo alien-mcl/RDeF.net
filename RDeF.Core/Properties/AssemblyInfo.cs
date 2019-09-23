@@ -10,5 +10,6 @@ using System.Runtime.InteropServices;
 [assembly: Guid("f07900af-8275-48ad-a7ce-7a7de267de2a")]
 [assembly: InternalsVisibleTo("RDeF.Core.Tests")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
+[assembly: InternalsVisibleTo("RDeF.Serialization.Tests")]
 [assembly: InternalsVisibleTo("RDeF.Mapping.Fluent")]
 [assembly: InternalsVisibleTo("RDeF.Mapping.Fluent.Tests")]

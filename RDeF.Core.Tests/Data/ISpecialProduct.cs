@@ -2,7 +2,7 @@
 
 namespace RDeF.Data
 {
-    [Class(Iri = "SpecialProduct")]
+    [Class(Iri = "some:some:SpecialProduct")]
     public interface ISpecialProduct : IProduct
     {
         [Property(Iri = "specialName")]

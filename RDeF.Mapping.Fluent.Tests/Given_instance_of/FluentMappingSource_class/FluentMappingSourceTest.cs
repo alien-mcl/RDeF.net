@@ -7,7 +7,7 @@ namespace Given_instance_of.FluentMappingSource_class
 {
     public abstract class FluentMappingSourceTest
     {
-        protected static readonly QIriMapping QIriMapping = new QIriMapping("prefix", new Iri("test_"));
+        protected static readonly QIriMapping QIriMapping = new QIriMapping("prefix", new Iri("test:"));
         
         protected FluentMappingSource Source { get; private set; }
 

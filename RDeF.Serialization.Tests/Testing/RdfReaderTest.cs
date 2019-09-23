@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Threading.Tasks;
+using NUnit.Framework;
 using RDeF.Serialization;
 
 namespace RDeF.Testing
@@ -7,16 +8,17 @@ namespace RDeF.Testing
     {
         protected IRdfReader Reader { get; private set; }
 
-        public virtual void TheTest()
+        public virtual Task TheTest()
         {
+            return Task.CompletedTask;
         }
 
         [SetUp]
-        public void Setup()
+        public async Task Setup()
         {
             Reader = new T();
             ScenarioSetup();
-            TheTest();
+            await TheTest();
         }
 
         protected virtual void ScenarioSetup()

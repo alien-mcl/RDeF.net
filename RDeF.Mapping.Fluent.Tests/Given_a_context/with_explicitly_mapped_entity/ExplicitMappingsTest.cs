@@ -41,31 +41,31 @@ namespace Given_a_context.with_explicitly_mapped_entity
         protected virtual void MapPrimaryEntity(IExplicitMappingsBuilder<IUnmappedProduct> entity)
         {
             entity
-                .MappedTo(new Iri("class1"))
-                .MappedTo(new Iri("class2"))
-                .WithProperty(instance => instance.Description).MappedTo(new Iri("description")).WithValueConverter<StringConverter>()
-                .WithProperty(instance => instance.Name).MappedTo(new Iri("name")).WithValueConverter<StringConverter>()
-                .WithCollection(instance => instance.Categories).MappedTo(new Iri("categories")).StoredAs(CollectionStorageModel.Simple).WithValueConverter<StringConverter>();
+                .MappedTo(new Iri("some:class1"))
+                .MappedTo(new Iri("some:class2"))
+                .WithProperty(instance => instance.Description).MappedTo(new Iri("some:description")).WithValueConverter<StringConverter>()
+                .WithProperty(instance => instance.Name).MappedTo(new Iri("some:name")).WithValueConverter<StringConverter>()
+                .WithCollection(instance => instance.Categories).MappedTo(new Iri("some:categories")).StoredAs(CollectionStorageModel.Simple).WithValueConverter<StringConverter>();
         }
 
         protected virtual void MapSecondaryEntity(IExplicitMappingsBuilder<IUnmappedProduct> entity)
         {
             entity
-                .MappedTo(new Iri("class1"))
-                .MappedTo(new Iri("class2"))
-                .WithProperty(instance => instance.Description).MappedTo(new Iri("description")).WithValueConverter<StringConverter>()
-                .WithProperty(instance => instance.Name).MappedTo(new Iri("label")).WithValueConverter<StringConverter>()
-                .WithCollection(instance => instance.Categories).MappedTo(new Iri("categories")).StoredAs(CollectionStorageModel.Simple).WithValueConverter<StringConverter>();
+                .MappedTo(new Iri("some:class1"))
+                .MappedTo(new Iri("some:class2"))
+                .WithProperty(instance => instance.Description).MappedTo(new Iri("some:description")).WithValueConverter<StringConverter>()
+                .WithProperty(instance => instance.Name).MappedTo(new Iri("some:label")).WithValueConverter<StringConverter>()
+                .WithCollection(instance => instance.Categories).MappedTo(new Iri("some:categories")).StoredAs(CollectionStorageModel.Simple).WithValueConverter<StringConverter>();
         }
 
         protected virtual void AlternativeMapSecondaryEntity(IExplicitMappingsBuilder<IUnmappedProduct> entity)
         {
             entity
-                .MappedTo(new Iri("class1"))
-                .MappedTo(new Iri("class2"))
-                .WithProperty(instance => instance.Description).MappedTo(new Iri("description")).WithValueConverter<StringConverter>()
-                .WithProperty(instance => instance.Name).MappedTo(new Iri("display-name")).WithValueConverter<StringConverter>()
-                .WithCollection(instance => instance.Categories).MappedTo(new Iri("categories")).StoredAs(CollectionStorageModel.Simple).WithValueConverter<StringConverter>();
+                .MappedTo(new Iri("some:class1"))
+                .MappedTo(new Iri("some:class2"))
+                .WithProperty(instance => instance.Description).MappedTo(new Iri("some:description")).WithValueConverter<StringConverter>()
+                .WithProperty(instance => instance.Name).MappedTo(new Iri("some:display-name")).WithValueConverter<StringConverter>()
+                .WithCollection(instance => instance.Categories).MappedTo(new Iri("some:categories")).StoredAs(CollectionStorageModel.Simple).WithValueConverter<StringConverter>();
         }
     }
 }

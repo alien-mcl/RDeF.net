@@ -29,7 +29,7 @@ namespace Given_instance_of.IriTypeConverter_class
         [Test]
         public void Should_convert_from_Uri()
         {
-            Converter.ConvertFrom(new Uri("Test", UriKind.Relative)).Should().Be(new Iri("Test"));
+            Converter.ConvertFrom(new Uri("Test", UriKind.Relative)).ToString().Should().Be("Test");
         }
 
         [Test]

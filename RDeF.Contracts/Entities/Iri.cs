@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Text;
 using RDeF.ComponentModel;
 
 namespace RDeF.Entities
@@ -14,16 +15,17 @@ namespace RDeF.Entities
         /// <summary>Defines an Iri that denotes a default graph.</summary>
         public static readonly Iri DefaultGraph = new Iri("_:defaultGraph");
 
+        private const int MaxCharsToSearchForProtocolSeparator = 20;
         private const string BlankProtocol = "_:";
         private const string BlankSuffix = "_:blank";
+
         private static long _id;
         private readonly string _iri;
         private string _asString;
 
         /// <summary>Initializes a new instance of the <see cref="Iri" /> class.</summary>
-        public Iri()
+        public Iri() : this(BlankSuffix + (++_id))
         {
-            _iri = BlankSuffix + (++_id);
         }
 
         /// <summary>Initializes a new instance of the <see cref="Iri"/> class.</summary>
@@ -53,12 +55,28 @@ namespace RDeF.Entities
                 throw new ArgumentOutOfRangeException(nameof(iri));
             }
 
-            _iri = iri;
+            if (iri[0] == '_')
+            {
+                _iri = iri;
+                Id = _iri.Substring(2);
+            }
+            else if (iri.IndexOf(':', 0, Math.Min(iri.Length, MaxCharsToSearchForProtocolSeparator)) == -1)
+            {
+                _iri = new StringBuilder(iri).Insert(0, BlankProtocol).ToString();
+                Id = iri;
+            }
+            else
+            {
+                _iri = iri;
+            }
         }
 
         /// <summary>Gets a value indicating whether this <see cref="Iri" /> is a blank identifier.</summary>
         [SuppressMessage("Microsoft.Globalization", "CA1307:SpecifyStringComparison", MessageId = "System.String.StartsWith(System.String)", Justification = "Text being compared is culture invariant.")]
-        public bool IsBlank { get { return _iri.StartsWith(BlankProtocol); } }
+        public bool IsBlank { get { return Id != null; } }
+
+        /// <summary>Gets a blank identifier.</summary>
+        public string Id { get; }
 
         internal Uri Uri { get; }
 

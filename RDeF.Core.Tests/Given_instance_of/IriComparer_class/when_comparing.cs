@@ -54,7 +54,7 @@ namespace Given_instance_of.IriComparer_class
         [Test]
         public void Should_obtain_underlying_iris_identifier_as_its_hash_code()
         {
-            IriComparer.Default.GetHashCode(new Iri("test")).Should().Be("test".GetHashCode());
+            IriComparer.Default.GetHashCode(new Iri("test")).Should().Be("_:test".GetHashCode());
         }
     }
 }

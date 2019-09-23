@@ -1,13 +1,11 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
 using RDeF.FluentAssertions;
-using RDeF.Serialization;
-using RDeF.Testing;
 
 namespace Given_instance_of.JsonLdReader_class.when_deserializing
 {
     [TestFixture]
-    public class named_graphs : RdfReaderDeserializationTest<JsonLdReader>
+    public class named_graphs : ScenarioTest
     {
         [Test]
         public void Should_deserialize_from_Json_Ld_correctly()
@@ -17,8 +15,8 @@ namespace Given_instance_of.JsonLdReader_class.when_deserializing
 
         protected override void ScenarioSetup()
         {
-            base.ScenarioSetup();
             WithSimpleGraph();
+            base.ScenarioSetup();
         }
     }
 }

@@ -7,9 +7,9 @@ namespace Given_instance_of.PropertyAttribute_class
     [TestFixture]
     public class which_is_already_initialized : PropertyAttributeTest
     {
-        private const string ExpectedIri = "iri";
+        private const string ExpectedIri = "some:iri";
 
-        private const string ExpectedGraphIri = "iri";
+        private const string ExpectedGraphIri = "some:iri";
 
         [Test]
         public void Should_obtain_mapped_term_iri()

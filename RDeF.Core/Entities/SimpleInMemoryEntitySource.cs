@@ -256,7 +256,7 @@ namespace RDeF.Entities
                              from statement in entity.Value
                              group statement by statement.Graph
                              into graph
-                             select new KeyValuePair<Iri, IEnumerable<Statement>>(graph.Key, graph);
+                             select new Graph(graph.Key, graph);
                 await rdfWriter.Write(streamWriter, graphs, cancellationToken);
             }
             finally
@@ -298,7 +298,7 @@ namespace RDeF.Entities
                     StatementAsserted != null ? AssertAdditionalStatements : (Action<IDictionary<Iri, ISet<Statement>>, Statement>)null;
                 foreach (var graph in await rdfReader.Read(streamReader, cancellationToken))
                 {
-                    foreach (var statement in graph.Value)
+                    foreach (var statement in graph.Statements)
                     {
                         statement.EnsureCache(subjects);
                         additionalStatements?.Invoke(subjects, statement);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using FluentAssertions.Collections;
-using RDeF.Entities;
+using RDeF.Serialization;
 
 namespace RDeF.FluentAssertions
 {
@@ -16,44 +16,44 @@ namespace RDeF.FluentAssertions
         }
 
         internal static void MatchStatements(
-            this GenericCollectionAssertions<KeyValuePair<Iri, IEnumerable<Statement>>> assertion,
-            IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>> expected)
+            this GenericCollectionAssertions<IGraph> assertion,
+            IEnumerable<IGraph> expected)
         {
             foreach (var resultingGraph in assertion.Subject)
             {
-                var expectedGraph = expected.FirstOrDefault(graph => graph.Key == resultingGraph.Key);
+                var expectedGraph = expected.FirstOrDefault(graph => graph.Iri == resultingGraph.Iri);
                 expectedGraph.Should().NotBeNull();
-                foreach (var resultingStatement in resultingGraph.Value)
+                foreach (var resultingStatement in resultingGraph.Statements)
                 {
-                    var expectedStatement = expectedGraph.Value.FirstOrDefault(statement => resultingStatement == statement);
+                    var expectedStatement = expectedGraph.Statements.FirstOrDefault(statement => resultingStatement == statement);
                     expectedStatement.Should().NotBeNull();
                 }
             }
         }
 
         internal static void BeSimilarTo(
-            this GenericCollectionAssertions<KeyValuePair<Iri, IEnumerable<Statement>>> assertion,
-            IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>> expected)
+            this GenericCollectionAssertions<IGraph> assertion,
+            IEnumerable<IGraph> expected)
         {
             assertion.Subject.Count().Should().Be(expected.Count());
             foreach (var resultingGraph in assertion.Subject)
             {
-                var expectedGraph = expected.FirstOrDefault(graph => graph.Key == resultingGraph.Key);
+                var expectedGraph = expected.FirstOrDefault(graph => graph.Iri == resultingGraph.Iri);
                 expectedGraph.Should().NotBeNull();
-                resultingGraph.Value.Count().Should().Be(expectedGraph.Value.Count());
+                resultingGraph.Statements.Count().Should().Be(expectedGraph.Statements.Count());
             }
         }
 
         internal static void MatchStatementsInAnyGraph(
-            this GenericCollectionAssertions<KeyValuePair<Iri, IEnumerable<Statement>>> assertion,
-            IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>> expected)
+            this GenericCollectionAssertions<IGraph> assertion,
+            IEnumerable<IGraph> expected)
         {
             foreach (var resultingGraph in assertion.Subject)
             {
-                foreach (var resultingStatement in resultingGraph.Value)
+                foreach (var resultingStatement in resultingGraph.Statements)
                 {
                     var expectedStatement = (from graph in expected
-                                             from statement in graph.Value
+                                             from statement in graph.Statements
                                              where resultingStatement.Subject == statement.Subject &&
                                                 resultingStatement.Predicate == statement.Predicate &&
                                                 resultingStatement.Object == statement.Object &&
@@ -67,10 +67,11 @@ namespace RDeF.FluentAssertions
         }
 
         internal static void BeSimilarToInAnyGraph(
-            this GenericCollectionAssertions<KeyValuePair<Iri, IEnumerable<Statement>>> assertion,
-            IEnumerable<KeyValuePair<Iri, IEnumerable<Statement>>> expected)
+            this GenericCollectionAssertions<IGraph> assertion,
+            IEnumerable<IGraph> expected)
         {
-            assertion.Subject.SelectMany(graph => graph.Value).Count().Should().Be(expected.SelectMany(graph => graph.Value).Count());
+            assertion.Subject.SelectMany(graph => graph.Statements).Count()
+                .Should().Be(expected.SelectMany(graph => graph.Statements).Count());
         }
     }
 }

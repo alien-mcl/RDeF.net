@@ -5,10 +5,10 @@
             "@graph": [
                 {
                     "@id": "http://test.uri/entity",
-                    "doubles": [
+                    "some:doubles": [
                         { "@list": [ 1.0, 2.0 ] }
                     ],
-                    "floats": [
+                    "some:floats": [
                         {
                             "@list": [
                                 {
@@ -22,11 +22,11 @@
                             ]
                         }
                     ],
-                    "@type": [ "class1", "class2" ],
-                    "other": [
+                    "@type": [ "some:class1", "some:class2" ],
+                    "some:other": [
                         { "@list": [ { "@id": "http://test.uri/entity" } ] }
                     ],
-                    "related": [
+                    "some:related": [
                         { "@id": "http://test.uri/entity" }
                     ]
                 }
