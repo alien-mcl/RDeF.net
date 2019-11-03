@@ -45,7 +45,7 @@ namespace RDeF.RDF
         [ExcludeFromCodeCoverage]
         public override IEnumerable<INode> SubjectNodes
         {
-            get { return Array.Empty<INode>(); }
+            get { return _statements.Select(_ => _.Subject).Distinct().Select(_ => _.ToNode(_nodeFactory)); }
         }
         
         /// <inheritdoc />

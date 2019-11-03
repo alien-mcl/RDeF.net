@@ -37,7 +37,7 @@ namespace Given_a_data_model
         [Test]
         public async Task Should_create_a_correct_JsonLd()
         {
-            (await new JsonLdReader().Read(new StreamReader(Buffer))).Should().BeSimilarTo(Expected);
+            (await new JsonLdReader().Read(new StreamReader(Buffer))).Should().MatchStatements(Expected, true);
         }
 
         [SetUp]

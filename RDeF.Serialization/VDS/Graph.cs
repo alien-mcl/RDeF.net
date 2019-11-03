@@ -17,6 +17,7 @@ namespace RDef.RDF
         internal Graph(IGraph graph)
         {
             _graph = graph;
+            NamespaceMap = new NamespaceMapper();
         }
         
         /// <inheritdoc />
@@ -82,10 +83,7 @@ namespace RDef.RDF
         }
 
         /// <inheritdoc />
-        public INamespaceMapper NamespaceMap
-        {
-            get { return null; }
-        }
+        public INamespaceMapper NamespaceMap { get; }
 
         /// <inheritdoc />
         public IEnumerable<INode> Nodes
@@ -180,9 +178,10 @@ namespace RDef.RDF
         }
 
         /// <inheritdoc />
+        [SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", Justification = "Members are disposed correctly. This is an FxCop bug.")]
         public void Dispose()
         {
-            //// Nothing to dipose.
+            NamespaceMap.Dispose();
         }
 
         /// <inheritdoc />

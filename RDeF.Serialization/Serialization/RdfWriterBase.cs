@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -23,6 +24,16 @@ namespace RDeF.Serialization
         /// <inheritdoc />
         public Task Write(StreamWriter streamWriter, IEnumerable<IGraph> graphs, CancellationToken cancellationToken)
         {
+            if (streamWriter == null)
+            {
+                throw new ArgumentNullException(nameof(streamWriter));
+            }
+
+            if (graphs == null)
+            {
+                throw new ArgumentNullException(nameof(graphs));
+            }
+
             using (var store = new InMemoryTripleStore(graphs, !SupportsGraphs))
             {
                 if (SupportsGraphs)
