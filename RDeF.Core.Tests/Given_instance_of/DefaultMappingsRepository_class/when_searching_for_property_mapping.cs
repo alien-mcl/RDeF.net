@@ -31,7 +31,8 @@ namespace Given_instance_of.DefaultMappingsRepository_class
         [Test]
         public void Should_throw_when_no_property_is_given()
         {
-            MappingsRepository.Invoking(instance => instance.FindPropertyMappingFor(null, null)).ShouldThrow<ArgumentNullException>();
+            MappingsRepository.Invoking(instance => instance.FindPropertyMappingFor(null, null))
+                .Should().Throw<ArgumentNullException>();
         }
 
         protected override void ScenarioSetup()
@@ -42,7 +43,11 @@ namespace Given_instance_of.DefaultMappingsRepository_class
             propertyMapping.SetupGet(instance => instance.Name).Returns(ExpectedProperty.Name);
             propertyMapping.SetupGet(instance => instance.EntityMapping).Returns(entityMapping.Object);
             entityMapping.SetupGet(instance => instance.Properties).Returns(new[] { propertyMapping.Object });
-            MappingBuilder.Setup(instance => instance.BuildMappings(It.IsAny<IEnumerable<IMappingSource>>(), It.IsAny<IDictionary<Type, ICollection<ITermMappingProvider>>>()))
+            MappingBuilder
+                .Setup(
+                    instance => instance.BuildMappings(
+                        It.IsAny<IEnumerable<IMappingSource>>(),
+                        It.IsAny<IDictionary<Type, ICollection<ITermMappingProvider>>>()))
                 .Returns(new Dictionary<Type, IEntityMapping>() { { typeof(IProduct), entityMapping.Object } });
         }
     }

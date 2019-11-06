@@ -11,19 +11,19 @@ namespace Given_instance_of.Iri_class
         [Test]
         public void Should_throw_when_no_iri_string_is_given()
         {
-            ((Iri)null).Invoking(_ => new Iri((string)null)).ShouldThrow<ArgumentNullException>();
+            ((Iri)null).Invoking(_ => new Iri((string)null)).Should().Throw<ArgumentNullException>();
         }
 
         [Test]
         public void Should_throw_when_an_empty_iri_string_is_given()
         {
-            ((Iri)null).Invoking(_ => new Iri(String.Empty)).ShouldThrow<ArgumentOutOfRangeException>();
+            ((Iri)null).Invoking(_ => new Iri(String.Empty)).Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Test]
         public void Should_throw_when_no_Uri_is_given()
         {
-            ((Iri)null).Invoking(_ => new Iri((Uri)null)).ShouldThrow<ArgumentNullException>();
+            ((Iri)null).Invoking(_ => new Iri((Uri)null)).Should().Throw<ArgumentNullException>();
         }
     }
 }

@@ -35,12 +35,10 @@ namespace Given_instance_of.Entity_class
         [Test]
         public void Should_provide_correct_unmapped_property()
         {
-            Result.ShouldBeEquivalentTo(new[]
-            {
+            Result.Should().BeEquivalentTo(
                 new Relation(SomePredicate, "Test"),
                 new Relation(SomeAnotherPredicate, RelatedProduct),
-                new Relation(YetAnotherPredicate, "Raw data")
-            });
+                new Relation(YetAnotherPredicate, "Raw data"));
         }
 
         [Test]

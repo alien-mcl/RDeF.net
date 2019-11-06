@@ -11,7 +11,8 @@ namespace Given_instance_of.DefaultChangeDetector_class
         [Test]
         public void Should_throw_when_no_mappings_repository_is_given()
         {
-            ((DefaultChangeDetector)null).Invoking(_ => new DefaultChangeDetector(null)).ShouldThrow<ArgumentNullException>();
+            ((DefaultChangeDetector)null).Invoking(_ => new DefaultChangeDetector(null))
+                .Should().Throw<ArgumentNullException>();
         }
     }
 }

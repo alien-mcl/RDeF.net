@@ -26,7 +26,8 @@ namespace Given_instance_of.DefaultEntityContext_class.which_is_using_an_in_memo
                     MappingsRepository.Object,
                     ChangeDetector.Object,
                     new[] { LiteralConverter.Object })
-                .Invoking(instance => instance.AsQueryable<IProduct>()).ShouldThrow<NotSupportedException>();
+                .Invoking(instance => instance.AsQueryable<IProduct>())
+                .Should().Throw<NotSupportedException>();
         }
 
         [Test]

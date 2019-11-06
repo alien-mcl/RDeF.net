@@ -22,13 +22,15 @@ namespace Given_instance_of.DefaultEntityContext_class
         [Test]
         public void Should_throw_when_no_Iri_is_given()
         {
-            Context.Invoking(context => context.Delete(null)).ShouldThrow<ArgumentNullException>();
+            Context.Invoking(context => context.Delete(null))
+                .Should().Throw<ArgumentNullException>();
         }
 
         [Test]
         public void Should_throw_when_given_Iri_is_a_blank()
         {
-            Context.Invoking(context => context.Delete(new Iri())).ShouldThrow<ArgumentOutOfRangeException>();
+            Context.Invoking(context => context.Delete(new Iri()))
+                .Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Test]

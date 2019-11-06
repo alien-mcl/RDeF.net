@@ -11,7 +11,8 @@ namespace Given_instance_of.InternalMappingSource_class
         [Test]
         public void Should_throw_when_no_assembly_is_given()
         {
-            ((InternalMappingSource)null).Invoking(_ => new InternalMappingSource(null)).ShouldThrow<ArgumentNullException>();
+            ((InternalMappingSource)null).Invoking(_ => new InternalMappingSource(null))
+                .Should().Throw<ArgumentNullException>();
         }
     }
 }

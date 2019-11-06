@@ -116,7 +116,7 @@ namespace System
             this.hours = 0;
             this.minutes = 0;
             this.seconds = 0;
-            this.nanoseconds = (uint)0;
+            this.nanoseconds = 0U;
             if (years < 0)
             {
                 this.nanoseconds |= NegativeBit;
@@ -147,7 +147,7 @@ namespace System
             this.hours = 0;
             this.minutes = 0;
             this.seconds = 0;
-            this.nanoseconds = (uint)0;
+            this.nanoseconds = 0U;
             if (isNegative)
             {
                 this.nanoseconds |= NegativeBit;

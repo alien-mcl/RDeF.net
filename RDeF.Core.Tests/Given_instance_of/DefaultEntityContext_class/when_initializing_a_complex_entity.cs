@@ -34,7 +34,7 @@ namespace Given_instance_of.DefaultEntityContext_class
         [Test]
         public void Should_build_ordinals_collection_correctly()
         {
-            Entity.ActLike<IComplexEntity>().Ordinals.ShouldBeEquivalentTo(new[] { 1, 2 });
+            Entity.ActLike<IComplexEntity>().Ordinals.Should().BeEquivalentTo(new[] { 1, 2 });
         }
 
         [Test]
@@ -47,13 +47,13 @@ namespace Given_instance_of.DefaultEntityContext_class
         [Test]
         public void Should_build_floats_list_correctly()
         {
-            Entity.ActLike<IComplexEntity>().Floats.ShouldBeEquivalentTo(new[] { 1f, 2f });
+            Entity.ActLike<IComplexEntity>().Floats.Should().BeEquivalentTo(new[] { 1f, 2f });
         }
 
         [Test]
         public void Should_build_doubles_list_correctly()
         {
-            Entity.ActLike<IComplexEntity>().Doubles.ShouldBeEquivalentTo(new[] { 1, 2 });
+            Entity.ActLike<IComplexEntity>().Doubles.Should().BeEquivalentTo(new[] { 1, 2 });
         }
 
         [Test]
@@ -67,7 +67,7 @@ namespace Given_instance_of.DefaultEntityContext_class
         public void Should_initialize_nested_entity_from_collection()
         {
             Entity.ActLike<IComplexEntity>().Related.First().Floats
-                .ShouldBeEquivalentTo(new[]
+                .Should().BeEquivalentTo(new[]
                 {
                     1f * CallCounter[Entity.ActLike<IComplexEntity>().Related.First().Iri],
                     2f * CallCounter[Entity.ActLike<IComplexEntity>().Related.First().Iri]
@@ -78,7 +78,7 @@ namespace Given_instance_of.DefaultEntityContext_class
         public void Should_initialize_another_nested_entity_from_collection()
         {
             Entity.ActLike<IComplexEntity>().Related.Last().Floats
-                .ShouldBeEquivalentTo(new[]
+                .Should().BeEquivalentTo(new[]
                 {
                     1f * CallCounter[Entity.ActLike<IComplexEntity>().Related.Last().Iri],
                     2f * CallCounter[Entity.ActLike<IComplexEntity>().Related.Last().Iri]
@@ -89,7 +89,7 @@ namespace Given_instance_of.DefaultEntityContext_class
         public void Should_initialize_nested_entity_from_list()
         {
             Entity.ActLike<IComplexEntity>().Other.First().Floats
-                .ShouldBeEquivalentTo(new[]
+                .Should().BeEquivalentTo(new[]
                 {
                     1f * CallCounter[Entity.ActLike<IComplexEntity>().Other.First().Iri],
                     2f * CallCounter[Entity.ActLike<IComplexEntity>().Other.First().Iri]
@@ -100,7 +100,7 @@ namespace Given_instance_of.DefaultEntityContext_class
         public void Should_initialize_another_nested_entity_from_list()
         {
             Entity.ActLike<IComplexEntity>().Other.Last().Floats
-                .ShouldBeEquivalentTo(new[]
+                .Should().BeEquivalentTo(new[]
                 {
                     1f * CallCounter[Entity.ActLike<IComplexEntity>().Other.Last().Iri],
                     2f * CallCounter[Entity.ActLike<IComplexEntity>().Other.Last().Iri]

@@ -39,7 +39,8 @@ namespace Given_instance_of.DefaultEntityContextFactory_class
         [Test]
         public void Should_throw_when_mappings_builder_is_not_given()
         {
-            Factory.Invoking(instance => instance.WithMappings(null)).ShouldThrow<ArgumentNullException>();
+            Factory.Invoking(instance => instance.WithMappings(null))
+                .Should().Throw<ArgumentNullException>();
         }
 
         protected override void ScenarioSetup()

@@ -34,7 +34,7 @@ namespace Given_instance_of.DefaultEntityContext_class
         public void Should_throw_when_no_entity_is_given()
         {
             Context.Invoking(instance => instance.Copy((IProduct)null))
-                .ShouldThrow<ArgumentNullException>().Which.ParamName.Should().Be("entity");
+                .Should().Throw<ArgumentNullException>().Which.ParamName.Should().Be("entity");
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace Given_instance_of.DefaultEntityContext_class
         public void Should_throw_when_instance_given_is_not_entity()
         {
             Context.Invoking(instance => instance.Copy(new MulticastObject().ActLike<IProduct>()))
-                .ShouldThrow<ArgumentOutOfRangeException>().Which.ParamName.Should().Be("entity");
+                .Should().Throw<ArgumentOutOfRangeException>().Which.ParamName.Should().Be("entity");
         }
 
         [Test]

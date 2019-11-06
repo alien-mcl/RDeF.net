@@ -37,7 +37,7 @@ namespace Given_instance_of.LazyLoadedEntity_class
         [Test]
         public void Should_provide_correct_unmapped_properties()
         {
-            Result.ShouldBeEquivalentTo(new[] { Relation });
+            Result.Should().BeEquivalentTo(new[] { Relation });
         }
 
         [Test]

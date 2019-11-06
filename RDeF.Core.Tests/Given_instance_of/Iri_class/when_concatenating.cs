@@ -16,13 +16,15 @@ namespace Given_instance_of.Iri_class
         [Test]
         public void Should_throw_when_right_operand_is_a_blank_id()
         {
-            OperandA.Invoking(left => { var result = left + new Iri(); }).ShouldThrow<InvalidOperationException>();
+            OperandA.Invoking(left => { var result = left + new Iri(); })
+                .Should().Throw<InvalidOperationException>();
         }
 
         [Test]
         public void Should_throw_when_left_operand_is_a_blank_id()
         {
-            OperandB.Invoking(right => { var result = new Iri() + right; }).ShouldThrow<InvalidOperationException>();
+            OperandB.Invoking(right => { var result = new Iri() + right; })
+                .Should().Throw<InvalidOperationException>();
         }
 
         [Test]
@@ -70,13 +72,15 @@ namespace Given_instance_of.Iri_class
         [Test]
         public void Should_throw_for_both_Uris_are_absolute()
         {
-            UriA.Invoking(uriA => { var uri = uriA + UriA; }).ShouldThrow<InvalidOperationException>();
+            UriA.Invoking(uriA => { var uri = uriA + UriA; })
+                .Should().Throw<InvalidOperationException>();
         }
 
         [Test]
         public void Should_throw_for_no_iri_and_string_operands()
         {
-            "test".Invoking(operandB => { var uri = (Iri)null + operandB; }).ShouldThrow<InvalidOperationException>();
+            "test".Invoking(operandB => { var uri = (Iri)null + operandB; })
+                .Should().Throw<InvalidOperationException>();
         }
     }
 }

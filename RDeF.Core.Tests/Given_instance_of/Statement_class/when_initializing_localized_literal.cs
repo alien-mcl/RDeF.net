@@ -12,28 +12,28 @@ namespace Given_instance_of.Statement_class
         public void Should_throw_when_no_subject_is_given()
         {
             ((Statement)null).Invoking(_ => new Statement((Iri)null, (Iri)null, (string)null, (string)null))
-                .ShouldThrow<ArgumentNullException>().Which.ParamName.Should().Be("subject");
+                .Should().Throw<ArgumentNullException>().Which.ParamName.Should().Be("subject");
         }
 
         [Test]
         public void Should_throw_when_no_predicate_is_given()
         {
             ((Statement)null).Invoking(_ => new Statement(new Iri("test"), (Iri)null, (string)null, (string)null))
-                .ShouldThrow<ArgumentNullException>().Which.ParamName.Should().Be("predicate");
+                .Should().Throw<ArgumentNullException>().Which.ParamName.Should().Be("predicate");
         }
 
         [Test]
         public void Should_throw_when_no_value_is_given()
         {
             ((Statement)null).Invoking(_ => new Statement(new Iri("test"), new Iri("test"), (string)null, (string)null))
-                .ShouldThrow<ArgumentNullException>().Which.ParamName.Should().Be("value");
+                .Should().Throw<ArgumentNullException>().Which.ParamName.Should().Be("value");
         }
 
         [Test]
         public void Should_throw_when_no_language_is_given()
         {
             ((Statement)null).Invoking(_ => new Statement(new Iri("test"), new Iri("test"), "test", (string)null))
-                .ShouldThrow<ArgumentNullException>().Which.ParamName.Should().Be("language");
+                .Should().Throw<ArgumentNullException>().Which.ParamName.Should().Be("language");
         }
     }
 }

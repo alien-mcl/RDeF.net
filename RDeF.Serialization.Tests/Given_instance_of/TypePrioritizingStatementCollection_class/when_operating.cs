@@ -48,7 +48,8 @@ namespace Given_instance_of.TypePrioritizingStatementCollection_class
         [Test]
         public void Should_copy_to_array()
         {
-            Statements.After(_ => ((ICollection<Statement>)Collection).CopyTo(Statements, 0)).ShouldAllBeEquivalentTo(new[] { Typing, Predicate });
+            Statements.After(_ => ((ICollection<Statement>)Collection).CopyTo(Statements, 0))
+                .Should().BeEquivalentTo(Typing, Predicate);
         }
 
         [Test]

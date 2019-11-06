@@ -8,7 +8,7 @@ namespace RDeF.Serialization
     public sealed class Graph : IGraph
     {
         /// <summary>Initializes a new instance of the <see cref="Graph" /> class.</summary>
-        /// <param name="statements">Default draph statements</param>
+        /// <param name="statements">Default draph statements.</param>
         public Graph(IEnumerable<Statement> statements) : this(Iri.DefaultGraph, statements)
         {
         }

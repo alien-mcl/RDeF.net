@@ -33,12 +33,17 @@ namespace Given_instance_of.DefaultMappingsRepository_class
         [Test]
         public void Should_throw_when_no_predicate_is_given()
         {
-            MappingsRepository.Invoking(instance => instance.FindPropertyMappingFor(null, (Iri)null)).ShouldThrow<ArgumentNullException>();
+            MappingsRepository.Invoking(instance => instance.FindPropertyMappingFor(null, (Iri)null))
+                .Should().Throw<ArgumentNullException>();
         }
 
         protected override void ScenarioSetup()
         {
-            MappingBuilder.Setup(instance => instance.BuildMappings(It.IsAny<IEnumerable<IMappingSource>>(), It.IsAny<IDictionary<Type, ICollection<ITermMappingProvider>>>()))
+            MappingBuilder
+                .Setup(
+                    instance => instance.BuildMappings(
+                        It.IsAny<IEnumerable<IMappingSource>>(),
+                        It.IsAny<IDictionary<Type, ICollection<ITermMappingProvider>>>()))
                 .Returns(new Dictionary<Type, IEntityMapping>()
                 {
                     { typeof(IComplexEntity), CreateEntityMapping<IComplexEntity>(new Iri("ComplexEntity")) },

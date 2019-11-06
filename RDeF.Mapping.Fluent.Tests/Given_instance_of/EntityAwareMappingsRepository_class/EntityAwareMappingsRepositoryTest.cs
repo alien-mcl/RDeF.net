@@ -129,7 +129,7 @@ namespace Given_instance_of.EntityAwareMappingsRepository_class
 
             internal void ResultingWithExpected(TResult result)
             {
-                _result.ShouldBeEquivalentTo(result);
+                _result.Should().BeEquivalentTo(result);
             }
         }
     }

@@ -14,7 +14,9 @@ namespace Given_instance_of.converter_of_type
         [TestCase(new byte[] { 0, 255 })]
         public void Should_convert_from_literal(byte[] value)
         {
-            Converter.ConvertFrom(StatementFor(Convert.ToBase64String(value), xsd.base64Binary)).Should().BeOfType<byte[]>().Which.ShouldBeEquivalentTo(value);
+            Converter.ConvertFrom(StatementFor(Convert.ToBase64String(value), xsd.base64Binary))
+                .Should().BeOfType<byte[]>()
+                .Which.Should().BeEquivalentTo(value);
         }
 
         [TestCase(new byte[] { 0, 255 })]

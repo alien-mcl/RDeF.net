@@ -23,7 +23,8 @@ namespace Given_instance_of.DefaultEntityContext_class
         [Test]
         public void Should_throw_when_no_Iri_is_given()
         {
-            Context.Awaiting(context => context.Load<IProduct>(null)).ShouldThrow<ArgumentNullException>();
+            Context.Awaiting(context => context.Load<IProduct>(null))
+                .Should().Throw<ArgumentNullException>();
         }
 
         [Test]

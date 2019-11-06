@@ -40,14 +40,14 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
         public void Should_throw_when_no_input_stream_is_given()
         {
             EntitySource.Awaiting(instance => instance.Read(null, null))
-                .ShouldThrow<ArgumentNullException>().Which.ParamName.Should().Be("streamReader");
+                .Should().Throw<ArgumentNullException>().Which.ParamName.Should().Be("streamReader");
         }
 
         [Test]
         public void Should_throw_when_no_RDF_reader_is_given()
         {
             EntitySource.Awaiting(instance => instance.Read(new StreamReader(new MemoryStream()), null))
-                .ShouldThrow<ArgumentNullException>().Which.ParamName.Should().Be("rdfReader");
+                .Should().Throw<ArgumentNullException>().Which.ParamName.Should().Be("rdfReader");
         }
 
         [Test]

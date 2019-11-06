@@ -20,7 +20,8 @@ namespace Given_instance_of.ConverterConventionVisitor_class
         [Test]
         public void Should_throw_when_no_provider_is_given()
         {
-            Visitor.Invoking(instance => instance.Visit((ICollectionMappingProvider)null)).ShouldThrow<ArgumentNullException>();
+            Visitor.Invoking(instance => instance.Visit((ICollectionMappingProvider)null))
+                .Should().Throw<ArgumentNullException>();
         }
 
         [Test]

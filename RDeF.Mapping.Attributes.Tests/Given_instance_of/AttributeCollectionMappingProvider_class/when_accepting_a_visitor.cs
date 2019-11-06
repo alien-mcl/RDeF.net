@@ -27,7 +27,8 @@ namespace Given_instance_of.AttributeCollectionMappingProvider_class
         [Test]
         public void Should_throw_if_no_visitor_is_given()
         {
-            Provider.Invoking(instance => instance.Accept(null)).ShouldThrow<ArgumentNullException>();
+            Provider.Invoking(instance => instance.Accept(null))
+                .Should().Throw<ArgumentNullException>();
         }
 
         protected override void ScenarioSetup()

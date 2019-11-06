@@ -11,7 +11,7 @@ namespace Given_instance_of.StatementEventArgs_class
         public void Should_throw_when_no_statement_is_given()
         {
             ((StatementEventArgs)null).Invoking(_ => new StatementEventArgs(null))
-                .ShouldThrow<ArgumentNullException>()
+                .Should().Throw<ArgumentNullException>()
                 .Which.ParamName.Should().Be("statement");
         }
     }

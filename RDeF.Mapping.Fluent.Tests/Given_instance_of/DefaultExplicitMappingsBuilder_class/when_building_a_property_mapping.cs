@@ -23,25 +23,29 @@ namespace Given_instance_of.DefaultExplicitMappingsBuilder_class
         [Test]
         public void Should_throw_when_no_property_selector_is_given()
         {
-            Builder.Invoking(instance => instance.WithProperty<string>(null)).ShouldThrow<ArgumentNullException>();
+            Builder.Invoking(instance => instance.WithProperty<string>(null))
+                .Should().Throw<ArgumentNullException>();
         }
 
         [Test]
         public void Should_throw_when_invalid_property_selector_is_given()
         {
-            Builder.Invoking(instance => instance.WithProperty(product => 1)).ShouldThrow<ArgumentOutOfRangeException>();
+            Builder.Invoking(instance => instance.WithProperty(product => 1))
+                .Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Test]
         public void Should_throw_when_the_selected_member_is_a_collection()
         {
-            Builder.Invoking(instance => instance.WithProperty(product => product.Categories)).ShouldThrow<ArgumentOutOfRangeException>();
+            Builder.Invoking(instance => instance.WithProperty(product => product.Categories))
+                .Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Test]
         public void Should_throw_when_no_mapped_term_is_given()
         {
-            Builder.WithProperty(product => product.Description).Invoking(instance => instance.MappedTo(null)).ShouldThrow<ArgumentNullException>();
+            Builder.WithProperty(product => product.Description).Invoking(instance => instance.MappedTo(null))
+                .Should().Throw<ArgumentNullException>();
         }
 
         [Test]
@@ -49,7 +53,7 @@ namespace Given_instance_of.DefaultExplicitMappingsBuilder_class
         {
             ((DefaultExplicitMappingsBuilder<IProduct>)ValueConverter.WithValueConverter<TestConverter>())
                 .Properties.Should().ContainKey(new ExplicitlyMappedPropertyInfo(typeof(IProduct).GetTypeInfo().GetProperty("Description"), new Iri("term"), new Iri("graph")))
-                .WhichValue.ShouldBeEquivalentTo(
+                .WhichValue.Should().BeEquivalentTo(
                     new Tuple<Iri, Iri, Type>(new Iri("term"), new Iri("graph"), typeof(TestConverter)));
         }
 
@@ -58,7 +62,7 @@ namespace Given_instance_of.DefaultExplicitMappingsBuilder_class
         {
             ((DefaultExplicitMappingsBuilder<IProduct>)ValueConverter.WithDefaultConverter())
                 .Properties.Should().ContainKey(new ExplicitlyMappedPropertyInfo(typeof(IProduct).GetTypeInfo().GetProperty("Description"), new Iri("term"), new Iri("graph")))
-                .WhichValue.ShouldBeEquivalentTo(
+                .WhichValue.Should().BeEquivalentTo(
                     new Tuple<Iri, Iri, Type>(new Iri("term"), new Iri("graph"), null));
         }
     }

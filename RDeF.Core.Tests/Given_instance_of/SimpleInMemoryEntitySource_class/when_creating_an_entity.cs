@@ -21,7 +21,8 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
         [Test]
         public void Should_throw_when_no_iri_is_given()
         {
-            EntitySource.Awaiting(instance => instance.Create<IProduct>(null)).ShouldThrow<ArgumentNullException>().Which.ParamName.Should().Be("iri");
+            EntitySource.Awaiting(instance => instance.Create<IProduct>(null))
+                .Should().Throw<ArgumentNullException>().Which.ParamName.Should().Be("iri");
         }
 
         [Test]

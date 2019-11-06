@@ -11,19 +11,25 @@ namespace Given_instance_of.AmbiguousMappingException_class
         [Test]
         public void Should_not_throw_when_using_default_constructor()
         {
-            ((AmbiguousMappingException)null).Invoking(_ => new AmbiguousMappingException()).ShouldNotThrow();
+            ((AmbiguousMappingException)null)
+                .Invoking(_ => new AmbiguousMappingException())
+                .Should().NotThrow();
         }
 
         [Test]
         public void Should_not_throw_when_providing_a_message()
         {
-            ((AmbiguousMappingException)null).Invoking(_ => new AmbiguousMappingException("Some message")).ShouldNotThrow();
+            ((AmbiguousMappingException)null)
+                .Invoking(_ => new AmbiguousMappingException("Some message"))
+                .Should().NotThrow();
         }
 
         [Test]
         public void Should_not_throw_when_providing_a_message_with_inner_exception()
         {
-            ((AmbiguousMappingException)null).Invoking(_ => new AmbiguousMappingException("Some message", new Exception())).ShouldNotThrow();
+            ((AmbiguousMappingException)null)
+                .Invoking(_ => new AmbiguousMappingException("Some message", new Exception()))
+                .Should().NotThrow();
         }
     }
 }

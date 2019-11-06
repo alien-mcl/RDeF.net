@@ -25,27 +25,31 @@ namespace Given_instance_of.DefaultExplicitMappingsBuilder_class
         [Test]
         public void Should_throw_when_no_collection_selector_is_given()
         {
-            Builder.Invoking(instance => instance.WithCollection<IEnumerable<string>>(null)).ShouldThrow<ArgumentNullException>();
+            Builder.Invoking(instance => instance.WithCollection<IEnumerable<string>>(null))
+                .Should().Throw<ArgumentNullException>();
         }
 
         [Test]
         public void Should_throw_when_the_selected_member_is_not_a_collection()
         {
-            Builder.Invoking(instance => instance.WithCollection(product => product.Description)).ShouldThrow<ArgumentOutOfRangeException>();
+            Builder.Invoking(instance => instance.WithCollection(product => product.Description))
+                .Should().Throw<ArgumentOutOfRangeException>();
         }
 
         [Test]
         public void Should_throw_when_no_mapped_term_is_given()
         {
-            Builder.WithCollection(product => product.Categories).Invoking(instance => instance.MappedTo(null)).ShouldThrow<ArgumentNullException>();
+            Builder.WithCollection(product => product.Categories).Invoking(instance => instance.MappedTo(null))
+                .Should().Throw<ArgumentNullException>();
         }
 
         [Test]
         public void Should_prepare_collection_data_model_correctly_with_pointed_value_converter()
         {
             ((DefaultExplicitMappingsBuilder<IProduct>)ValueConverter.WithValueConverter<TestConverter>())
-                .Collections.Should().ContainKey(new ExplicitlyMappedPropertyInfo(typeof(IProduct).GetTypeInfo().GetProperty("Categories"), new Iri("term"), new Iri("graph")))
-                    .WhichValue.ShouldBeEquivalentTo(
+                .Collections.Should().ContainKey(
+                    new ExplicitlyMappedPropertyInfo(typeof(IProduct).GetTypeInfo().GetProperty("Categories"), new Iri("term"), new Iri("graph")))
+                    .WhichValue.Should().BeEquivalentTo(
                         new Tuple<Iri, Iri, CollectionStorageModel, Type>(new Iri("term"), new Iri("graph"), CollectionStorageModel.Simple, typeof(TestConverter)));
         }
 
@@ -53,8 +57,9 @@ namespace Given_instance_of.DefaultExplicitMappingsBuilder_class
         public void Should_prepare_collection_data_model_correctly_with_default_value_converter()
         {
             ((DefaultExplicitMappingsBuilder<IProduct>)ValueConverter.WithDefaultConverter())
-                .Collections.Should().ContainKey(new ExplicitlyMappedPropertyInfo(typeof(IProduct).GetTypeInfo().GetProperty("Categories"), new Iri("term"), new Iri("graph")))
-                .WhichValue.ShouldBeEquivalentTo(
+                .Collections.Should().ContainKey(
+                    new ExplicitlyMappedPropertyInfo(typeof(IProduct).GetTypeInfo().GetProperty("Categories"), new Iri("term"), new Iri("graph")))
+                .WhichValue.Should().BeEquivalentTo(
                     new Tuple<Iri, Iri, CollectionStorageModel, Type>(new Iri("term"), new Iri("graph"), CollectionStorageModel.Simple, null));
         }
     }

@@ -41,7 +41,8 @@ namespace Given_instance_of.IriTypeConverter_class
         [Test]
         public void Should_throw_for_other_type_conversions()
         {
-            Converter.Invoking(instance => instance.ConvertTo(0, typeof(double))).ShouldThrow<NotSupportedException>();
+            Converter.Invoking(instance => instance.ConvertTo(0, typeof(double)))
+                .Should().Throw<NotSupportedException>();
         }
     }
 }

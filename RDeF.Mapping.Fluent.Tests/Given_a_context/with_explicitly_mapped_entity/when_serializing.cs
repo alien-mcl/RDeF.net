@@ -36,7 +36,7 @@ namespace Given_a_context.with_explicitly_mapped_entity
         [Test]
         public void Should_serialize_explicitly_mapped_properties()
         {
-            ResultConverted.ShouldBeEquivalentTo(Expected);
+            ResultConverted.Should().BeEquivalentTo(Expected);
         }
 
         protected override void ScenarioSetup()

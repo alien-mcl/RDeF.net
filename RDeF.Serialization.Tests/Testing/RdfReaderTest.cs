@@ -42,7 +42,7 @@ namespace RDeF.Testing
         public void Should_throw_when_null_is_given_instead_of_stream_reader()
         {
             Reader.Awaiting(instance => instance.Read(null))
-                .ShouldThrow<ArgumentNullException>().Which.ParamName.Should().Be("streamReader");
+                .Should().Throw<ArgumentNullException>().Which.ParamName.Should().Be("streamReader");
         }
 
         [SetUp]

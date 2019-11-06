@@ -52,7 +52,8 @@ namespace Given_instance_of.converter_of_type
         [Test]
         public void Should_not_convert_scientific_notation()
         {
-            Converter.Invoking(instance => instance.ConvertFrom(StatementFor("2e10", xsd.@decimal))).ShouldThrow<FormatException>();
+            Converter.Invoking(instance => instance.ConvertFrom(StatementFor("2e10", xsd.@decimal)))
+                .Should().Throw<FormatException>();
         }
     }
 }

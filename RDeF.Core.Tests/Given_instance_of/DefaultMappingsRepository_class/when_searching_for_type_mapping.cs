@@ -30,20 +30,26 @@ namespace Given_instance_of.DefaultMappingsRepository_class
         [Test]
         public void Should_throw_when_no_type_is_given()
         {
-            MappingsRepository.Invoking(instance => instance.FindEntityMappingFor(null, null)).ShouldThrow<ArgumentNullException>();
+            MappingsRepository.Invoking(instance => instance.FindEntityMappingFor(null, null))
+                .Should().Throw<ArgumentNullException>();
         }
 
         [Test]
         public void Should_throw_when_invalid_type_is_given()
         {
-            MappingsRepository.Invoking(instance => instance.FindEntityMappingFor(null, typeof(string))).ShouldThrow<ArgumentOutOfRangeException>();
+            MappingsRepository.Invoking(instance => instance.FindEntityMappingFor(null, typeof(string)))
+                .Should().Throw<ArgumentOutOfRangeException>();
         }
 
         protected override void ScenarioSetup()
         {
             var entityMapping = new Mock<IEntityMapping>(MockBehavior.Strict);
             entityMapping.SetupGet(instance => instance.Type).Returns(typeof(IProduct));
-            MappingBuilder.Setup(instance => instance.BuildMappings(It.IsAny<IEnumerable<IMappingSource>>(), It.IsAny<IDictionary<Type, ICollection<ITermMappingProvider>>>()))
+            MappingBuilder
+                .Setup(
+                    instance => instance.BuildMappings(
+                        It.IsAny<IEnumerable<IMappingSource>>(), 
+                        It.IsAny<IDictionary<Type, ICollection<ITermMappingProvider>>>()))
                 .Returns(new Dictionary<Type, IEntityMapping>() { { typeof(IProduct), entityMapping.Object } });
         }
     }

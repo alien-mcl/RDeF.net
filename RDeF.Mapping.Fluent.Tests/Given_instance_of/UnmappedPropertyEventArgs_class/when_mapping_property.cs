@@ -41,7 +41,7 @@ namespace Given_instance_of.UnmappedPropertyEventArgs_class
         {
             EventArgs.Invoking(instance => instance.OfEntity<IProduct>(config => config
                 .WithProperty(typeof(string), "Test").MappedTo(new Iri("predicate")).WithDefaultConverter()
-                .WithProperty(typeof(string), "Another"))).ShouldThrow<InvalidOperationException>();
+                .WithProperty(typeof(string), "Another"))).Should().Throw<InvalidOperationException>();
         }
 
         [SetUp]

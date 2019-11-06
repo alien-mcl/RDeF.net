@@ -10,7 +10,7 @@ namespace RDeF.Mapping
         /// <summary>Builds mappings out of given <paramref name="mappingSources" />.</summary>
         /// <param name="mappingSources">Mapping sources.</param>
         /// <param name="openGenericMappingProviders">Map of open generic <see cref="IEntityMappingProvider" />s.</param>
-        /// <returns>Map of entity <see cref="Type" /> with it's <see cref="IEntityMapping" /></returns>
+        /// <returns>Map of entity <see cref="Type" /> with it's <see cref="IEntityMapping" />.</returns>
         IDictionary<Type, IEntityMapping> BuildMappings(IEnumerable<IMappingSource> mappingSources, IDictionary<Type, ICollection<ITermMappingProvider>> openGenericMappingProviders);
 
         /// <summary>Builds mappings for a <paramref name="closedGenericType" />.</summary>

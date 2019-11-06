@@ -51,13 +51,15 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
         [Test]
         public void Should_throw_when_no_StreamWriter_is_given()
         {
-            EntitySource.Awaiting(instance => instance.Write(null, null)).ShouldThrow<ArgumentNullException>().Which.ParamName.Should().Be("streamWriter");
+            EntitySource.Awaiting(instance => instance.Write(null, null))
+                .Should().Throw<ArgumentNullException>().Which.ParamName.Should().Be("streamWriter");
         }
 
         [Test]
         public void Should_throw_when_no_RdfWriter_is_given()
         {
-            EntitySource.Awaiting(instance => instance.Write(new StreamWriter(new MemoryStream()), null)).ShouldThrow<ArgumentNullException>().Which.ParamName.Should().Be("rdfWriter");
+            EntitySource.Awaiting(instance => instance.Write(new StreamWriter(new MemoryStream()), null))
+                .Should().Throw<ArgumentNullException>().Which.ParamName.Should().Be("rdfWriter");
         }
 
         [Test]

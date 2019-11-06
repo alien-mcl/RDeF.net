@@ -38,20 +38,22 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
         [Test]
         public void Should_throw_when_no_deleted_entities_are_given()
         {
-            EntitySource.Invoking(instance => instance.Commit(null, null, null)).ShouldThrow<ArgumentNullException>().Which.ParamName.Should().Be("deletedEntities");
+            EntitySource.Invoking(instance => instance.Commit(null, null, null))
+                .Should().Throw<ArgumentNullException>().Which.ParamName.Should().Be("deletedEntities");
         }
 
         [Test]
         public void Should_throw_when_no_retracted_statements_are_given()
         {
-            EntitySource.Invoking(instance => instance.Commit(DeletedEntities, null, null)).ShouldThrow<ArgumentNullException>().Which.ParamName.Should().Be("retractedStatements");
+            EntitySource.Invoking(instance => instance.Commit(DeletedEntities, null, null))
+                .Should().Throw<ArgumentNullException>().Which.ParamName.Should().Be("retractedStatements");
         }
 
         [Test]
         public void Should_throw_when_no_added_statements_are_given()
         {
             EntitySource.Invoking(instance => instance.Commit(DeletedEntities, RetractedStatements, null))
-                .ShouldThrow<ArgumentNullException>().Which.ParamName.Should().Be("addedStatements");
+                .Should().Throw<ArgumentNullException>().Which.ParamName.Should().Be("addedStatements");
         }
 
         [Test]

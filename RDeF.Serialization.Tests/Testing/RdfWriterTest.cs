@@ -40,14 +40,14 @@ namespace RDeF.Testing
         public void Should_throw_when_null_is_given_instead_of_stream_writer()
         {
             Writer.Awaiting(instance => instance.Write(null, null))
-                .ShouldThrow<ArgumentNullException>();
+                .Should().Throw<ArgumentNullException>();
         }
 
         [Test]
         public void Should_throw_when_null_is_given_instead_of_graphs()
         {
             Writer.Awaiting(instance => instance.Write(new StreamWriter(new MemoryStream()) { AutoFlush = true }, null))
-                .ShouldThrow<ArgumentNullException>();
+                .Should().Throw<ArgumentNullException>();
         }
 
         public IEnumerable<IGraph> WrittenGraph()

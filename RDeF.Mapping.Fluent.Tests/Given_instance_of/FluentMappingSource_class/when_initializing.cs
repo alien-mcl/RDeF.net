@@ -11,13 +11,15 @@ namespace Given_instance_of.FluentMappingSource_class
         [Test]
         public void Should_throw_when_no_assembly_is_given()
         {
-            ((FluentMappingSource)null).Invoking(_ => new FluentMappingSource(null, null)).ShouldThrow<ArgumentNullException>();
+            ((FluentMappingSource)null).Invoking(_ => new FluentMappingSource(null, null))
+                .Should().Throw<ArgumentNullException>();
         }
         
         [Test]
         public void Should_throw_when_no_QIri_mappings_are_given()
         {
-            ((FluentMappingSource)null).Invoking(_ => new FluentMappingSource(GetType().Assembly, null)).ShouldThrow<ArgumentNullException>();
+            ((FluentMappingSource)null).Invoking(_ => new FluentMappingSource(GetType().Assembly, null))
+                .Should().Throw<ArgumentNullException>();
         }
     }
 }

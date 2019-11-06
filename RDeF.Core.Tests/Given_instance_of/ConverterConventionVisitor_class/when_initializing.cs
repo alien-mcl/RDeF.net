@@ -11,7 +11,9 @@ namespace Given_instance_of.ConverterConventionVisitor_class
         [Test]
         public void Should_throw_when_no_converters_are_given()
         {
-            ((ConverterConventionVisitor)null).Invoking(_ => new ConverterConventionVisitor(null)).ShouldThrow<ArgumentNullException>();
+            ((ConverterConventionVisitor)null)
+                .Invoking(_ => new ConverterConventionVisitor(null))
+                .Should().Throw<ArgumentNullException>();
         }
     }
 }

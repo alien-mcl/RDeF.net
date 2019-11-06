@@ -21,7 +21,8 @@ namespace Given_a_context.with_explicitly_mapped_entity.when_an_entity
         [Test]
         public void Should_throw_when_no_entity_context_is_given()
         {
-            ((IEntityContext)null).Awaiting(_ => _.Load<IUnmappedProduct>(null, null)).ShouldThrow<ArgumentNullException>();
+            ((IEntityContext)null).Awaiting(_ => _.Load<IUnmappedProduct>(null, null))
+                .Should().Throw<ArgumentNullException>();
         }
 
         protected override void ScenarioSetup()

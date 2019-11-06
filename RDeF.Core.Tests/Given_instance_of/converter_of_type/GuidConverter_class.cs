@@ -22,7 +22,8 @@ namespace Given_instance_of.converter_of_type
         [Test]
         public void Should_throw_when_converting_to_literal()
         {
-            Converter.Invoking(instance => instance.ConvertTo(Subject, Predicate, Guid.Empty)).ShouldThrow<NotSupportedException>();
+            Converter.Invoking(instance => instance.ConvertTo(Subject, Predicate, Guid.Empty))
+                .Should().Throw<NotSupportedException>();
         }
 
         [TestCase(oguid.ns)]

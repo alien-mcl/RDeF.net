@@ -32,7 +32,8 @@ namespace Given_instance_of.DefaultMappingsRepository_class
         [Test]
         public void Should_throw_when_no_class_is_given()
         {
-            MappingsRepository.Invoking(instance => instance.FindEntityMappingFor(null, (Iri)null)).ShouldThrow<ArgumentNullException>();
+            MappingsRepository.Invoking(instance => instance.FindEntityMappingFor(null, (Iri)null))
+                .Should().Throw<ArgumentNullException>();
         }
 
         protected override void ScenarioSetup()
@@ -43,7 +44,11 @@ namespace Given_instance_of.DefaultMappingsRepository_class
             classMapping.SetupGet(instance => instance.Term).Returns(new Iri(ExpectedClass));
             classMapping.SetupGet(instance => instance.Graph).Returns((Iri)null);
             entityMapping.SetupGet(instance => instance.Classes).Returns(new[] { classMapping.Object });
-            MappingBuilder.Setup(instance => instance.BuildMappings(It.IsAny<IEnumerable<IMappingSource>>(), It.IsAny<IDictionary<Type, ICollection<ITermMappingProvider>>>()))
+            MappingBuilder
+                .Setup(
+                    instance => instance.BuildMappings(
+                        It.IsAny<IEnumerable<IMappingSource>>(),
+                        It.IsAny<IDictionary<Type, ICollection<ITermMappingProvider>>>()))
                 .Returns(new Dictionary<Type, IEntityMapping>() { { typeof(IProduct), entityMapping.Object } });
         }
     }

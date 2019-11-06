@@ -12,21 +12,21 @@ namespace Given_instance_of.Statement_class
         public void Should_throw_when_no_subject_is_given()
         {
             ((Statement)null).Invoking(_ => new Statement((Iri)null, (Iri)null, (Iri)null))
-                .ShouldThrow<ArgumentNullException>().Which.ParamName.Should().Be("subject");
+                .Should().Throw<ArgumentNullException>().Which.ParamName.Should().Be("subject");
         }
 
         [Test]
         public void Should_throw_when_no_predicate_is_given()
         {
             ((Statement)null).Invoking(_ => new Statement(new Iri("test"), (Iri)null, (Iri)null))
-                .ShouldThrow<ArgumentNullException>().Which.ParamName.Should().Be("predicate");
+                .Should().Throw<ArgumentNullException>().Which.ParamName.Should().Be("predicate");
         }
 
         [Test]
         public void Should_throw_when_no_object_is_given()
         {
             ((Statement)null).Invoking(_ => new Statement(new Iri("test"), new Iri("test"), (Iri)null))
-                .ShouldThrow<ArgumentNullException>().Which.ParamName.Should().Be("object");
+                .Should().Throw<ArgumentNullException>().Which.ParamName.Should().Be("object");
         }
     }
 }
