@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -37,5 +38,20 @@ namespace RDeF.Entities
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>Task of this operation.</returns>
         Task Read(StreamReader streamReader, IRdfReader rdfReader, CancellationToken cancellationToken);
+
+        /// <summary>Reads new statements from a given <paramref name="streamReader" /> using a given <paramref name="rdfReader" />.</summary>
+        /// <param name="streamReader">Source stream of RDF data.</param>
+        /// <param name="rdfReader">Target RDF reading facility.</param>
+        /// <param name="baseUri">Base Uri.</param>
+        /// <returns>Task of this operation.</returns>
+        Task Read(StreamReader streamReader, IRdfReader rdfReader, Uri baseUri);
+        
+        /// <summary>Reads new statements from a given <paramref name="streamReader" /> using a given <paramref name="rdfReader" />.</summary>
+        /// <param name="streamReader">Source stream of RDF data.</param>
+        /// <param name="rdfReader">Target RDF reading facility.</param>
+        /// <param name="baseUri">Base Uri.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>Task of this operation.</returns>
+        Task Read(StreamReader streamReader, IRdfReader rdfReader, Uri baseUri, CancellationToken cancellationToken);
     }
 }

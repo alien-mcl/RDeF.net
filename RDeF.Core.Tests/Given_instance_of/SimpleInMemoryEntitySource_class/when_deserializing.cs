@@ -19,6 +19,7 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
         private static readonly Iri ExpectedPredicate = new Iri("predicate");
         private static readonly Iri ExpectedProperty = new Iri("assert");
         private static readonly Iri ExpectedObject = new Iri("object");
+        private static readonly Uri BaseUri = new Uri("http://some.uri/");
 
         private static readonly Statement ExpectedStatement = new Statement(ExpectedSubject, ExpectedPredicate, ExpectedObject);
 
@@ -32,7 +33,7 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
 
         public override async Task TheTest()
         {
-            await EntitySource.Read(StreamReader, RdfReader.Object);
+            await EntitySource.Read(StreamReader, RdfReader.Object, BaseUri);
         }
 
         [Test]
@@ -52,7 +53,7 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
         [Test]
         public void Should_use_RDF_reader()
         {
-            RdfReader.Verify(instance => instance.Read(StreamReader, It.IsAny<CancellationToken>()), Times.Once);
+            RdfReader.Verify(instance => instance.Read(StreamReader, It.IsAny<Uri>(), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         [Test]
@@ -127,7 +128,7 @@ namespace Given_instance_of.SimpleInMemoryEntitySource_class
             ExpectedStatements = new[] { ExpectedStatement, ExpectedAdditionalStatement };
             StreamReader = new StreamReader(new MemoryStream());
             RdfReader = new Mock<IRdfReader>(MockBehavior.Strict);
-            RdfReader.Setup(instance => instance.Read(It.IsAny<StreamReader>(), It.IsAny<CancellationToken>()))
+            RdfReader.Setup(instance => instance.Read(It.IsAny<StreamReader>(), It.IsAny<Uri>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new[] { new Graph(new Iri("graph"), new[] { ExpectedStatement }) });
             Context.Setup(instance => instance.Clear());
             Context.Setup(instance => instance.CreateInternal(It.IsAny<Iri>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))

@@ -14,7 +14,7 @@ namespace RDeF.Entities
         private string _asString;
 
         /// <summary>Initializes a new instance of the <see cref="Relation" /> class.</summary>
-        /// <param name="predicate">Unmapped predicate</param>
+        /// <param name="predicate">Unmapped predicate.</param>
         /// <param name="object">Object being in relation.</param>
         /// <param name="graph">Iri of the graph this relation is defined in.</param>
         public Relation(Iri predicate, IEntity @object, Iri graph = null)
@@ -51,7 +51,7 @@ namespace RDeF.Entities
         }
 
         /// <summary>Initializes a new instance of the <see cref="Relation" /> class.</summary>
-        /// <param name="predicate">Unmapped predicate</param>
+        /// <param name="predicate">Unmapped predicate.</param>
         /// <param name="value">Literal value.</param>
         /// <param name="graph">Iri of the graph this relation is defined in.</param>
         public Relation(Iri predicate, object value, Iri graph = null)

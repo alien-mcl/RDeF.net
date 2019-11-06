@@ -26,11 +26,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Given_instance_of\JsonLdWriter_class\**" />
+    <Compile Remove="Given_instance_of\RdfXmlWriter_class\**" />
+    <EmbeddedResource Remove="Given_instance_of\JsonLdWriter_class\**" />
+    <EmbeddedResource Remove="Given_instance_of\RdfXmlWriter_class\**" />
+    <None Remove="Given_instance_of\JsonLdWriter_class\**" />
+    <None Remove="Given_instance_of\RdfXmlWriter_class\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Given_a_data_model\when_serializing_it.json" />
-    <None Remove="Given_instance_of\JsonLdWriter_class\when_serializing\named_graphs.json" />
-    <None Remove="Given_instance_of\JsonLdWriter_class\when_serializing\named_graphs_with_lists_and_collections.json" />
-    <None Remove="Given_instance_of\RdfXmlWriter_class\when_serializing\named_graphs.rdf" />
-    <None Remove="Given_instance_of\RdfXmlWriter_class\when_serializing\named_graphs_with_lists_and_collections.rdf" />
     <None Remove="packages.config" />
     <None Remove="Settings.StyleCop" />
     <None Remove="StyleCop.Cache" />
@@ -43,10 +48,6 @@
 
   <ItemGroup>
     <EmbeddedResource Include="Given_a_data_model\when_serializing_it.json" />
-    <EmbeddedResource Include="Given_instance_of\JsonLdWriter_class\when_serializing\named_graphs.json" />
-    <EmbeddedResource Include="Given_instance_of\JsonLdWriter_class\when_serializing\named_graphs_with_lists_and_collections.json" />
-    <EmbeddedResource Include="Given_instance_of\RdfXmlWriter_class\when_serializing\named_graphs.rdf" />
-    <EmbeddedResource Include="Given_instance_of\RdfXmlWriter_class\when_serializing\named_graphs_with_lists_and_collections.rdf" />
   </ItemGroup>
 
   <ItemGroup>
@@ -59,8 +60,8 @@
     <PackageReference Include="System.Collections.NonGeneric" Version="4.3.0" />
     <PackageReference Include="System.Diagnostics.Tools" Version="4.3.0" />
     <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
-    <PackageReference Include="System.Reflection.Emit" Version="4.3.0" />
-    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.4.0" />
+    <PackageReference Include="System.Reflection.Emit" Version="4.6.0" />
+    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.6.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -268,11 +268,23 @@ namespace RDeF.Entities
         /// <inheritdoc />
         public Task Read(StreamReader streamReader, IRdfReader rdfReader)
         {
-            return Read(streamReader, rdfReader, CancellationToken.None);
+            return Read(streamReader, rdfReader, null);
         }
 
         /// <inheritdoc />
-        public async Task Read(StreamReader streamReader, IRdfReader rdfReader, CancellationToken cancellationToken)
+        public Task Read(StreamReader streamReader, IRdfReader rdfReader, Uri baseUri)
+        {
+            return Read(streamReader, rdfReader, baseUri, CancellationToken.None);
+        }
+
+        /// <inheritdoc />
+        public Task Read(StreamReader streamReader, IRdfReader rdfReader, CancellationToken cancellationToken)
+        {
+            return Read(streamReader, rdfReader, null, cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public async Task Read(StreamReader streamReader, IRdfReader rdfReader, Uri baseUri, CancellationToken cancellationToken)
         {
             if (streamReader == null)
             {
@@ -296,7 +308,7 @@ namespace RDeF.Entities
                 var subjects = new Dictionary<Iri, ISet<Statement>>();
                 Action<IDictionary<Iri, ISet<Statement>>, Statement> additionalStatements =
                     StatementAsserted != null ? AssertAdditionalStatements : (Action<IDictionary<Iri, ISet<Statement>>, Statement>)null;
-                foreach (var graph in await rdfReader.Read(streamReader, cancellationToken))
+                foreach (var graph in await rdfReader.Read(streamReader, baseUri, cancellationToken))
                 {
                     foreach (var statement in graph.Statements)
                     {
