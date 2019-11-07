@@ -14,4 +14,5 @@ COPY %package%\bin\%config%\netstandard2.0\%package%.dll NugetBuild\%package%\li
 IF EXIST %package%\bin\%config%\netstandard2.0\%package%.pdb (COPY %package%\bin\%config%\netstandard2.0\%package%.pdb NugetBuild\%package%\lib\netstandard20)
 COPY %package%\bin\%config%\netstandard2.0\%package%.xml NugetBuild\%package%\lib\netstandard20
 COPY ".nuget\%package%.nuspec" NugetBuild\%package%
+COPY "readme.md" NugetBuild\%package%
 ".build\nuget" pack NugetBuild\%package%\%package%.nuspec -version %tag:~1%.%version%.%release% -outputdirectory NugetBuild

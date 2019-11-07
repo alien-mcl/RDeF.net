@@ -47,6 +47,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDeF.Mapping.Fluent", "RDeF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RDeF.Mapping.Fluent.Tests", "RDeF.Mapping.Fluent.Tests\RDeF.Mapping.Fluent.Tests.csproj", "{BD535722-AD65-4A87-BAB4-99A6E67CAF92}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".docs", ".docs", "{52D2A74E-CD2E-4338-9296-BBF0F9A0E838}"
+	ProjectSection(SolutionItems) = preProject
+		readme.md = readme.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
