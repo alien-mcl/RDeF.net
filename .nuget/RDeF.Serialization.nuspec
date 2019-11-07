@@ -46,6 +46,7 @@
 		</dependencies>
 	</metadata>
     <files>
+		<file src="lib\**" target="lib/" />
         <file src="readme.md" target="" />
     </files>
 </package>
